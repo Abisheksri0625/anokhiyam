@@ -1,35 +1,38 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from 'react';
+import './index.css';
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <div className="app">
+      <header className="header">
+        <h1>🎓 ANOKHIYAM</h1>
+        <p>ERP Student Management System</p>
+      </header>
+      <main className="main">
+        <div className="container">
+          <h2>Welcome to ANOKHIYAM</h2>
+          <p>Smart India Hackathon 2025 - Government of Rajasthan DTE</p>
+          <div className="status-cards">
+            <div className="card">
+              <h3>Frontend Status</h3>
+              <p>✅ React + Vite Running</p>
+            </div>
+            <div className="card">
+              <h3>Backend Status</h3>
+              <p>✅ Node.js + Express Running</p>
+            </div>
+            <div className="card">
+              <h3>Repository Status</h3>
+              <p>✅ GitHub Connected</p>
+            </div>
+          </div>
+        </div>
+      </main>
+      <footer className="footer">
+        <p>&copy; 2025 ANOKHIYAM - Smart India Hackathon</p>
+      </footer>
+    </div>
+  );
 }
 
-export default App
+export default App;
