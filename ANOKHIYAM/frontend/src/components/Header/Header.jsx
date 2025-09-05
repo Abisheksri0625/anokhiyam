@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import styles from './Header.module.css';
 
 const Header = () => {
@@ -17,7 +18,7 @@ const Header = () => {
 
         <div className={styles.authSection}>
           <button className={styles.checkResultsBtn}>Check Results</button>
-          <button className={styles.loginBtn}>Log In</button>
+          <Link to="/login" className={styles.loginBtn}>Log In</Link>
         </div>
       </div>
     </header>
