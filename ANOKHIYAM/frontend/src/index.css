@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap');
+
 * {
   margin: 0;
   padding: 0;
@@ -5,109 +7,16 @@
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, sans-serif;
   line-height: 1.6;
-  color: #333;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  min-height: 100vh;
+  color: #1f2937;
+  overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 .app {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-}
-
-.header {
-  background: rgba(255, 255, 255, 0.95);
-  padding: 2rem 0;
-  text-align: center;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-}
-
-.header h1 {
-  font-size: 3rem;
-  margin-bottom: 0.5rem;
-  color: #4a5568;
-}
-
-.header p {
-  font-size: 1.2rem;
-  color: #718096;
-}
-
-.main {
-  flex: 1;
-  padding: 4rem 2rem;
-}
-
-.container {
-  max-width: 1200px;
-  margin: 0 auto;
-  text-align: center;
-}
-
-.container h2 {
-  font-size: 2.5rem;
-  color: white;
-  margin-bottom: 1rem;
-}
-
-.container p {
-  font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.9);
-  margin-bottom: 3rem;
-}
-
-.status-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-top: 3rem;
-}
-
-.card {
-  background: white;
-  padding: 2rem;
-  border-radius: 15px;
-  box-shadow: 0 8px 25px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-}
-
-.card h3 {
-  font-size: 1.5rem;
-  margin-bottom: 1rem;
-  color: #4a5568;
-}
-
-.card p {
-  font-size: 1.1rem;
-  color: #48bb78;
-  font-weight: 600;
-}
-
-.footer {
-  background: rgba(0, 0, 0, 0.8);
-  color: white;
-  text-align: center;
-  padding: 1rem;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .header h1 {
-    font-size: 2rem;
-  }
-  
-  .container h2 {
-    font-size: 2rem;
-  }
-  
-  .status-cards {
-    grid-template-columns: 1fr;
-  }
 }
