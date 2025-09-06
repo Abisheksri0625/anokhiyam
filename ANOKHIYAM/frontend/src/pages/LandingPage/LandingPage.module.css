@@ -42,6 +42,7 @@
   gap: 2rem;
 }
 
+/* CHANGE 1: Added Poppins font to navigation links */
 .navLink {
   color: #6b7280;
   text-decoration: none;
@@ -52,6 +53,7 @@
   padding: 0;
   cursor: pointer;
   transition: color 0.3s ease;
+  font-family: 'Poppins', sans-serif;
 }
 
 .navLink:hover {
@@ -64,15 +66,20 @@
   align-items: center;
 }
 
+/* CHANGE 2: Updated checkResultsBtn to match loginBtn style */
 .checkResultsBtn {
-  background: transparent;
-  color: #6b7280;
-  border: 1px solid #d1d5db;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
+  background: white;
+  color: #1f2937;
+  border: 1px solid #e5e7eb;
+  padding: 0.5rem 1rem;
+  border-radius: 0.375rem;
   font-weight: 500;
+  font-size: 0.875rem;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+  display: inline-block;
 }
 
 .checkResultsBtn:hover {
@@ -318,6 +325,7 @@
   animation: float 6s ease-in-out infinite 4s;
 }
 
+/* CHANGE 6: Updated bigNumber with cleaner font */
 .bigNumber {
   font-size: 2.25rem;
   font-weight: 800;
@@ -325,15 +333,17 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Inter', 'Poppins', sans-serif;
   line-height: 1;
 }
 
+/* CHANGE 6: Updated unit with cleaner font */
 .unit {
   color: #6b7280;
   font-size: 0.75rem;
   font-weight: 400;
   margin-top: 0.25rem;
+  font-family: 'Inter', 'Poppins', sans-serif;
 }
 
 .statsLabel {
@@ -617,17 +627,22 @@
   transform: translateY(-3px);
 }
 
+/* Updated statNumber with cleaner font similar to page content styling */
 .statNumber {
   font-size: 2.5rem;
-  font-weight: 800;
+  font-weight: 700;
   margin-bottom: 0.5rem;
   font-family: 'Poppins', sans-serif;
+  line-height: 1.1;
 }
 
+/* Updated statLabel with cleaner font similar to page content styling */
 .statLabel {
   color: #6b7280;
-  font-weight: 500;
-  font-size: 0.875rem;
+  font-weight: 400;
+  font-size: 0.95rem;
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.4;
 }
 
 .ctaSection {
@@ -792,37 +807,34 @@
   color: #e2e8f0;
 }
 
+/* Updated footerBottom to properly position elements */
 .footerBottom {
   display: flex;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   flex-wrap: wrap;
   gap: 1rem;
 }
 
-.languageSelector {
+/* Contact information positioned to far left */
+.contactInfo {
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  gap: 0.5rem;
+  text-align: left;
+  order: 1;
 }
 
-.languageSelect {
-  background-color: transparent;
-  border: none;
+.contactItem {
   color: #a0aec0;
   font-size: 0.875rem;
-  cursor: pointer;
-  outline: none;
-}
-
-.languageSelect option {
-  background-color: #1a202c;
-  color: #a0aec0;
 }
 
 .socialLinks {
   display: flex;
   gap: 1rem;
   align-items: center;
+  order: 2;
 }
 
 .socialLink {
@@ -844,9 +856,11 @@
   height: 16px;
 }
 
+/* Copyright positioned to far right */
 .copyright {
   color: #718096;
   font-size: 0.875rem;
+  order: 3;
 }
 
 /* ===== RESPONSIVE DESIGN ===== */
@@ -926,5 +940,19 @@
     flex-direction: column;
     text-align: center;
     gap: 1rem;
+    align-items: center;
+  }
+
+  .contactInfo {
+    text-align: center;
+    order: 1;
+  }
+
+  .socialLinks {
+    order: 2;
+  }
+
+  .copyright {
+    order: 3;
   }
 }
