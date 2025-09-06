@@ -3,12 +3,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
-// Components
-import Header from './components/Header/Header';
-import HeroSection from './components/HeroSection/HeroSection';
-import FeaturesGrid from './components/FeaturesGrid/FeaturesGrid';
-import AboutSection from './components/AboutSection/AboutSection';
-import StatsSection from './components/StatsSection/StatsSection';
+// Pages
+import LandingPage from './pages/LandingPage/LandingPage';
 import Login from './pages/Login/Login';
 import StudentDashboard from './pages/StudentDashboard/StudentDashboard';
 import TeacherDashboard from './pages/TeacherDashboard/TeacherDashboard';
@@ -17,17 +13,6 @@ import LibrarianDashboard from './pages/LibrarianDashboard/LibrarianDashboard';
 import HostelDashboard from './pages/HostelDashboard/HostelDashboard';
 
 import './index.css';
-
-// Landing Page Component
-const LandingPage = () => (
-  <>
-    <Header />
-    <HeroSection />
-    <FeaturesGrid />
-    <AboutSection />
-    <StatsSection />
-  </>
-);
 
 function App() {
   return (
@@ -38,7 +23,6 @@ function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
             
-            {/* Protected Routes */}
             <Route path="/student-dashboard" element={
               <ProtectedRoute requiredRole="student">
                 <StudentDashboard />
