@@ -1,0 +1,200 @@
+.card {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+  border: 1px solid #f1f5f9;
+  position: relative;
+  overflow: hidden;
+  font-family: 'Poppins', sans-serif;
+  animation: slideInUp 0.6s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.cardTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0;
+}
+
+.cardIcon {
+  width: 40px;
+  height: 40px;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.cardIcon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.mainValue {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #1f2937;
+  line-height: 1;
+}
+
+.changeValue {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #10b981;
+}
+
+.description {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 400;
+}
+
+/* Academic Card Specific */
+.academicCard .cardIcon {
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+.progressBar {
+  width: 100%;
+  height: 4px;
+  background: #f3f4f6;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #10b981, #059669);
+  border-radius: 2px;
+  transition: width 0.6s ease;
+}
+
+/* Attendance Card Specific */
+.attendanceCard .cardIcon {
+  background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+}
+
+.attendanceStatus {
+  margin-top: 0.5rem;
+}
+
+.statusGood {
+  color: #10b981;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.statusWarning {
+  color: #f59e0b;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Assignments Card Specific */
+.assignmentsCard .cardIcon {
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+}
+
+.assignmentsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.assignmentItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+.assignmentDot {
+  width: 6px;
+  height: 6px;
+  background: #f59e0b;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* Exams Card Specific */
+.examsCard .cardIcon {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+}
+
+.nextExam {
+  background: #f8fafc;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.examInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.examLabel {
+  font-size: 0.7rem;
+  color: #6b7280;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.examName {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.examDate {
+  font-size: 0.75rem;
+  color: #ef4444;
+  font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .card {
+    padding: 1rem;
+  }
+  
+  .mainValue {
+    font-size: 1.5rem;
+  }
+}
