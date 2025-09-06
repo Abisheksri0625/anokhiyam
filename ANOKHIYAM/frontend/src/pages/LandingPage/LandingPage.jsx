@@ -6,12 +6,12 @@ const LandingPage = () => {
   const features = [
     {
       title: 'AI-Powered Analysis',
-      description: 'Dynamic student growthmonitoring with AI powered predictive analysis.',
+      description: 'Dynamic student growth monitoring with AI powered predictive analysis.',
       gradient: 'linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%)'
     },
     {
       title: 'Ease of Use',
-      description: 'Digitized platform for efficinecy in attendance, admissions, libaray and hostel management.',
+      description: 'Digitized platform for efficinecy in attendance, admissions, library and hostel management.',
       gradient: 'linear-gradient(135deg, #ec4899 0%, #f472b6 100%)'
     },
     {
