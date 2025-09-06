@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './LandingPage.module.css';
 
 const LandingPage = () => {
+  // CHANGE 3: Added 2 more cards to features array
   const features = [
     {
       title: 'AI-Powered Analysis',
@@ -22,40 +23,49 @@ const LandingPage = () => {
       title: 'Communication Hub',
       description: 'Centralized messaging system with real-time notifications and multi-language support.',
       gradient: 'linear-gradient(135deg, #10b981 0%, #34d399 100%)'
+    },
+    {
+      title: 'Resource Management',
+      description: 'Comprehensive library and hostel management with automated inventory tracking and allocation.',
+      gradient: 'linear-gradient(135deg, #f59e0b 0%, #f97316 100%)'
+    },
+    {
+      title: 'Analytics Dashboard',
+      description: 'Advanced reporting and analytics for institutional performance monitoring and decision-making.',
+      gradient: 'linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%)'
     }
   ];
 
   const processes = [
-  {
-    number: '01',
-    title: 'Streamline Admissions',
-    description: 'Digitize and automate student enrollment, document submission, and eligibility verification processes.',
-    stat: '40% faster admission processing',
-    color: '#8b5cf6'
-  },
-  {
-    number: '02',
-    title: 'Centralized Communication',
-    description: 'Integrate announcements, alerts, and feedback across students, faculty, and parents in real-time.',
-    stat: '85% improvement in communication flow',
-    color: '#ec4899'
-  },
-  {
-    number: '03',
-    title: 'Smart Academic Monitoring',
-    description: 'Track attendance, grades, and performance trends using AI to identify students needing support.',
-    stat: '60% boost in early intervention',
-    color: '#06b6d4'
-  },
-  {
-    number: '04',
-    title: 'Career and Counseling Support',
-    description: 'Provide students with tailored guidance and resources for academic success and career readiness.',
-    stat: '75% increase in student satisfaction',
-    color: '#10b981'
-  }
-];
-
+    {
+      number: '01',
+      title: 'Streamline Admissions',
+      description: 'Digitize and automate student enrollment, document submission, and eligibility verification processes.',
+      stat: '40% faster admission processing',
+      color: '#8b5cf6'
+    },
+    {
+      number: '02',
+      title: 'Centralized Communication',
+      description: 'Integrate announcements, alerts, and feedback across students, faculty, and parents in real-time.',
+      stat: '85% improvement in communication flow',
+      color: '#ec4899'
+    },
+    {
+      number: '03',
+      title: 'Smart Academic Monitoring',
+      description: 'Track attendance, grades, and performance trends using AI to identify students needing support.',
+      stat: '60% boost in early intervention',
+      color: '#06b6d4'
+    },
+    {
+      number: '04',
+      title: 'Career and Counseling Support',
+      description: 'Provide students with tailored guidance and resources for academic success and career readiness.',
+      stat: '75% increase in student satisfaction',
+      color: '#10b981'
+    }
+  ];
 
   const stats = [
     {
@@ -80,6 +90,7 @@ const LandingPage = () => {
     }
   ];
 
+  // CHANGE 3: Updated getIcon function to handle 6 icons
   const getIcon = (index) => {
     const icons = [
       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -96,6 +107,15 @@ const LandingPage = () => {
       </svg>,
       <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" strokeWidth="2"/>
+      </svg>,
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 7V5C3 3.89543 3.89543 3 5 3H9L11 5H19C20.1046 5 21 5.89543 21 7V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V7Z" stroke="currentColor" strokeWidth="2"/>
+        <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+      </svg>,
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M3 3V21L12 17L21 21V3H3Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+        <path d="M9 9L15 9" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
+        <path d="M9 13L15 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
       </svg>
     ];
     return icons[index];
@@ -190,9 +210,9 @@ const LandingPage = () => {
                   </div>
                 </div>
 
+                {/* CHANGE 6: Removed "x 1280px" from statsCard */}
                 <div className={styles.statsCard}>
                   <div className={styles.bigNumber}>3847</div>
-                  <div className={styles.unit}>x 1280px</div>
                   <div className={styles.statsLabel}>Enrolled Students</div>
                 </div>
               </div>
@@ -300,7 +320,7 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* ===== NEW FOOTER SECTION ===== */}
+      {/* ===== FOOTER SECTION ===== */}
       <section id="about" className={styles.footer}>
         <div className={styles.footerContainer}>
           <div className={styles.footerBrand}>
@@ -315,12 +335,10 @@ const LandingPage = () => {
           </div>
           
           <div className={styles.footerBottom}>
-            <div className={styles.languageSelector}>
-              <select className={styles.languageSelect}>
-                <option value="en">English</option>
-                <option value="hi">हिंदी</option>
-                <option value="raj">राजस्थानी</option>
-              </select>
+            {/* Contact information moved to far left */}
+            <div className={styles.contactInfo}>
+              <div className={styles.contactItem}>Email: info@anokhiyam.edu.in</div>
+              <div className={styles.contactItem}>Contact: +91-141-2234567</div>
             </div>
             
             <div className={styles.socialLinks}>
@@ -336,19 +354,21 @@ const LandingPage = () => {
                 </svg>
               </a>
               
+              <a href="#" className={styles.socialLink} aria-label="Instagram">
+                <svg viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                </svg>
+              </a>
+              
+              {/* Replaced Dribbble with Facebook icon */}
               <a href="#" className={styles.socialLink} aria-label="Facebook">
                 <svg viewBox="0 0 24 24" fill="currentColor">
                   <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                 </svg>
               </a>
-              
-              <a href="#" className={styles.socialLink} aria-label="Dribbble">
-                <svg viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 0C5.374 0 0 5.373 0 12s5.374 12 12 12 12-5.373 12-12S18.626 0 12 0zm9.568 7.375c.77 1.423 1.208 3.054 1.208 4.781 0 .203-.006.405-.017.606-.187-.04-2.051-.412-3.931-.195-.04-.097-.08-.195-.123-.295-.133-.309-.275-.608-.423-.899 2.07-.84 2.989-2.065 3.286-2.998zM12 22.785c-1.274 0-2.5-.219-3.639-.618.133-.211 1.592-2.684 4.319-3.684.948 2.463 1.336 4.515 1.424 5.093-.688.143-1.39.209-2.104.209zm-3.967-1.448c-.265.402-.548.792-.846 1.168-.297-.119-1.163-.497-1.893-1.028-.73-.53-1.347-1.156-1.844-1.857.518-.193 2.317-.82 4.583-.283zm-5.09-3.066c.729.463 1.544.845 2.408 1.125.864.278 1.776.473 2.718.571-.096.2-.195.4-.297.599-1.185-.375-2.268-.946-3.197-1.687-.928-.741-1.685-1.633-2.223-2.634.197-.098.394-.184.591-.274zm-.411-2.748c.543.77 1.223 1.44 2.008 1.973.786.533 1.666.934 2.601 1.181-.097.397-.196.793-.297 1.186-2.032-.285-3.888-1.195-5.336-2.58.341-.254.681-.502 1.024-.76zM2.215 12c0-1.274.219-2.5.618-3.639.211-.133 2.684-1.592 3.684-4.319-2.463-.948-4.515-1.336-5.093-1.424-.143.688-.209 1.39-.209 2.104zm1.448 3.967c-.402.265-.792.548-1.168.846.119.297.497 1.163 1.028 1.893.53.73 1.156 1.347 1.857 1.844.193-.518.82-2.317.283-4.583zm3.066 5.09c-.463-.729-.845-1.544-1.125-2.408-.278-.864-.473-1.776-.571-2.718.2.096.4.195.599.297.375 1.185.946 2.268 1.687 3.197.741.928 1.633 1.685 2.634 2.223.098-.197.184-.394.274-.591zm2.748.411c-.77-.543-1.44-1.223-1.973-2.008-.533-.786-.934-1.666-1.181-2.601.397.097.793.196 1.186.297.285 2.032 1.195 3.888 2.58 5.336.254-.341.502-.681.76-1.024z"/>
-                </svg>
-              </a>
             </div>
             
+            {/* All rights reserved moved to far right */}
             <div className={styles.copyright}>
               &copy; 2024 ANOKHIYAM. All rights reserved.
             </div>
