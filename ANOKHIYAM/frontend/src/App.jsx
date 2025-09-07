@@ -11,6 +11,14 @@ import TeacherDashboard from './pages/TeacherDashboard/TeacherDashboard';
 import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
 import LibrarianDashboard from './pages/LibrarianDashboard/LibrarianDashboard';
 import HostelDashboard from './pages/HostelDashboard/HostelDashboard';
+import AdmissionForm from './pages/AdmissionForm/AdmissionForm';
+
+// New Admin Pages
+import EntranceResults from './pages/EntranceResults/EntranceResults';
+import Admissions from './pages/Admissions/Admissions';
+
+// Public Pages
+import CheckResults from './pages/CheckResults/CheckResults';
 
 import './index.css';
 
@@ -20,9 +28,13 @@ function App() {
       <Router>
         <div className="app">
           <Routes>
+            {/* Public Routes */}
             <Route path="/" element={<LandingPage />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/check-results" element={<CheckResults />} />
+            <Route path="/admission-form" element={<AdmissionForm />} />
             
+            {/* Protected Dashboard Routes */}
             <Route path="/student-dashboard" element={
               <ProtectedRoute requiredRole="student">
                 <StudentDashboard />
@@ -40,7 +52,21 @@ function App() {
                 <AdminDashboard />
               </ProtectedRoute>
             } />
+
+            {/* Protected Admin Function Routes */}
+            <Route path="/admin/entrance-results" element={
+              <ProtectedRoute requiredRole="admin">
+                <EntranceResults />
+              </ProtectedRoute>
+            } />
             
+            <Route path="/admin/admissions" element={
+              <ProtectedRoute requiredRole="admin">
+                <Admissions />
+              </ProtectedRoute>
+            } />
+            
+            {/* Other Protected Dashboard Routes */}
             <Route path="/librarian-dashboard" element={
               <ProtectedRoute requiredRole="librarian">
                 <LibrarianDashboard />
