@@ -12,6 +12,17 @@ import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
 import LibrarianDashboard from './pages/LibrarianDashboard/LibrarianDashboard';
 import HostelDashboard from './pages/HostelDashboard/HostelDashboard';
 
+// Admin Pages
+import EntranceResults from './pages/Admin/EntranceResults/EntranceResults';
+import SemesterResults from './pages/Admin/SemesterResults/SemesterResults';
+import PublishResults from './pages/Admin/PublishResults/PublishResults';
+import Admissions from './pages/Admin/Admissions/Admissions';
+import UserManagement from './pages/Admin/UserManagement/UserManagement';
+import Analytics from './pages/Admin/Analytics/Analytics';
+import StaffManagement from './pages/Admin/StaffManagement/StaffManagement'; // Changed from SystemSettings
+import Notifications from './pages/Admin/Notifications/Notifications';
+import Settings from './pages/Admin/Settings/Settings';
+
 import './index.css';
 
 function App() {
@@ -38,6 +49,61 @@ function App() {
             <Route path="/admin-dashboard" element={
               <ProtectedRoute requiredRole="admin">
                 <AdminDashboard />
+              </ProtectedRoute>
+            } />
+
+            {/* Admin Routes */}
+            <Route path="/admin/entrance-results" element={
+              <ProtectedRoute requiredRole="admin">
+                <EntranceResults />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/admin/semester-results" element={
+              <ProtectedRoute requiredRole="admin">
+                <SemesterResults />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/admin/publish-results" element={
+              <ProtectedRoute requiredRole="admin">
+                <PublishResults />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/admin/admissions" element={
+              <ProtectedRoute requiredRole="admin">
+                <Admissions />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/admin/users" element={
+              <ProtectedRoute requiredRole="admin">
+                <UserManagement />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/admin/analytics" element={
+              <ProtectedRoute requiredRole="admin">
+                <Analytics />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/admin/staff" element={
+              <ProtectedRoute requiredRole="admin">
+                <StaffManagement />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/admin/notifications" element={
+              <ProtectedRoute requiredRole="admin">
+                <Notifications />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/admin/settings" element={
+              <ProtectedRoute requiredRole="admin">
+                <Settings />
               </ProtectedRoute>
             } />
             
