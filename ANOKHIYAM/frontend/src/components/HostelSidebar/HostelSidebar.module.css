@@ -1,3 +1,6 @@
+/* HostelSidebar.module.css */
+
+/* Desktop Sidebar States */
 .sidebar {
   width: 280px;
   height: 100vh;
@@ -11,6 +14,8 @@
   z-index: 100;
   font-family: 'Poppins', sans-serif;
   animation: slideInLeft 0.3s ease-out;
+  transition: width 0.3s ease-in-out;
+  overflow-x: hidden;
 }
 
 @keyframes slideInLeft {
@@ -22,9 +27,91 @@
   }
 }
 
-.logo {
+.collapsed {
+  width: 4rem;
+}
+
+.expanded {
+  width: 280px;
+}
+
+/* Pin/Unpin Button */
+.pinButton {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  width: 2rem;
+  height: 2rem;
+  background-color: rgba(239, 68, 68, 0.1);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 50;
+  color: #ef4444;
+}
+
+.pinButton:hover {
+  background-color: rgba(239, 68, 68, 0.2);
+  transform: scale(1.1);
+}
+
+/* Expand Button */
+.expandButton {
+  position: absolute;
+  top: 50%;
+  right: -1rem;
+  transform: translateY(-50%);
+  width: 2rem;
+  height: 2rem;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  border: 2px solid white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: white;
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
+  transition: all 0.3s ease;
+  z-index: 1000;
+  animation: fadeIn 0.4s ease-out forwards;
+}
+
+.expandButton:hover {
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.4);
+}
+
+@keyframes fadeIn {
+  0% { 
+    opacity: 0; 
+    transform: translateY(-50%) translateX(-10px) scale(0.9); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: translateY(-50%) translateX(0) scale(1); 
+  }
+}
+
+/* Logo Container */
+.logoContainer {
   padding: 1.5rem;
   border-bottom: 1px solid #f1f5f9;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 .logoText {
@@ -34,8 +121,21 @@
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  white-space: nowrap;
+  transition: all 0.3s ease;
 }
 
+.logoCollapsed {
+  transform: scale(0.6);
+  opacity: 0.7;
+}
+
+.logoExpanded {
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* Menu */
 .menu {
   flex: 1;
   padding: 1rem 0;
@@ -54,6 +154,20 @@
   letter-spacing: 0.05em;
   padding: 0 1.5rem;
   margin-bottom: 0.75rem;
+  transition: all 0.3s ease;
+}
+
+.sectionHidden {
+  opacity: 0;
+  transform: translateX(-1rem);
+  pointer-events: none;
+}
+
+.sectionVisible {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+  transition-delay: 0.1s;
 }
 
 .menuItem {
@@ -112,17 +226,137 @@
 .menuLabel {
   font-size: 0.875rem;
   font-weight: 500;
+  white-space: nowrap;
+  transition: all 0.3s ease;
 }
 
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .sidebar {
-    width: 250px;
-    transform: translateX(-100%);
-    transition: transform 0.3s ease;
+.labelHidden {
+  opacity: 0;
+  transform: translateX(-1rem);
+  pointer-events: none;
+}
+
+.labelVisible {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+  transition-delay: 0.15s;
+}
+
+/* Hamburger Menu Button */
+.hamburgerButton {
+  position: fixed;
+  top: 2rem;
+  left: 1rem;
+  z-index: 9999;
+  width: 3rem;
+  height: 3rem;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  transition: all 0.3s ease;
+}
+
+.hamburgerButton:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(239, 68, 68, 0.4);
+}
+
+.hamburgerHidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: scale(0.8);
+}
+
+/* Overlay for mobile */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 9998;
+  backdrop-filter: blur(2px);
+}
+
+/* Mobile sidebar styles */
+.mobileSidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 9999;
+  overflow-y: auto;
+}
+
+.sidebarOpen {
+  transform: translateX(0);
+}
+
+/* Mobile header */
+.mobileHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #f1f5f9;
+  background: white;
+}
+
+.closeButton {
+  width: 2.5rem;
+  height: 2.5rem;
+  background-color: rgba(239, 68, 68, 0.1);
+  border: none;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ef4444;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+  background-color: rgba(239, 68, 68, 0.2);
+  transform: scale(1.05);
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .sidebar:not(.mobileSidebar) {
+    display: none;
   }
   
-  .sidebar.open {
-    transform: translateX(0);
+  .hamburgerButton {
+    display: flex;
+  }
+
+  .sidebar {
+    width: 250px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hamburgerButton {
+    display: none;
+  }
+  
+  .mobileSidebar {
+    display: none;
+  }
+  
+  .overlay {
+    display: none;
   }
 }

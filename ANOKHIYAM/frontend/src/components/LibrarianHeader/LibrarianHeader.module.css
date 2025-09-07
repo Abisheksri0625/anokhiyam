@@ -7,11 +7,20 @@
   padding: 0 2rem;
   position: fixed;
   top: 0;
-  left: 280px;
   right: 0;
   z-index: 50;
   font-family: 'Poppins', sans-serif;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dynamic positioning based on sidebar state */
+.header.sidebarExpanded {
+  left: 280px;
+}
+
+.header.sidebarCollapsed {
+  left: 80px;
 }
 
 .leftSection {
@@ -256,7 +265,9 @@
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
-  .header {
+  .header,
+  .header.sidebarExpanded,
+  .header.sidebarCollapsed {
     left: 0;
     padding: 0 1rem;
   }

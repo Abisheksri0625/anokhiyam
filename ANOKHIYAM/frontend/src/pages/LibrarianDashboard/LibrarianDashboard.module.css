@@ -7,9 +7,18 @@
 
 .mainContent {
   flex: 1;
-  margin-left: 280px;
   display: flex;
   flex-direction: column;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Dynamic margins based on sidebar state */
+.mainContent.sidebarExpanded {
+  margin-left: 280px;
+}
+
+.mainContent.sidebarCollapsed {
+  margin-left: 80px;
 }
 
 .content {
@@ -187,7 +196,9 @@
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
-  .mainContent {
+  .mainContent,
+  .mainContent.sidebarExpanded,
+  .mainContent.sidebarCollapsed {
     margin-left: 0;
   }
   
@@ -217,6 +228,7 @@
     height: 40px;
   }
 }
+
 .backBtn {
   background: #f3f4f6;
   color: #374151;

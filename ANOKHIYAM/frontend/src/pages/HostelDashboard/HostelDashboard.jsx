@@ -1,15 +1,122 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import HostelSidebar from '../../components/HostelSidebar/HostelSidebar';
 import HostelHeader from '../../components/HostelHeader/HostelHeader';
-import TotalRoomsCard from '../../components/HostelCards/TotalRoomsCard';
-import OccupancyCard from '../../components/HostelCards/OccupancyCard';
-import CheckInsCard from '../../components/HostelCards/CheckInsCard';
-import MaintenanceCard from '../../components/HostelCards/MaintenanceCard';
-import RoleBasedUserManagement from '../../components/UserManagement/RoleBasedUserManagement';
 import styles from './HostelDashboard.module.css';
 
 const HostelDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
+  const [sidebarState, setSidebarState] = useState(2); // Track sidebar state
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check for mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+    };
+
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
+
+  // Dashboard Cards Components
+  const TotalRoomsCard = () => (
+    <div className={styles.statsCard}>
+      <div className={styles.cardHeader}>
+        <div className={styles.cardIcon}>
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="3" y="3" width="18" height="18" rx="2" ry="2" stroke="currentColor" strokeWidth="2"/>
+            <line x1="9" y1="9" x2="9" y2="21" stroke="currentColor" strokeWidth="2"/>
+            <line x1="15" y1="9" x2="15" y2="21" stroke="currentColor" strokeWidth="2"/>
+            <line x1="3" y1="15" x2="21" y2="15" stroke="currentColor" strokeWidth="2"/>
+          </svg>
+        </div>
+        <div className={styles.cardTrend}>
+          <span className={`${styles.trendValue} ${styles.positive}`}>+2</span>
+        </div>
+      </div>
+      <div className={styles.cardContent}>
+        <h3 className={styles.cardTitle}>Total Rooms</h3>
+        <div className={styles.cardValue}>156</div>
+        <p className={styles.cardDescription}>Available: 24 • Occupied: 132</p>
+      </div>
+    </div>
+  );
+
+  const OccupancyCard = () => (
+    <div className={styles.statsCard}>
+      <div className={styles.cardHeader}>
+        <div className={styles.cardIcon}>
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="currentColor" strokeWidth="2"/>
+            <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2"/>
+          </svg>
+        </div>
+        <div className={styles.cardTrend}>
+          <span className={`${styles.trendValue} ${styles.positive}`}>+5%</span>
+        </div>
+      </div>
+      <div className={styles.cardContent}>
+        <h3 className={styles.cardTitle}>Occupancy Rate</h3>
+        <div className={styles.cardValue}>84.6%</div>
+        <div className={styles.progressBar}>
+          <div className={styles.progressFill} style={{ width: '84.6%' }}></div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const CheckInsCard = () => (
+    <div className={styles.statsCard}>
+      <div className={styles.cardHeader}>
+        <div className={styles.cardIcon}>
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M9 11L12 14L22 4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M21 12V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3.89543 5 5 3.89543 5 3H16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+          </svg>
+        </div>
+        <div className={styles.cardTrend}>
+          <span className={`${styles.trendValue} ${styles.positive}`}>+12</span>
+        </div>
+      </div>
+      <div className={styles.cardContent}>
+        <h3 className={styles.cardTitle}>Today's Check-ins</h3>
+        <div className={styles.cardValue}>28</div>
+        <p className={styles.cardDescription}>Check-outs: 15 • Pending: 3</p>
+      </div>
+    </div>
+  );
+
+  const MaintenanceCard = () => (
+    <div className={styles.statsCard}>
+      <div className={styles.cardHeader}>
+        <div className={styles.cardIcon}>
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M14.7 6.3C15.3 5.7 15.3 4.7 14.7 4.1C14.1 3.5 13.1 3.5 12.5 4.1L12 4.6L11.5 4.1C10.9 3.5 9.9 3.5 9.3 4.1C8.7 4.7 8.7 5.7 9.3 6.3L10.6 7.6L11.3 8.3L12 9L12.7 8.3L14 7L14.7 6.3Z" stroke="currentColor" strokeWidth="2"/>
+            <path d="M8.5 10.5L7 12L15 20L17 18L9 10" stroke="currentColor" strokeWidth="2"/>
+            <path d="M15 5L17 7" stroke="currentColor" strokeWidth="2"/>
+            <path d="M18 8L20 10" stroke="currentColor" strokeWidth="2"/>
+          </svg>
+        </div>
+        <div className={styles.cardTrend}>
+          <span className={`${styles.trendValue} ${styles.negative}`}>-3</span>
+        </div>
+      </div>
+      <div className={styles.cardContent}>
+        <h3 className={styles.cardTitle}>Maintenance Requests</h3>
+        <div className={styles.cardValue}>7</div>
+        <p className={styles.cardDescription}>Pending: 4 • In Progress: 3</p>
+      </div>
+    </div>
+  );
+
+  const RoleBasedUserManagement = () => (
+    <div className={styles.contentSection}>
+      <h2>User Management</h2>
+      <p>Manage hostel staff and student user accounts</p>
+      {/* Add your user management component content here */}
+    </div>
+  );
 
   const renderContent = () => {
     switch(activeTab) {
@@ -133,11 +240,23 @@ const HostelDashboard = () => {
     }
   };
 
+  // Determine main content class based on sidebar state and mobile
+  const getMainContentClass = () => {
+    if (isMobile) return styles.mainContent;
+    
+    // sidebarState: 0 = collapsed, 1 = hover, 2 = expanded, 3 = pinned
+    const isCollapsed = sidebarState === 0 || sidebarState === 1;
+    return `${styles.mainContent} ${isCollapsed ? styles.mainContentCollapsed : styles.mainContentExpanded}`;
+  };
+
   return (
     <div className={styles.dashboardContainer}>
-      <HostelSidebar activeItem="Dashboard" />
-      <div className={styles.mainContent}>
-        <HostelHeader />
+      <HostelSidebar 
+        activeItem="Dashboard" 
+        onSidebarStateChange={setSidebarState}
+      />
+      <div className={getMainContentClass()}>
+        <HostelHeader sidebarState={sidebarState} />
         <div className={styles.content}>
           {activeTab !== 'overview' && (
             <button 

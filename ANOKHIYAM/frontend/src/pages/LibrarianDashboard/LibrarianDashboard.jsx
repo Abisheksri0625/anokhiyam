@@ -10,6 +10,7 @@ import styles from './LibrarianDashboard.module.css';
 
 const LibrarianDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
+  const [sidebarState, setSidebarState] = useState(1); // 0: collapsed, 1: expanded
 
   const renderContent = () => {
     switch(activeTab) {
@@ -135,9 +136,12 @@ const LibrarianDashboard = () => {
 
   return (
     <div className={styles.dashboardContainer}>
-      <LibrarianSidebar activeItem="Dashboard" />
-      <div className={styles.mainContent}>
-        <LibrarianHeader />
+      <LibrarianSidebar 
+        activeItem="Dashboard" 
+        onSidebarStateChange={setSidebarState}
+      />
+      <div className={`${styles.mainContent} ${sidebarState === 1 ? styles.sidebarExpanded : styles.sidebarCollapsed}`}>
+        <LibrarianHeader sidebarState={sidebarState} />
         <div className={styles.content}>
           {activeTab !== 'overview' && (
             <button 
