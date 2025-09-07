@@ -1,8 +1,9 @@
+// src/config/firebase.js
 // Firebase configuration for ANOKHIYAM ERP System
+
 import { initializeApp } from 'firebase/app';
 import { getAuth, connectAuthEmulator } from 'firebase/auth';
 import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore';
-import { getStorage, connectStorageEmulator } from 'firebase/storage';
 import { getAnalytics } from 'firebase/analytics';
 
 // Your web app's Firebase configuration
@@ -20,10 +21,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 
 // Initialize Firebase Analytics (optional)
-let analytics;
-if (typeof window !== 'undefined') {
-  analytics = getAnalytics(app);
-}
+const analytics = getAnalytics(app);
 
 // Initialize Firebase Authentication and get a reference to the service
 export const auth = getAuth(app);
@@ -31,17 +29,12 @@ export const auth = getAuth(app);
 // Initialize Cloud Firestore and get a reference to the service
 export const db = getFirestore(app);
 
-// Initialize Firebase Storage and get a reference to the service
-export const storage = getStorage(app);
-
 // Connect to emulators if in development (optional)
-if (process.env.NODE_ENV === 'development' && typeof window !== 'undefined') {
+if (process.env.NODE_ENV === 'development') {
   // Uncomment these lines if you want to use Firebase emulators for local development
   // connectAuthEmulator(auth, "http://localhost:9099");
   // connectFirestoreEmulator(db, 'localhost', 8080);
-  // connectStorageEmulator(storage, 'localhost', 9199);
 }
 
-// Export the initialized app and analytics as default
-export { analytics };
+// Export the initialized app as default
 export default app;
