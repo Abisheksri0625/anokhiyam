@@ -1,23 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import HostelSidebar from '../../components/HostelSidebar/HostelSidebar';
 import HostelHeader from '../../components/HostelHeader/HostelHeader';
 import styles from './HostelDashboard.module.css';
 
 const HostelDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
-  const [sidebarState, setSidebarState] = useState(2); // Track sidebar state
-  const [isMobile, setIsMobile] = useState(false);
-
-  // Check for mobile screen size
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024);
-    };
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   // Dashboard Cards Components
   const TotalRoomsCard = () => (
@@ -114,7 +102,6 @@ const HostelDashboard = () => {
     <div className={styles.contentSection}>
       <h2>User Management</h2>
       <p>Manage hostel staff and student user accounts</p>
-      {/* Add your user management component content here */}
     </div>
   );
 
@@ -240,23 +227,15 @@ const HostelDashboard = () => {
     }
   };
 
-  // Determine main content class based on sidebar state and mobile
-  const getMainContentClass = () => {
-    if (isMobile) return styles.mainContent;
-    
-    // sidebarState: 0 = collapsed, 1 = hover, 2 = expanded, 3 = pinned
-    const isCollapsed = sidebarState === 0 || sidebarState === 1;
-    return `${styles.mainContent} ${isCollapsed ? styles.mainContentCollapsed : styles.mainContentExpanded}`;
-  };
-
   return (
     <div className={styles.dashboardContainer}>
       <HostelSidebar 
         activeItem="Dashboard" 
-        onSidebarStateChange={setSidebarState}
+        isCollapsed={isCollapsed}
+        setIsCollapsed={setIsCollapsed}
       />
-      <div className={getMainContentClass()}>
-        <HostelHeader sidebarState={sidebarState} />
+      <div className={`${styles.mainContent} ${isCollapsed ? styles.collapsed : ''}`}>
+        <HostelHeader isCollapsed={isCollapsed} />
         <div className={styles.content}>
           {activeTab !== 'overview' && (
             <button 

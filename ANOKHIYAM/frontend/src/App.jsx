@@ -46,7 +46,7 @@ import TeacherClasses from './pages/Teacher/TeacherClasses/TeacherClasses';
 import TeacherNotifications from './pages/Teacher/TeacherNotifications/TeacherNotifications';
 import TeacherSettings from './pages/Teacher/TeacherSettings/TeacherSettings';
 
-// Librarian Pages - CORRECTED IMPORT PATHS
+// Librarian Pages
 import BookManagement from './pages/librarian/BookManagement/BookManagement';
 import Inventory from './pages/librarian/Inventory/Inventory';
 import IssuedBooks from './pages/librarian/IssuedBooks/IssuedBooks';
@@ -56,6 +56,17 @@ import OverdueBooks from './pages/librarian/OverdueBooks/OverdueBooks';
 import Reports from './pages/librarian/Reports/Reports';
 import LibrarianNotifications from './pages/librarian/LibrarianNotifications/LibrarianNotifications';
 import LibrarianSettings from './pages/librarian/LibrarianSettings/LibrarianSettings';
+
+// Hostel Warden Pages
+import RoomManagement from './pages/hostelwarden/RoomManagement/RoomManagement';
+import Occupancy from './pages/hostelwarden/Occupancy/Occupancy';
+import HostelStudentRecords from './pages/hostelwarden/StudentRecords/StudentRecords';
+import CheckInOut from './pages/hostelwarden/CheckInOut/CheckInOut';
+import VisitorLogs from './pages/hostelwarden/VisitorLogs/VisitorLogs';
+import Maintenance from './pages/hostelwarden/Maintenance/Maintenance';
+import HostelReports from './pages/hostelwarden/Reports/Reports';
+import HostelNotifications from './pages/hostelwarden/HostelNotifications/HostelNotifications';
+import HostelSettings from './pages/hostelwarden/HostelSettings/HostelSettings';
 
 import './index.css';
 
@@ -288,6 +299,53 @@ function App() {
             <Route path="/hostel-dashboard" element={
               <ProtectedRoute requiredRole="hostel_warden">
                 <HostelDashboard />
+              </ProtectedRoute>
+            } />
+
+            {/* Hostel Warden Routes */}
+            <Route path="/hostel/rooms" element={
+              <ProtectedRoute requiredRole="hostel_warden">
+                <RoomManagement />
+              </ProtectedRoute>
+            } />
+            <Route path="/hostel/occupancy" element={
+              <ProtectedRoute requiredRole="hostel_warden">
+                <Occupancy />
+              </ProtectedRoute>
+            } />
+            <Route path="/hostel/students" element={
+              <ProtectedRoute requiredRole="hostel_warden">
+                <HostelStudentRecords />
+              </ProtectedRoute>
+            } />
+            <Route path="/hostel/check-in-out" element={
+              <ProtectedRoute requiredRole="hostel_warden">
+                <CheckInOut />
+              </ProtectedRoute>
+            } />
+            <Route path="/hostel/visitors" element={
+              <ProtectedRoute requiredRole="hostel_warden">
+                <VisitorLogs />
+              </ProtectedRoute>
+            } />
+            <Route path="/hostel/maintenance" element={
+              <ProtectedRoute requiredRole="hostel_warden">
+                <Maintenance />
+              </ProtectedRoute>
+            } />
+            <Route path="/hostel/reports" element={
+              <ProtectedRoute requiredRole="hostel_warden">
+                <HostelReports />
+              </ProtectedRoute>
+            } />
+            <Route path="/hostel/notifications" element={
+              <ProtectedRoute requiredRole="hostel_warden">
+                <HostelNotifications />
+              </ProtectedRoute>
+            } />
+            <Route path="/hostel/settings" element={
+              <ProtectedRoute requiredRole="hostel_warden">
+                <HostelSettings />
               </ProtectedRoute>
             } />
           </Routes>
