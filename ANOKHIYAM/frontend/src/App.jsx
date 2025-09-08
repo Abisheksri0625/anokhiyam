@@ -46,6 +46,17 @@ import TeacherClasses from './pages/Teacher/TeacherClasses/TeacherClasses';
 import TeacherNotifications from './pages/Teacher/TeacherNotifications/TeacherNotifications';
 import TeacherSettings from './pages/Teacher/TeacherSettings/TeacherSettings';
 
+// Librarian Pages - CORRECTED IMPORT PATHS
+import BookManagement from './pages/librarian/BookManagement/BookManagement';
+import Inventory from './pages/librarian/Inventory/Inventory';
+import IssuedBooks from './pages/librarian/IssuedBooks/IssuedBooks';
+import Returns from './pages/librarian/Returns/Returns';
+import StudentRecords from './pages/librarian/StudentRecords/StudentRecords';
+import OverdueBooks from './pages/librarian/OverdueBooks/OverdueBooks';
+import Reports from './pages/librarian/Reports/Reports';
+import LibrarianNotifications from './pages/librarian/LibrarianNotifications/LibrarianNotifications';
+import LibrarianSettings from './pages/librarian/LibrarianSettings/LibrarianSettings';
+
 import './index.css';
 
 function App() {
@@ -69,55 +80,46 @@ function App() {
                 <StudentProfile />
               </ProtectedRoute>
             } />
-
             <Route path="/student/grades" element={
               <ProtectedRoute requiredRole="student">
                 <StudentGrades />
               </ProtectedRoute>
             } />
-
             <Route path="/student/attendance" element={
               <ProtectedRoute requiredRole="student">
                 <StudentAttendance />
               </ProtectedRoute>
             } />
-
             <Route path="/student/assignments" element={
               <ProtectedRoute requiredRole="student">
                 <StudentAssignments />
               </ProtectedRoute>
             } />
-
             <Route path="/student/schedule" element={
               <ProtectedRoute requiredRole="student">
                 <StudentSchedule />
               </ProtectedRoute>
             } />
-
             <Route path="/student/library" element={
               <ProtectedRoute requiredRole="student">
                 <StudentLibrary />
               </ProtectedRoute>
             } />
-
             <Route path="/student/hostel" element={
               <ProtectedRoute requiredRole="student">
                 <StudentHostel />
               </ProtectedRoute>
             } />
-
             <Route path="/student/fees" element={
               <ProtectedRoute requiredRole="student">
                 <StudentFees />
               </ProtectedRoute>
             } />
-
             <Route path="/student/notifications" element={
               <ProtectedRoute requiredRole="student">
                 <StudentNotifications />
               </ProtectedRoute>
             } />
-
             <Route path="/student/settings" element={
               <ProtectedRoute requiredRole="student">
                 <StudentSettings />
@@ -136,49 +138,41 @@ function App() {
                 <TeacherStudents />
               </ProtectedRoute>
             } />
-
             <Route path="/teacher/analytics" element={
               <ProtectedRoute requiredRole="teacher">
                 <TeacherAnalytics />
               </ProtectedRoute>
             } />
-
             <Route path="/teacher/interventions" element={
               <ProtectedRoute requiredRole="teacher">
                 <TeacherInterventions />
               </ProtectedRoute>
             } />
-
             <Route path="/teacher/assignments" element={
               <ProtectedRoute requiredRole="teacher">
                 <TeacherAssignments />
               </ProtectedRoute>
             } />
-
             <Route path="/teacher/gradebook" element={
               <ProtectedRoute requiredRole="teacher">
                 <TeacherGradebook />
               </ProtectedRoute>
             } />
-
             <Route path="/teacher/attendance" element={
               <ProtectedRoute requiredRole="teacher">
                 <TeacherAttendance />
               </ProtectedRoute>
             } />
-
             <Route path="/teacher/classes" element={
               <ProtectedRoute requiredRole="teacher">
                 <TeacherClasses />
               </ProtectedRoute>
             } />
-
             <Route path="/teacher/notifications" element={
               <ProtectedRoute requiredRole="teacher">
                 <TeacherNotifications />
               </ProtectedRoute>
             } />
-
             <Route path="/teacher/settings" element={
               <ProtectedRoute requiredRole="teacher">
                 <TeacherSettings />
@@ -197,49 +191,41 @@ function App() {
                 <EntranceResults />
               </ProtectedRoute>
             } />
-
             <Route path="/admin/semester-results" element={
               <ProtectedRoute requiredRole="admin">
                 <SemesterResults />
               </ProtectedRoute>
             } />
-
             <Route path="/admin/publish-results" element={
               <ProtectedRoute requiredRole="admin">
                 <PublishResults />
               </ProtectedRoute>
             } />
-
             <Route path="/admin/admissions" element={
               <ProtectedRoute requiredRole="admin">
                 <Admissions />
               </ProtectedRoute>
             } />
-
             <Route path="/admin/users" element={
               <ProtectedRoute requiredRole="admin">
                 <UserManagement />
               </ProtectedRoute>
             } />
-
             <Route path="/admin/analytics" element={
               <ProtectedRoute requiredRole="admin">
                 <Analytics />
               </ProtectedRoute>
             } />
-
             <Route path="/admin/staff" element={
               <ProtectedRoute requiredRole="admin">
                 <StaffManagement />
               </ProtectedRoute>
             } />
-
             <Route path="/admin/notifications" element={
               <ProtectedRoute requiredRole="admin">
                 <Notifications />
               </ProtectedRoute>
             } />
-
             <Route path="/admin/settings" element={
               <ProtectedRoute requiredRole="admin">
                 <Settings />
@@ -249,6 +235,53 @@ function App() {
             <Route path="/librarian-dashboard" element={
               <ProtectedRoute requiredRole="librarian">
                 <LibrarianDashboard />
+              </ProtectedRoute>
+            } />
+
+            {/* Librarian Routes */}
+            <Route path="/librarian/books" element={
+              <ProtectedRoute requiredRole="librarian">
+                <BookManagement />
+              </ProtectedRoute>
+            } />
+            <Route path="/librarian/inventory" element={
+              <ProtectedRoute requiredRole="librarian">
+                <Inventory />
+              </ProtectedRoute>
+            } />
+            <Route path="/librarian/issued-books" element={
+              <ProtectedRoute requiredRole="librarian">
+                <IssuedBooks />
+              </ProtectedRoute>
+            } />
+            <Route path="/librarian/returns" element={
+              <ProtectedRoute requiredRole="librarian">
+                <Returns />
+              </ProtectedRoute>
+            } />
+            <Route path="/librarian/students" element={
+              <ProtectedRoute requiredRole="librarian">
+                <StudentRecords />
+              </ProtectedRoute>
+            } />
+            <Route path="/librarian/overdue" element={
+              <ProtectedRoute requiredRole="librarian">
+                <OverdueBooks />
+              </ProtectedRoute>
+            } />
+            <Route path="/librarian/reports" element={
+              <ProtectedRoute requiredRole="librarian">
+                <Reports />
+              </ProtectedRoute>
+            } />
+            <Route path="/librarian/notifications" element={
+              <ProtectedRoute requiredRole="librarian">
+                <LibrarianNotifications />
+              </ProtectedRoute>
+            } />
+            <Route path="/librarian/settings" element={
+              <ProtectedRoute requiredRole="librarian">
+                <LibrarianSettings />
               </ProtectedRoute>
             } />
             

@@ -1,14 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './LibrarianSidebar.module.css';
+import LogoImage from '../../assets/logo.png'; // Adjust path as needed
 
-const LibrarianSidebar = ({ activeItem = 'dashboard', onSidebarStateChange }) => {
+const LibrarianSidebar = ({ activeItem = 'Dashboard', isCollapsed, setIsCollapsed }) => {
   const navigate = useNavigate();
-  const [sidebarState, setSidebarState] = useState(1); // 0: collapsed, 1: expanded
-  const [hoveredIndex, setHoveredIndex] = useState(null);
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isMobile, setIsMobile] = useState(false);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [hoveredItem, setHoveredItem] = useState(null);
 
   const menuItems = [
     {
@@ -32,18 +29,6 @@ const LibrarianSidebar = ({ activeItem = 'dashboard', onSidebarStateChange }) =>
       ]
     }
   ];
-
-  // Notify parent component when sidebar state changes
-  useEffect(() => {
-    if (onSidebarStateChange) {
-      onSidebarStateChange(sidebarState);
-    }
-  }, [sidebarState, onSidebarStateChange]);
-
-  const handleSidebarToggle = () => {
-    const newState = sidebarState === 0 ? 1 : 0;
-    setSidebarState(newState);
-  };
 
   const getIcon = (iconType) => {
     const icons = {
@@ -107,6 +92,7 @@ const LibrarianSidebar = ({ activeItem = 'dashboard', onSidebarStateChange }) =>
       notifications: (
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M18 8C18 6.4087 17.3679 4.88258 16.2426 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.88258 2.63214 7.75736 3.75736C6.63214 4.88258 6 6.4087 6 8C6 15 3 17 3 17H21C21 17 18 15 18 8Z" stroke="currentColor" strokeWidth="2"/>
+          <path d="M13.73 21C13.5542 21.3031 13.3019 21.5547 12.9982 21.7295C12.6946 21.9044 12.3504 21.9965 12 21.9965C11.6496 21.9965 11.3054 21.9044 11.0018 21.7295C10.6982 21.5547 10.4458 21.3031 10.27 21" stroke="currentColor" strokeWidth="2"/>
         </svg>
       ),
       settings: (
@@ -119,160 +105,72 @@ const LibrarianSidebar = ({ activeItem = 'dashboard', onSidebarStateChange }) =>
     return icons[iconType] || icons.dashboard;
   };
 
-  // Flatten items for easier indexing
-  const allItems = menuItems.reduce((acc, section) => [...acc, ...section.items], []);
-
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  useEffect(() => {
-    // Set active index based on activeItem prop
-    const foundIndex = allItems.findIndex(item => item.id === activeItem);
-    if (foundIndex !== -1) {
-      setActiveIndex(foundIndex);
-    }
-  }, [activeItem, allItems]);
-
-  const handleItemClick = (item, index) => {
-    setActiveIndex(index);
-    if (navigate) {
-      navigate(item.path);
-    }
-    if (isMobile) {
-      setMobileMenuOpen(false);
-    }
+  const handleMenuClick = (item) => {
+    navigate(item.path);
   };
 
-  // Mobile version
-  if (isMobile) {
-    return (
-      <>
-        <button
-          className={`${styles.mobileButton} ${mobileMenuOpen ? styles.hidden : ''}`}
-          onClick={() => setMobileMenuOpen(true)}
-        >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <line x1="3" y1="6" x2="21" y2="6"></line>
-            <line x1="3" y1="12" x2="21" y2="12"></line>
-            <line x1="3" y1="18" x2="21" y2="18"></line>
-          </svg>
-        </button>
-
-        {mobileMenuOpen && (
-          <div className={styles.overlay} onClick={() => setMobileMenuOpen(false)} />
+  return (
+    <div className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ''}`}>
+      <div className={styles.logoSection}>
+        {!isCollapsed && (
+          <>
+            <button 
+              className={styles.hamburgerBtn}
+              onClick={() => setIsCollapsed(!isCollapsed)}
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+            <span className={styles.logoText}>ANOKHIYAM</span>
+          </>
         )}
 
-        <div className={`${styles.sidebarMobile} ${!mobileMenuOpen ? styles.closed : ''}`}>
-          <div className={styles.mobileHeader}>
-            <span className={styles.logoText}>ANOKHIYAM</span>
-            <button className={styles.closeButton} onClick={() => setMobileMenuOpen(false)}>
-              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
-              </svg>
+        {isCollapsed && (
+          <div className={styles.collapsedHeader}>
+            <div className={styles.logoIcon}>
+              <img src={LogoImage} alt="Logo" />
+            </div>
+            <button 
+              className={styles.hamburgerBtnCollapsed}
+              onClick={() => setIsCollapsed(!isCollapsed)}
+            >
+              <span></span>
+              <span></span>
+              <span></span>
             </button>
           </div>
-
-          <div className={styles.mobileContent}>
-            {menuItems.map((section, sectionIndex) => (
-              <div key={sectionIndex} className={styles.menuSection}>
-                <div className={styles.sectionTitle}>{section.section}</div>
-                {section.items.map((item, itemIndex) => {
-                  const globalIndex = menuItems
-                    .slice(0, sectionIndex)
-                    .reduce((acc, s) => acc + s.items.length, 0) + itemIndex;
-                  
-                  return (
-                    <div
-                      key={item.id}
-                      className={`${styles.menuItemExpanded} ${activeIndex === globalIndex ? styles.active : ''}`}
-                      onClick={() => handleItemClick(item, globalIndex)}
-                    >
-                      <div className={styles.menuItemIcon}>
-                        {getIcon(item.icon)}
-                      </div>
-                      <span className={styles.menuItemLabel}>{item.label}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            ))}
-          </div>
-        </div>
-      </>
-    );
-  }
-
-  // Desktop version
-  return (
-    <div className={`${styles.sidebar} ${sidebarState === 1 ? styles.expanded : styles.collapsed}`}>
-      <div className={styles.header}>
-        <div className={styles.logoContainer}>
-          {sidebarState === 0 ? (
-            <div className={styles.logoIcon}>A</div>
-          ) : (
-            <span className={styles.logoText}>ANOKHIYAM</span>
-          )}
-        </div>
-        <button
-          className={styles.expandButton}
-          onClick={handleSidebarToggle}
-        >
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            className={`${styles.expandIcon} ${sidebarState === 1 ? styles.rotated : ''}`}
-          >
-            <polyline points="9,18 15,12 9,6"></polyline>
-          </svg>
-        </button>
+        )}
       </div>
 
-      <div className={styles.content}>
+      <div className={styles.menu}>
         {menuItems.map((section, sectionIndex) => (
           <div key={sectionIndex} className={styles.menuSection}>
-            {sidebarState === 1 && (
+            {!isCollapsed && (
               <div className={styles.sectionTitle}>{section.section}</div>
             )}
-            {section.items.map((item, itemIndex) => {
-              const globalIndex = menuItems
-                .slice(0, sectionIndex)
-                .reduce((acc, s) => acc + s.items.length, 0) + itemIndex;
-              
-              return (
-                <div
-                  key={item.id}
-                  className={`${
-                    sidebarState === 0 ? styles.menuItemCollapsed : styles.menuItemExpanded
-                  } ${activeIndex === globalIndex ? styles.active : ''} ${
-                    hoveredIndex === globalIndex ? styles.hovered : ''
-                  }`}
-                  onClick={() => handleItemClick(item, globalIndex)}
-                  onMouseEnter={() => setHoveredIndex(globalIndex)}
-                  onMouseLeave={() => setHoveredIndex(null)}
-                >
-                  <div className={styles.menuItemIcon}>
-                    {getIcon(item.icon)}
-                  </div>
-                  {sidebarState === 1 && (
-                    <span className={styles.menuItemLabel}>{item.label}</span>
-                  )}
-                  {sidebarState === 0 && hoveredIndex === globalIndex && (
-                    <div className={styles.tooltip}>{item.label}</div>
-                  )}
+            {section.items.map((item) => (
+              <div
+                key={item.id}
+                className={`${styles.menuItem} ${activeItem.toLowerCase() === item.id ? styles.active : ''}`}
+                onClick={() => handleMenuClick(item)}
+                onMouseEnter={() => setHoveredItem(item.id)}
+                onMouseLeave={() => setHoveredItem(null)}
+                title={isCollapsed ? item.label : ''}
+              >
+                <div className={styles.menuIcon}>
+                  {getIcon(item.icon)}
                 </div>
-              );
-            })}
+                {!isCollapsed && (
+                  <span className={styles.menuLabel}>{item.label}</span>
+                )}
+                {isCollapsed && hoveredItem === item.id && (
+                  <div className={styles.tooltip}>
+                    {item.label}
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
         ))}
       </div>

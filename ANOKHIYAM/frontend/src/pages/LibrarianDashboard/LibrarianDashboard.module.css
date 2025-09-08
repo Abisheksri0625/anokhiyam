@@ -7,18 +7,14 @@
 
 .mainContent {
   flex: 1;
+  margin-left: 280px; /* Add this - it was missing */
   display: flex;
   flex-direction: column;
-  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: margin-left 0.3s ease;
 }
 
-/* Dynamic margins based on sidebar state */
-.mainContent.sidebarExpanded {
-  margin-left: 280px;
-}
-
-.mainContent.sidebarCollapsed {
-  margin-left: 80px;
+.mainContent.collapsed {
+  margin-left: 70px; /* Add this - it was missing */
 }
 
 .content {
@@ -194,41 +190,6 @@
   font-weight: 500;
 }
 
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .mainContent,
-  .mainContent.sidebarExpanded,
-  .mainContent.sidebarCollapsed {
-    margin-left: 0;
-  }
-  
-  .content {
-    padding: 1rem;
-  }
-  
-  .pageTitle {
-    font-size: 1.5rem;
-  }
-  
-  .statsGrid {
-    grid-template-columns: 1fr;
-  }
-  
-  .actionGrid {
-    grid-template-columns: 1fr;
-  }
-  
-  .actionBtn {
-    padding: 1rem;
-  }
-  
-  .actionIcon {
-    font-size: 1.25rem;
-    width: 40px;
-    height: 40px;
-  }
-}
-
 .backBtn {
   background: #f3f4f6;
   color: #374151;
@@ -264,4 +225,71 @@
 .contentSection p {
   color: #6b7280;
   margin: 0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .mainContent {
+    margin-left: 0;
+  }
+  
+  .mainContent.collapsed {
+    margin-left: 0;
+  }
+  
+  .content {
+    padding: 1rem;
+  }
+  
+  .pageTitle {
+    font-size: 1.5rem;
+  }
+  
+  .statsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .actionGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .actionBtn {
+    padding: 1rem;
+  }
+  
+  .actionIcon {
+    font-size: 1.25rem;
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* Tablet Responsive */
+@media (max-width: 1024px) {
+  .content {
+    padding: 1.5rem;
+  }
+  
+  .statsGrid {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  }
+  
+  .actionGrid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+}
+
+/* Large Screen Adjustments */
+@media (min-width: 1400px) {
+  .content {
+    max-width: 1600px;
+  }
+  
+  .statsGrid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  
+  .actionGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }
