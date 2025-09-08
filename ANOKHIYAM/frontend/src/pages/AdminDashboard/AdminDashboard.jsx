@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AdminSidebar from '../../components/AdminSidebar/AdminSidebar';
 import AdminHeader from '../../components/AdminHeader/AdminHeader';
 import EntranceResultsCard from '../../components/AdminCards/EntranceResultsCard';
@@ -10,12 +10,17 @@ import styles from './AdminDashboard.module.css';
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
     <div className={styles.dashboardContainer}>
-      <AdminSidebar activeItem="dashboard" />
-      <div className={styles.mainContent}>
-        <AdminHeader />
+      <AdminSidebar 
+        activeItem="dashboard" 
+        isCollapsed={isCollapsed}
+        setIsCollapsed={setIsCollapsed}
+      />
+      <div className={`${styles.mainContent} ${isCollapsed ? styles.collapsed : ''}`}>
+        <AdminHeader isCollapsed={isCollapsed} />
         <div className={styles.content}>
           <div className={styles.pageHeader}>
             <h1 className={styles.pageTitle}>Admin Dashboard</h1>

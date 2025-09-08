@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './AdminSidebar.module.css';
+import LogoImage from '../../assets/logo.png'; // Adjust path as needed
 
-const AdminSidebar = ({ activeItem = 'Dashboard' }) => {
+const AdminSidebar = ({ activeItem = 'Dashboard', isCollapsed, setIsCollapsed }) => {
   const navigate = useNavigate();
   const [hoveredItem, setHoveredItem] = useState(null);
 
@@ -17,7 +18,7 @@ const AdminSidebar = ({ activeItem = 'Dashboard' }) => {
         { id: 'admissions', label: 'Admissions', icon: 'admissions', path: '/admin/admissions' },
         { id: 'users', label: 'User Management', icon: 'users', path: '/admin/users' },
         { id: 'analytics', label: 'Analytics', icon: 'analytics', path: '/admin/analytics' },
-        { id: 'staff', label: 'Staff', icon: 'staff', path: '/admin/staff' } // Changed from system to staff
+        { id: 'staff', label: 'Staff', icon: 'staff', path: '/admin/staff' }
       ]
     },
     {
@@ -82,7 +83,6 @@ const AdminSidebar = ({ activeItem = 'Dashboard' }) => {
           <line x1="6" y1="20" x2="6" y2="14" stroke="currentColor" strokeWidth="2"/>
         </svg>
       ),
-      // New staff icon
       staff: (
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M16 21V19C16 17.9391 15.5786 16.9217 14.8284 16.1716C14.0783 15.4214 13.0609 15 12 15H5C3.93913 15 2.92172 15.4214 1.17157 16.1716C0.421427 16.9217 0 17.9391 0 19V21" stroke="currentColor" strokeWidth="2"/>
@@ -114,15 +114,45 @@ const AdminSidebar = ({ activeItem = 'Dashboard' }) => {
   };
 
   return (
-    <div className={styles.sidebar}>
-      <div className={styles.logo}>
-        <span className={styles.logoText}>ANOKHIYAM</span>
+    <div className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ''}`}>
+      <div className={styles.logoSection}>
+        {!isCollapsed && (
+          <>
+            <button 
+              className={styles.hamburgerBtn}
+              onClick={() => setIsCollapsed(!isCollapsed)}
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+            <span className={styles.logoText}>ANOKHIYAM</span>
+          </>
+        )}
+
+        {isCollapsed && (
+          <div className={styles.collapsedHeader}>
+            <div className={styles.logoIcon}>
+              <img src={LogoImage} alt="Logo" />
+            </div>
+            <button 
+              className={styles.hamburgerBtnCollapsed}
+              onClick={() => setIsCollapsed(!isCollapsed)}
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+          </div>
+        )}
       </div>
 
       <div className={styles.menu}>
         {menuItems.map((section, sectionIndex) => (
           <div key={sectionIndex} className={styles.menuSection}>
-            <div className={styles.sectionTitle}>{section.section}</div>
+            {!isCollapsed && (
+              <div className={styles.sectionTitle}>{section.section}</div>
+            )}
             {section.items.map((item) => (
               <div
                 key={item.id}
@@ -130,11 +160,19 @@ const AdminSidebar = ({ activeItem = 'Dashboard' }) => {
                 onClick={() => handleMenuClick(item)}
                 onMouseEnter={() => setHoveredItem(item.id)}
                 onMouseLeave={() => setHoveredItem(null)}
+                title={isCollapsed ? item.label : ''}
               >
                 <div className={styles.menuIcon}>
                   {getIcon(item.icon)}
                 </div>
-                <span className={styles.menuLabel}>{item.label}</span>
+                {!isCollapsed && (
+                  <span className={styles.menuLabel}>{item.label}</span>
+                )}
+                {isCollapsed && hoveredItem === item.id && (
+                  <div className={styles.tooltip}>
+                    {item.label}
+                  </div>
+                )}
               </div>
             ))}
           </div>
