@@ -12,6 +12,18 @@ import AdminDashboard from './pages/AdminDashboard/AdminDashboard';
 import LibrarianDashboard from './pages/LibrarianDashboard/LibrarianDashboard';
 import HostelDashboard from './pages/HostelDashboard/HostelDashboard';
 
+// Student Pages
+import StudentProfile from './pages/student/StudentProfile/StudentProfile';
+import StudentGrades from './pages/student/StudentGrades/StudentGrades';
+import StudentAttendance from './pages/student/StudentAttendance/StudentAttendance';
+import StudentAssignments from './pages/student/StudentAssignments/StudentAssignments';
+import StudentSchedule from './pages/student/StudentSchedule/StudentSchedule';
+import StudentLibrary from './pages/student/StudentLibrary/StudentLibrary';
+import StudentHostel from './pages/student/StudentHostel/StudentHostel';
+import StudentFees from './pages/student/StudentFees/StudentFees';
+import StudentNotifications from './pages/student/StudentNotifications/StudentNotifications';
+import StudentSettings from './pages/student/StudentSettings/StudentSettings';
+
 // Admin Pages
 import EntranceResults from './pages/Admin/EntranceResults/EntranceResults';
 import SemesterResults from './pages/Admin/SemesterResults/SemesterResults';
@@ -48,6 +60,67 @@ function App() {
             <Route path="/student-dashboard" element={
               <ProtectedRoute requiredRole="student">
                 <StudentDashboard />
+              </ProtectedRoute>
+            } />
+
+            {/* Student Routes */}
+            <Route path="/student/profile" element={
+              <ProtectedRoute requiredRole="student">
+                <StudentProfile />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/student/grades" element={
+              <ProtectedRoute requiredRole="student">
+                <StudentGrades />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/student/attendance" element={
+              <ProtectedRoute requiredRole="student">
+                <StudentAttendance />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/student/assignments" element={
+              <ProtectedRoute requiredRole="student">
+                <StudentAssignments />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/student/schedule" element={
+              <ProtectedRoute requiredRole="student">
+                <StudentSchedule />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/student/library" element={
+              <ProtectedRoute requiredRole="student">
+                <StudentLibrary />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/student/hostel" element={
+              <ProtectedRoute requiredRole="student">
+                <StudentHostel />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/student/fees" element={
+              <ProtectedRoute requiredRole="student">
+                <StudentFees />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/student/notifications" element={
+              <ProtectedRoute requiredRole="student">
+                <StudentNotifications />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/student/settings" element={
+              <ProtectedRoute requiredRole="student">
+                <StudentSettings />
               </ProtectedRoute>
             } />
             
