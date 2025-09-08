@@ -13,6 +13,11 @@
   font-family: 'Poppins', sans-serif;
   box-shadow: 0 4px 24px rgba(16, 185, 129, 0.15);
   backdrop-filter: blur(10px);
+  transition: left 0.3s ease;
+}
+
+.header.collapsed {
+  left: 70px;
 }
 
 .leftSection {
@@ -23,7 +28,6 @@
 }
 
 .menuBtn {
-  display: none;
   background: rgba(255, 255, 255, 0.15);
   border: none;
   width: 44px;
@@ -31,7 +35,10 @@
   border-radius: 0.75rem;
   color: white;
   cursor: pointer;
-  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.3s ease;
   backdrop-filter: blur(10px);
 }
 
@@ -41,8 +48,8 @@
 }
 
 .menuBtn svg {
-  width: 20px;
-  height: 20px;
+  width: 24px;
+  height: 24px;
 }
 
 .searchContainer {
@@ -60,7 +67,6 @@
   height: 20px;
   color: rgba(255, 255, 255, 0.7);
   z-index: 1;
-  transition: color 0.3s ease;
 }
 
 .searchInput {
@@ -90,228 +96,10 @@
   transform: scale(1.02);
 }
 
-.searchInput:focus + .searchIcon {
-  color: rgba(255, 255, 255, 0.9);
-}
-
 .rightSection {
   display: flex;
   align-items: center;
   gap: 1rem;
-}
-
-.quickActions {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-right: 0.5rem;
-}
-
-.quickActionBtn {
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  width: 40px;
-  height: 40px;
-  border-radius: 0.75rem;
-  color: white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-.quickActionBtn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
-}
-
-.quickActionBtn svg {
-  width: 18px;
-  height: 18px;
-}
-
-.notificationContainer {
-  position: relative;
-}
-
-.notificationBtn {
-  background: rgba(255, 255, 255, 0.15);
-  border: none;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  color: white;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  position: relative;
-  backdrop-filter: blur(10px);
-}
-
-.notificationBtn:hover {
-  background: rgba(255, 255, 255, 0.25);
-  transform: scale(1.1);
-}
-
-.notificationBtn svg {
-  width: 22px;
-  height: 22px;
-}
-
-.notificationBadge {
-  position: absolute;
-  top: -2px;
-  right: -2px;
-  background: #ef4444;
-  color: white;
-  font-size: 0.7rem;
-  font-weight: 700;
-  min-width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid #10b981;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.1); }
-  100% { transform: scale(1); }
-}
-
-.notificationDropdown {
-  position: absolute;
-  top: calc(100% + 0.5rem);
-  right: 0;
-  width: 380px;
-  max-height: 500px;
-  background: white;
-  border-radius: 1rem;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
-  overflow: hidden;
-  z-index: 1000;
-  animation: slideDown 0.3s ease;
-}
-
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px) scale(0.95); }
-  to { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-.notificationHeader {
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid #f1f5f9;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: #f8fafc;
-}
-
-.notificationHeader h4 {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #1f2937;
-  margin: 0;
-}
-
-.notificationHeader span {
-  font-size: 0.75rem;
-  color: #6b7280;
-  font-weight: 500;
-}
-
-.notificationList {
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-.notificationItem {
-  padding: 1rem 1.25rem;
-  border-bottom: 1px solid #f1f5f9;
-  display: flex;
-  gap: 0.75rem;
-  transition: background 0.2s ease;
-  position: relative;
-}
-
-.notificationItem:hover {
-  background: #f8fafc;
-}
-
-.notificationItem.unread {
-  background: #f0fdfa;
-}
-
-.notificationItem.unread::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 3px;
-  height: 100%;
-  background: #10b981;
-}
-
-.notificationType {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  margin-top: 0.25rem;
-  flex-shrink: 0;
-}
-
-.notificationType.success { background: #10b981; }
-.notificationType.warning { background: #f59e0b; }
-.notificationType.info { background: #3b82f6; }
-.notificationType.error { background: #ef4444; }
-
-.notificationContent h5 {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #1f2937;
-  margin: 0 0 0.25rem 0;
-}
-
-.notificationContent p {
-  font-size: 0.75rem;
-  color: #6b7280;
-  margin: 0 0 0.25rem 0;
-  line-height: 1.4;
-}
-
-.notificationTime {
-  font-size: 0.7rem;
-  color: #9ca3af;
-  font-weight: 500;
-}
-
-.notificationFooter {
-  padding: 0.75rem 1.25rem;
-  border-top: 1px solid #f1f5f9;
-  display: flex;
-  justify-content: space-between;
-  background: #f8fafc;
-}
-
-.notificationFooter button {
-  background: none;
-  border: none;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #10b981;
-  cursor: pointer;
-  transition: color 0.2s ease;
-}
-
-.notificationFooter button:hover {
-  color: #059669;
 }
 
 .userContainer {
@@ -382,129 +170,67 @@
   position: absolute;
   top: calc(100% + 0.5rem);
   right: 0;
-  min-width: 280px;
+  min-width: 200px;
   background: white;
   border-radius: 1rem;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
   overflow: hidden;
   z-index: 1000;
   animation: slideDown 0.3s ease;
-}
-
-.userDropdownHeader {
-  padding: 1.25rem;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  display: flex;
-  align-items: center;
-  gap: 0.875rem;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.userDropdownAvatar {
-  width: 50px;
-  height: 50px;
-  border-radius: 0.75rem;
-  overflow: hidden;
-  flex-shrink: 0;
-}
-
-.userDropdownAvatar img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.userDropdownHeader h4 {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #1f2937;
-  margin: 0;
-}
-
-.userDropdownHeader p {
-  font-size: 0.75rem;
-  color: #6b7280;
-  margin: 0.125rem 0 0 0;
-  font-weight: 500;
-}
-
-.userDropdownMenu {
-  padding: 0.5rem 0;
-}
-
-.userDropdownMenu a {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem 1.25rem;
-  color: #374151;
-  text-decoration: none;
-  font-size: 0.875rem;
-  font-weight: 500;
-  transition: all 0.2s ease;
-}
-
-.userDropdownMenu a:hover {
-  background: #f8fafc;
-  color: #10b981;
-}
-
-.userDropdownMenu a svg {
-  width: 18px;
-  height: 18px;
-}
-
-.userDropdownFooter {
-  padding: 0.75rem 1.25rem;
-  border-top: 1px solid #e2e8f0;
-  background: #f8fafc;
-}
-
-.logoutBtn {
-  width: 100%;
-  background: none;
-  border: 1px solid #e2e8f0;
-  padding: 0.75rem;
-  border-radius: 0.5rem;
-  color: #ef4444;
-  font-size: 0.875rem;
-  font-weight: 600;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  transition: all 0.2s ease;
+  color: #111;
   font-family: 'Poppins', sans-serif;
 }
 
-.logoutBtn:hover {
-  background: #fef2f2;
-  border-color: #fecaca;
+.userDropdown a,
+.userDropdown button {
+  display: block;
+  padding: 0.75rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-decoration: none;
+  color: #111;
+  cursor: pointer;
+  border: none;
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  border-top: 1px solid #f0f0f0;
+  transition: background 0.2s ease;
 }
 
-.logoutBtn svg {
-  width: 16px;
-  height: 16px;
+.userDropdown a:first-child,
+.userDropdown button:first-child {
+  border-top: none;
 }
 
-/* Enhanced Mobile Responsive */
+.userDropdown a:hover,
+.userDropdown button:hover {
+  background: #f9fafb;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.rotateIcon {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
+}
+
+/* Responsive */
 @media (max-width: 1024px) {
   .header {
-    left: 0;
+    left: 0 !important;
     padding: 0 1rem;
   }
-  
+
   .menuBtn {
     display: flex;
   }
-  
+
   .searchContainer {
     max-width: 300px;
-  }
-  
-  .quickActions {
-    display: none;
   }
 }
 
@@ -512,7 +238,7 @@
   .header {
     height: 70px;
   }
-  
+
   .searchContainer {
     max-width: 200px;
   }
@@ -524,10 +250,9 @@
   .userInfo {
     display: none;
   }
-  
-  .notificationDropdown,
+
   .userDropdown {
-    width: calc(100vw - 2rem);
-    max-width: 300px;
+    width: calc(100vw - 2rem) !important;
+    max-width: 300px !important;
   }
 }
