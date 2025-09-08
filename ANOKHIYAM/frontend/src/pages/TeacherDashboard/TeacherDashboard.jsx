@@ -9,6 +9,7 @@ import styles from './TeacherDashboard.module.css';
 
 const TeacherDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   const renderContent = () => {
     switch(activeTab) {
@@ -155,9 +156,13 @@ const TeacherDashboard = () => {
 
   return (
     <div className={styles.dashboardContainer}>
-      <TeacherSidebar activeItem="Dashboard" />
-      <div className={styles.mainContent}>
-        <TeacherHeader />
+      <TeacherSidebar 
+        activeItem="Dashboard" 
+        isCollapsed={isCollapsed}
+        setIsCollapsed={setIsCollapsed}
+      />
+      <div className={`${styles.mainContent} ${isCollapsed ? styles.collapsed : ''}`}>
+        <TeacherHeader isCollapsed={isCollapsed} />
         <div className={styles.content}>
           {activeTab !== 'overview' && (
             <button 

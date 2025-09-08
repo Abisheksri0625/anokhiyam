@@ -134,8 +134,8 @@
 .menu {
   flex: 1;
   padding: 1rem 0;
-  overflow-y: auto;
-  overflow-x: visible;
+  overflow-y: auto;     /* Vertical only */
+  overflow-x: hidden;   /* Prevent horizontal scrollbar */
 }
 
 .menuSection {

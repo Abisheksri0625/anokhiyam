@@ -19,9 +19,20 @@ import PublishResults from './pages/Admin/PublishResults/PublishResults';
 import Admissions from './pages/Admin/Admissions/Admissions';
 import UserManagement from './pages/Admin/UserManagement/UserManagement';
 import Analytics from './pages/Admin/Analytics/Analytics';
-import StaffManagement from './pages/Admin/StaffManagement/StaffManagement'; // Changed from SystemSettings
+import StaffManagement from './pages/Admin/StaffManagement/StaffManagement';
 import Notifications from './pages/Admin/Notifications/Notifications';
 import Settings from './pages/Admin/Settings/Settings';
+
+// Teacher Pages
+import TeacherStudents from './pages/Teacher/TeacherStudents/TeacherStudents';
+import TeacherAnalytics from './pages/Teacher/TeacherAnalytics/TeacherAnalytics';
+import TeacherInterventions from './pages/Teacher/TeacherInterventions/TeacherInterventions';
+import TeacherAssignments from './pages/Teacher/TeacherAssignments/TeacherAssignments';
+import TeacherGradebook from './pages/Teacher/TeacherGradebook/TeacherGradebook';
+import TeacherAttendance from './pages/Teacher/TeacherAttendance/TeacherAttendance';
+import TeacherClasses from './pages/Teacher/TeacherClasses/TeacherClasses';
+import TeacherNotifications from './pages/Teacher/TeacherNotifications/TeacherNotifications';
+import TeacherSettings from './pages/Teacher/TeacherSettings/TeacherSettings';
 
 import './index.css';
 
@@ -43,6 +54,61 @@ function App() {
             <Route path="/teacher-dashboard" element={
               <ProtectedRoute requiredRole="teacher">
                 <TeacherDashboard />
+              </ProtectedRoute>
+            } />
+
+            {/* Teacher Routes */}
+            <Route path="/teacher/students" element={
+              <ProtectedRoute requiredRole="teacher">
+                <TeacherStudents />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/teacher/analytics" element={
+              <ProtectedRoute requiredRole="teacher">
+                <TeacherAnalytics />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/teacher/interventions" element={
+              <ProtectedRoute requiredRole="teacher">
+                <TeacherInterventions />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/teacher/assignments" element={
+              <ProtectedRoute requiredRole="teacher">
+                <TeacherAssignments />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/teacher/gradebook" element={
+              <ProtectedRoute requiredRole="teacher">
+                <TeacherGradebook />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/teacher/attendance" element={
+              <ProtectedRoute requiredRole="teacher">
+                <TeacherAttendance />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/teacher/classes" element={
+              <ProtectedRoute requiredRole="teacher">
+                <TeacherClasses />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/teacher/notifications" element={
+              <ProtectedRoute requiredRole="teacher">
+                <TeacherNotifications />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/teacher/settings" element={
+              <ProtectedRoute requiredRole="teacher">
+                <TeacherSettings />
               </ProtectedRoute>
             } />
             
