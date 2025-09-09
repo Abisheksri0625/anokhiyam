@@ -49,13 +49,15 @@
   background: #ffffff;
   padding: 1.25rem;
   border-radius: 0.75rem;
+  border-left: 6px solid #fbbf24; /* sleek yellow line */
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .requestCard:hover {
-  transform: translateY(-2px);
+  transform: translateY(-3px);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  background: #fdfdfd;
 }
 
 .requestInfo p {
