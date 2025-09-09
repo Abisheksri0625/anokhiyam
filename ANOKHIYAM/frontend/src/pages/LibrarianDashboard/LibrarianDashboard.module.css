@@ -292,4 +292,57 @@
   .actionGrid {
     grid-template-columns: repeat(3, 1fr);
   }
+  .chartCard {
+  background: #ffffff;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  text-align: left;
+}
+
+.chartTitle {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #1f2937;
+  text-align: center;
+}
+
+.chartRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.chartContainer {
+  width: 160px;
+  height: 160px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chartStats {
+  font-size: 0.85rem;
+  color: #374151;
+  line-height: 1.4;
+}
+
+.chartStats p {
+  margin: 4px 0;
+}
+
+/* Minimal activity icons */
+.activityIcon {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #9ca3af; /* subtle gray dot */
+  flex-shrink: 0;
+  margin-top: 6px;
+}
+
+
+
 }
