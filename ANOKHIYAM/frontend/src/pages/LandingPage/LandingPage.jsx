@@ -46,6 +46,10 @@ const LandingPage = () => {
     navigate('/login');
   };
   
+  const handleCheckResultsClick = () => {
+    navigate('/check-results');
+  };
+  
   const educationImages = [
     { src: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=200&h=250&fit=crop", alt: "Students Learning", label: "Students" },
     { src: "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=200&h=250&fit=crop", alt: "Teaching", label: "Teachers" },
@@ -84,7 +88,7 @@ const LandingPage = () => {
             <button onClick={() => scrollToSection('about')} className={styles.navLink}>About</button>
           </nav>
           <div className={styles.authSection}>
-            <button className={styles.checkResultsBtn}>Check Results</button>
+            <button onClick={handleCheckResultsClick} className={styles.checkResultsBtn}>Check Results</button>
             <button onClick={handleLoginClick} className={styles.loginBtn}>Log In</button>
           </div>
         </div>

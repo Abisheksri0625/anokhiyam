@@ -1,0 +1,466 @@
+.dashboardContainer {
+  display: flex;
+  min-height: 100vh;
+  background: #f8fafc;
+  font-family: 'Poppins', sans-serif;
+}
+
+.mainContent {
+  flex: 1;
+  margin-left: 280px;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.3s ease;
+}
+
+.mainContent.collapsed {
+  margin-left: 70px;
+}
+
+.content {
+  flex: 1;
+  padding: 2rem;
+  margin-top: 70px;
+}
+
+.roomManagementContainer {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.header p {
+  font-size: 1.1rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Statistics Cards */
+.statsContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.statCard {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+  text-align: center;
+  border-left: 4px solid #f63b3b;
+}
+
+.statNumber {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Tabs */
+.tabsContainer {
+  display: flex;
+  background: white;
+  border-radius: 0.75rem;
+  padding: 0.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+}
+
+.tab {
+  flex: 1;
+  padding: 1rem;
+  border: none;
+  background: transparent;
+  color: #6b7280;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.tab:hover {
+  background: #f3f4f6;
+}
+
+.tab.active {
+  background: #3b82f6;
+  color: white;
+}
+
+/* Filters */
+.filtersSection {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1.5rem;
+}
+
+.filterGroup {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filterSelect {
+  padding: 0.75rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 0.875rem;
+  background: white;
+  color: #374151;
+  min-width: 150px;
+  cursor: pointer;
+}
+
+.filterSelect:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* Table Styles */
+.tableContainer {
+  background: white;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+}
+
+.roomsTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.roomsTable th {
+  background: #f9fafb;
+  padding: 1.25rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.875rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.roomsTable td {
+  padding: 1.25rem 1rem;
+  border-bottom: 1px solid #f3f4f6;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.roomsTable tbody tr:hover {
+  background: #f9fafb;
+}
+
+.studentInfo {
+  max-width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Status Badges */
+.statusBadge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.occupied {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.available {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.partial {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.maintenance {
+  background: #e0e7ff;
+  color: #4338ca;
+}
+
+/* Maintenance Badges */
+.maintenanceBadge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.good {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.attention {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.repair {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.under-repair {
+  background: #e0e7ff;
+  color: #4338ca;
+}
+
+/* Priority Badges */
+.priorityBadge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.high {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.medium {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.low {
+  background: #dcfce7;
+  color: #166534;
+}
+
+/* Action Buttons */
+.actionButtons {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.actionBtn {
+  padding: 0.375rem 0.75rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  background: white;
+  color: #374151;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.actionBtn:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+/* Room Allocation Grid */
+.allocationGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.roomCard {
+  background: white;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+  border-left: 4px solid;
+  transition: transform 0.2s ease;
+}
+
+.roomCard:hover {
+  transform: translateY(-2px);
+}
+
+.roomCard.occupied {
+  border-left-color: #dc2626;
+}
+
+.roomCard.available {
+  border-left-color: #16a34a;
+}
+
+.roomCard.partial {
+  border-left-color: #d97706;
+}
+
+.roomCard.maintenance {
+  border-left-color: #4338ca;
+}
+
+.roomHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.roomHeader h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  color: #1f2937;
+}
+
+.statusIndicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.statusIndicator.occupied {
+  background-color: #dc2626;
+}
+
+.statusIndicator.available {
+  background-color: #16a34a;
+}
+
+.statusIndicator.partial {
+  background-color: #d97706;
+}
+
+.statusIndicator.maintenance {
+  background-color: #4338ca;
+}
+
+.roomDetails p {
+  margin: 0.5rem 0;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.roomActions {
+  margin-top: 1.5rem;
+}
+
+.assignBtn {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: #3b82f6;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.assignBtn:hover:not(:disabled) {
+  background: #2563eb;
+}
+
+.assignBtn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .mainContent {
+    margin-left: 0;
+  }
+  
+  .mainContent.collapsed {
+    margin-left: 0;
+  }
+  
+  .content {
+    padding: 1rem;
+  }
+  
+  .header h1 {
+    font-size: 1.75rem;
+  }
+  
+  .statsContainer {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .statCard {
+    padding: 1rem;
+  }
+  
+  .statNumber {
+    font-size: 1.75rem;
+  }
+  
+  .tabsContainer {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .tab {
+    text-align: center;
+  }
+  
+  .filterGroup {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .filterSelect {
+    min-width: unset;
+  }
+  
+  .tableContainer {
+    overflow-x: auto;
+  }
+  
+  .roomsTable {
+    min-width: 800px;
+  }
+  
+  .allocationGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .actionButtons {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .statsContainer {
+    grid-template-columns: 1fr;
+  }
+  
+  .roomsTable th,
+  .roomsTable td {
+    padding: 0.75rem 0.5rem;
+    font-size: 0.8rem;
+  }
+}

@@ -1,63 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './HostelSidebar.module.css';
+import LogoImage from '../../assets/logo.png'; // Adjust path as needed
 
-const HostelSidebar = ({ activeItem = 'Dashboard', onSidebarStateChange }) => {
+const HostelSidebar = ({ activeItem = 'Dashboard', isCollapsed, setIsCollapsed }) => {
   const navigate = useNavigate();
   const [hoveredItem, setHoveredItem] = useState(null);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [sidebarState, setSidebarState] = useState(0); // 0: collapsed, 1: hover, 2: expanded, 3: pinned
-
-  // Notify parent component when sidebar state changes
-  useEffect(() => {
-    if (onSidebarStateChange) {
-      onSidebarStateChange(sidebarState);
-    }
-  }, [sidebarState, onSidebarStateChange]);
-
-  // Icon Components
-  const HamburgerIcon = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <line x1="3" y1="6" x2="21" y2="6" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-      <line x1="3" y1="12" x2="21" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-      <line x1="3" y1="18" x2="21" y2="18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-    </svg>
-  );
-
-  const CloseIcon = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <line x1="18" y1="6" x2="6" y2="18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-      <line x1="6" y1="6" x2="18" y2="18" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-    </svg>
-  );
-
-  const PinIcon = () => (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        stroke="currentColor"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        strokeWidth="1.5"
-        d="m1 19 4.63-4.631m.006-.005-2.78-2.78c-.954-.953.006-2.996 1.31-3.078 1.178-.075 3.905.352 4.812-.555l2.49-2.49c.617-.618.225-2 .185-2.762-.058-1.016 1.558-2.271 2.415-1.414l4.647 4.648c.86.858-.4 2.469-1.413 2.415-.762-.04-2.145-.432-2.763.185l-2.49 2.49c-.906.907-.48 3.633-.554 4.81-.082 1.306-2.125 2.266-3.08 1.31l-2.78-2.78Z"
-      />
-    </svg>
-  );
-
-  const UnpinIcon = () => (
-    <svg width="14" height="24" viewBox="0 0 14 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path
-        fill="currentColor"
-        d="M1.885 1.912C2.035 1.173 2.577.21 3.713.21h6.572c1.139 0 1.68.962 1.829 1.7.08.4.077.813-.01 1.212-.085.387-.27.799-.608 1.104a8.992 8.992 0 0 1-.516.415l-.055.04a9 9 0 0 0-.551.449c-.374.339-.452.536-.453.622v3.522c0 .114.056.31.244.606.182.285.446.594.759.918.3.31.623.613.936.902l.034.033c.31.289.626.583.85.838.684.775.652 1.88.342 2.686-.311.806-1.046 1.665-2.155 1.664H7.75v5.805a.75.75 0 1 1-1.5 0v-5.804H3.068c-1.108-.001-1.844-.858-2.154-1.665-.311-.806-.342-1.911.34-2.685.226-.256.542-.55.852-.839l.034-.033c.312-.29.636-.591.936-.902.313-.324.577-.633.759-.918.188-.296.243-.493.243-.606V5.753c0-.086-.078-.284-.453-.622a8.997 8.997 0 0 0-.552-.448L3.02 4.64a8.999 8.999 0 0 1-.515-.415c-.34-.304-.524-.716-.61-1.102a2.953 2.953 0 0 1-.01-1.212Z"
-      />
-    </svg>
-  );
-
-  const ExpandArrowIcon = () => (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <polyline points="9,18 15,12 9,6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-    </svg>
-  );
 
   const menuItems = [
     {
@@ -81,24 +29,6 @@ const HostelSidebar = ({ activeItem = 'Dashboard', onSidebarStateChange }) => {
       ]
     }
   ];
-
-  // Check for mobile screen size
-  useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 1024);
-    };
-
-    checkMobile();
-    window.addEventListener("resize", checkMobile);
-    return () => window.removeEventListener("resize", checkMobile);
-  }, []);
-
-  // Close sidebar on mobile when navigating
-  useEffect(() => {
-    if (isMobile) {
-      setSidebarOpen(false);
-    }
-  }, [activeItem, isMobile]);
 
   const getIcon = (iconType) => {
     const icons = {
@@ -128,7 +58,7 @@ const HostelSidebar = ({ activeItem = 'Dashboard', onSidebarStateChange }) => {
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="currentColor" strokeWidth="2"/>
           <circle cx="9" cy="7" r="4" stroke="currentColor" strokeWidth="2"/>
-          <path d="M23 21V19C23 18.1645 22.7155 17.3541 22.2094 17.7006C21.7033 16.047 20.9996 15.5867 20.2 15.3829" stroke="currentColor" strokeWidth="2"/>
+          <path d="M23 21V19C23 18.1645 22.7155 17.3541 22.2094 16.7006C21.7033 16.047 20.9996 15.5867 20.2 15.3829" stroke="currentColor" strokeWidth="2"/>
           <path d="M16 3.13C16.8604 3.35031 17.623 3.85071 18.1676 4.55232C18.7122 5.25392 19.0078 6.11683 19.0078 7.005C19.0078 7.89318 18.7122 8.75608 18.1676 9.45769C17.623 10.1593 16.8604 10.6597 16 10.88" stroke="currentColor" strokeWidth="2"/>
         </svg>
       ),
@@ -178,127 +108,48 @@ const HostelSidebar = ({ activeItem = 'Dashboard', onSidebarStateChange }) => {
 
   const handleMenuClick = (item) => {
     navigate(item.path);
-    if (isMobile) {
-      setSidebarOpen(false);
-    }
   };
 
-  // Mobile version
-  if (isMobile) {
-    return (
-      <>
-        {/* Hamburger Menu Button */}
-        <button
-          className={`${styles.hamburgerButton} ${sidebarOpen ? styles.hamburgerHidden : ''}`}
-          onClick={() => setSidebarOpen(true)}
-        >
-          <HamburgerIcon />
-        </button>
-
-        {/* Overlay */}
-        {sidebarOpen && (
-          <div
-            className={styles.overlay}
-            onClick={() => setSidebarOpen(false)}
-          />
+  return (
+    <div className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ''}`}>
+      <div className={styles.logoSection}>
+        {!isCollapsed && (
+          <>
+            <button 
+              className={styles.hamburgerBtn}
+              onClick={() => setIsCollapsed(!isCollapsed)}
+            >
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+            <span className={styles.logoText}>ANOKHIYAM</span>
+          </>
         )}
 
-        {/* Mobile Sidebar */}
-        <div className={`${styles.sidebar} ${styles.mobileSidebar} ${sidebarOpen ? styles.sidebarOpen : ''}`}>
-          <div className={styles.mobileHeader}>
-            <div className={styles.logo}>
-              <span className={styles.logoText}>ANOKHIYAM</span>
+        {isCollapsed && (
+          <div className={styles.collapsedHeader}>
+            <div className={styles.logoIcon}>
+              <img src={LogoImage} alt="Logo" />
             </div>
-            <button
-              className={styles.closeButton}
-              onClick={() => setSidebarOpen(false)}
+            <button 
+              className={styles.hamburgerBtnCollapsed}
+              onClick={() => setIsCollapsed(!isCollapsed)}
             >
-              <CloseIcon />
+              <span></span>
+              <span></span>
+              <span></span>
             </button>
           </div>
-
-          <div className={styles.menu}>
-            {menuItems.map((section, sectionIndex) => (
-              <div key={sectionIndex} className={styles.menuSection}>
-                <div className={styles.sectionTitle}>{section.section}</div>
-                {section.items.map((item) => (
-                  <div
-                    key={item.id}
-                    className={`${styles.menuItem} ${activeItem.toLowerCase() === item.id ? styles.active : ''}`}
-                    onClick={() => handleMenuClick(item)}
-                    onMouseEnter={() => setHoveredItem(item.id)}
-                    onMouseLeave={() => setHoveredItem(null)}
-                  >
-                    <div className={styles.menuIcon}>
-                      {getIcon(item.icon)}
-                    </div>
-                    <span className={styles.menuLabel}>{item.label}</span>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        </div>
-      </>
-    );
-  }
-
-  // Desktop version with pin/unpin functionality
-  return (
-    <div 
-      className={`${styles.sidebar} ${
-        sidebarState === 2 || sidebarState === 3 ? styles.expanded : styles.collapsed
-      }`}
-      onMouseEnter={() => {
-        if (sidebarState === 0) setSidebarState(1);
-      }}
-      onMouseLeave={() => {
-        if (sidebarState !== 3) setSidebarState(0);
-      }}
-    >
-      {/* Pin/Unpin Button */}
-      {(sidebarState === 2 || sidebarState === 3) && (
-        <div
-          className={styles.pinButton}
-          onClick={() => setSidebarState((prev) => (prev === 2 ? 3 : 0))}
-        >
-          {sidebarState === 2 ? <PinIcon /> : <UnpinIcon />}
-        </div>
-      )}
-
-      {/* Logo */}
-      <div className={styles.logoContainer}>
-        <div className={styles.logo}>
-          <span 
-            className={`${styles.logoText} ${
-              sidebarState === 2 || sidebarState === 3 ? styles.logoExpanded : styles.logoCollapsed
-            }`}
-          >
-            ANOKHIYAM
-          </span>
-        </div>
+        )}
       </div>
-
-      {/* Expand Button (shown on hover when collapsed) */}
-      {sidebarState === 1 && (
-        <div
-          className={styles.expandButton}
-          onClick={() => setSidebarState(2)}
-        >
-          <ExpandArrowIcon />
-        </div>
-      )}
 
       <div className={styles.menu}>
         {menuItems.map((section, sectionIndex) => (
           <div key={sectionIndex} className={styles.menuSection}>
-            <div 
-              className={`${styles.sectionTitle} ${
-                sidebarState === 2 || sidebarState === 3 ? styles.sectionVisible : styles.sectionHidden
-              }`}
-            >
-              {section.section}
-            </div>
+            {!isCollapsed && (
+              <div className={styles.sectionTitle}>{section.section}</div>
+            )}
             {section.items.map((item) => (
               <div
                 key={item.id}
@@ -306,17 +157,19 @@ const HostelSidebar = ({ activeItem = 'Dashboard', onSidebarStateChange }) => {
                 onClick={() => handleMenuClick(item)}
                 onMouseEnter={() => setHoveredItem(item.id)}
                 onMouseLeave={() => setHoveredItem(null)}
+                title={isCollapsed ? item.label : ''}
               >
                 <div className={styles.menuIcon}>
                   {getIcon(item.icon)}
                 </div>
-                <span 
-                  className={`${styles.menuLabel} ${
-                    sidebarState === 2 || sidebarState === 3 ? styles.labelVisible : styles.labelHidden
-                  }`}
-                >
-                  {item.label}
-                </span>
+                {!isCollapsed && (
+                  <span className={styles.menuLabel}>{item.label}</span>
+                )}
+                {isCollapsed && hoveredItem === item.id && (
+                  <div className={styles.tooltip}>
+                    {item.label}
+                  </div>
+                )}
               </div>
             ))}
           </div>
