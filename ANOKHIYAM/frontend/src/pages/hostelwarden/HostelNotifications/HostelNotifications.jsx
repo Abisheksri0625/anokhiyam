@@ -16,8 +16,8 @@ const HostelNotifications = () => {
       type: "Report",
       date: "2025-09-08",
       time: "09:15 AM",
-      redirect: "/hostel/reports", // link to Reports page
-      studentId: 101, // you can pass ID if needed
+      redirect: "/hostel/reports",
+      studentId: 101,
       read: false,
     },
     {
@@ -63,13 +63,11 @@ const HostelNotifications = () => {
   ]);
 
   const handleNotificationClick = (notif) => {
-    // mark as read
+    // Mark as read on click
     setNotifications((prev) =>
-      prev.map((n) =>
-        n.id === notif.id ? { ...n, read: true } : n
-      )
+      prev.map((n) => (n.id === notif.id ? { ...n, read: true } : n))
     );
-    // redirect
+    // Navigate to target page, passing studentId if present
     navigate(notif.redirect, { state: { studentId: notif.studentId } });
   };
 
@@ -96,9 +94,14 @@ const HostelNotifications = () => {
                   notif.read ? styles.read : styles.unread
                 }`}
                 onClick={() => handleNotificationClick(notif)}
+                title={`Click to view details or manage ${notif.type.toLowerCase()}`}
               >
                 <div className={styles.notifHeader}>
-                  <span className={styles.notifType}>{notif.type}</span>
+                  <span
+                    className={`${styles.notifType} ${styles[notif.type]}`}
+                  >
+                    {notif.type}
+                  </span>
                   <span className={styles.notifDate}>
                     {notif.date} • {notif.time}
                   </span>
