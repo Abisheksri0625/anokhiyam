@@ -7,7 +7,8 @@ import {
   onSnapshot, 
   doc, 
   updateDoc,
-  serverTimestamp 
+  serverTimestamp,
+  getDoc
 } from 'firebase/firestore';
 import { db } from '../../../config/firebase';
 import AdminSidebar from '../../../components/AdminSidebar/AdminSidebar';
@@ -22,8 +23,14 @@ import {
   Users,
   TrendUp,
   User,
-  GraduationCap
+  Envelope
 } from 'phosphor-react';
+import emailjs from '@emailjs/browser';
+
+// ============ EMAILJS CONFIGURATION - REPLACE WITH YOUR VALUES ============
+const EMAILJS_SERVICE_ID = 'service_7o20qlk';           // ✅ You have this
+const EMAILJS_TEMPLATE_ID = 'template_avvkrhs';     // ← Get from EmailJS dashboard
+const EMAILJS_PUBLIC_KEY = 'igm9usvUOfWwmFVTU';       // ← Get from EmailJS dashboard
 
 const Admissions = () => {
   const [applications, setApplications] = useState([]);
@@ -39,7 +46,6 @@ const Admissions = () => {
     total: 0
   });
   
-  // Modal state
   const [showModal, setShowModal] = useState(false);
   const [selectedApplicationId, setSelectedApplicationId] = useState(null);
 
@@ -59,6 +65,14 @@ const Admissions = () => {
   ];
 
   useEffect(() => {
+    // Initialize EmailJS
+    if (EMAILJS_PUBLIC_KEY && EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY_HERE') {
+      emailjs.init(EMAILJS_PUBLIC_KEY);
+      console.log('✅ EmailJS initialized');
+    } else {
+      console.warn('⚠️ EmailJS Public Key not configured');
+    }
+    
     loadApplications();
   }, []);
 
@@ -68,7 +82,6 @@ const Admissions = () => {
 
   const loadApplications = () => {
     try {
-      console.log('Loading applications...');
       const q = query(
         collection(db, 'admission_applications'),
         where('institutionCode', '==', 'DEMO001'),
@@ -84,7 +97,6 @@ const Admissions = () => {
           });
         });
 
-        console.log('Loaded applications:', apps.length);
         setApplications(apps);
         calculateStats(apps);
         setLoading(false);
@@ -96,7 +108,6 @@ const Admissions = () => {
 
       return () => unsubscribe();
     } catch (error) {
-      console.error('Error setting up listener:', error);
       setError('Error setting up data listener: ' + error.message);
       setLoading(false);
     }
@@ -115,12 +126,10 @@ const Admissions = () => {
   const filterApplications = () => {
     let filtered = applications;
 
-    // Filter by status (pending, accepted, rejected)
     if (selectedCategory !== 'all') {
       filtered = filtered.filter(app => app.status === selectedCategory);
     }
 
-    // Filter by caste category
     if (selectedCaste !== 'all') {
       filtered = filtered.filter(app => app.personalInfo?.category === selectedCaste);
     }
@@ -138,41 +147,144 @@ const Admissions = () => {
     setSelectedApplicationId(null);
   };
 
+  // ============ WORKING EMAIL FUNCTION ============
+  const sendEmailNotification = async (studentData, status, rejectionReason = '') => {
+    try {
+      console.log('📧 Sending email notification...');
+      
+      // Validate EmailJS configuration
+      if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
+        throw new Error('EmailJS configuration incomplete');
+      }
+
+      // Get student data
+      const studentName = `${studentData.personalInfo?.firstName || ''} ${studentData.personalInfo?.lastName || ''}`.trim();
+      const studentEmail = studentData.contactInfo?.studentEmail;
+      
+      if (!studentEmail) {
+        throw new Error('Student email not found');
+      }
+
+      // EXACT parameters that match template variables
+      const templateParams = {
+        to_email: studentEmail,                    // {{to_email}}
+        student_name: studentName,                 // {{student_name}}
+        course_name: studentData.selectedCourse,   // {{course_name}}
+        college_name: 'ANOKHIYAM College',         // {{college_name}}
+        admission_status: status,                  // {{admission_status}}
+        rejection_reason: rejectionReason || '',   // {{rejection_reason}}
+        contact_phone: '9876543210'                // {{contact_phone}}
+      };
+
+      console.log('📧 Sending with params:', templateParams);
+
+      // Send email
+      const response = await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        templateParams,
+        EMAILJS_PUBLIC_KEY
+      );
+
+      console.log('✅ Email sent successfully');
+      return { success: true };
+      
+    } catch (error) {
+      console.error('❌ Email failed:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
+  // ============ ACCEPT APPLICATION ============
   const handleAcceptApplication = async (applicationId) => {
+    if (!window.confirm('✅ Accept this application?\n\nStudent will receive email notification.')) {
+      return;
+    }
+
     try {
       const docRef = doc(db, 'admission_applications', applicationId);
+      const docSnap = await getDoc(docRef);
+      
+      if (!docSnap.exists()) {
+        alert('❌ Application not found');
+        return;
+      }
+
+      const applicationData = docSnap.data();
+      const studentName = applicationData.personalInfo?.firstName || 'Student';
+
+      console.log('✅ Processing acceptance for:', studentName);
+
+      // Update Firestore
       await updateDoc(docRef, {
         status: 'accepted',
         processedDate: serverTimestamp(),
         processedBy: 'admin'
       });
-      
-      console.log('Application accepted:', applicationId);
-      // Note: Add notification service here for SMS/Email
+
+      // Send email
+      const emailResult = await sendEmailNotification(applicationData, 'accepted');
+
+      // Show result
+      if (emailResult.success) {
+        alert(`✅ ${studentName} accepted successfully!\n📧 Email sent to ${applicationData.contactInfo?.studentEmail}`);
+      } else {
+        alert(`✅ ${studentName} accepted!\n❌ Email failed: ${emailResult.error}`);
+      }
+
     } catch (error) {
-      console.error('Error accepting application:', error);
-      alert('Error accepting application: ' + error.message);
+      console.error('❌ Error accepting application:', error);
+      alert('❌ Error: ' + error.message);
     }
   };
 
+  // ============ REJECT APPLICATION ============
   const handleRejectApplication = async (applicationId) => {
-    const reason = prompt('Please enter rejection reason:');
-    if (!reason) return;
+    const reason = prompt('📝 Please enter rejection reason (required):');
+    if (!reason || reason.trim() === '') {
+      alert('❌ Rejection reason is required');
+      return;
+    }
+
+    if (!window.confirm('❌ Reject this application?\n\nStudent will receive email notification.')) {
+      return;
+    }
 
     try {
       const docRef = doc(db, 'admission_applications', applicationId);
+      const docSnap = await getDoc(docRef);
+      
+      if (!docSnap.exists()) {
+        alert('❌ Application not found');
+        return;
+      }
+
+      const applicationData = docSnap.data();
+      const studentName = applicationData.personalInfo?.firstName || 'Student';
+
+      console.log('❌ Processing rejection for:', studentName);
+
+      // Update Firestore
       await updateDoc(docRef, {
         status: 'rejected',
-        rejectionReason: reason,
+        rejectionReason: reason.trim(),
         processedDate: serverTimestamp(),
         processedBy: 'admin'
       });
-      
-      console.log('Application rejected:', applicationId);
-      // Note: Add notification service here for SMS/Email
+
+      // Send email
+      const emailResult = await sendEmailNotification(applicationData, 'rejected', reason);
+
+      // Show result
+      if (emailResult.success) {
+        alert(`❌ ${studentName} rejected successfully!\n📧 Email sent to ${applicationData.contactInfo?.studentEmail}`);
+      } else {
+        alert(`❌ ${studentName} rejected!\n❌ Email failed: ${emailResult.error}`);
+      }
+
     } catch (error) {
-      console.error('Error rejecting application:', error);
-      alert('Error rejecting application: ' + error.message);
+      console.error('❌ Error rejecting application:', error);
+      alert('❌ Error: ' + error.message);
     }
   };
 
@@ -228,16 +340,20 @@ const Admissions = () => {
           <button 
             className={styles.acceptButton}
             onClick={() => handleAcceptApplication(application.id)}
+            title="Accept and send email notification"
           >
             <CheckCircle size={16} />
-            Accept
+            <Envelope size={14} />
+            Accept & Email
           </button>
           <button 
             className={styles.rejectButton}
             onClick={() => handleRejectApplication(application.id)}
+            title="Reject and send email notification"
           >
             <XCircle size={16} />
-            Reject
+            <Envelope size={14} />
+            Reject & Email
           </button>
         </div>
       )}
@@ -260,9 +376,24 @@ const Admissions = () => {
           <div className={styles.pageHeader}>
             <h1 className={styles.pageTitle}>Admission Management</h1>
             <p className={styles.pageSubtitle}>
-              Review and approve student applications based on caste categories (FCFS Method)
+              📧 Automated Email Notification System
             </p>
           </div>
+
+          {/* Configuration Warning */}
+          {(EMAILJS_TEMPLATE_ID === 'YOUR_TEMPLATE_ID_HERE' || EMAILJS_PUBLIC_KEY === 'YOUR_PUBLIC_KEY_HERE') && (
+            <div style={{ 
+              background: '#fef2f2', 
+              border: '2px solid #dc2626', 
+              padding: '1rem', 
+              borderRadius: '8px', 
+              marginBottom: '1rem',
+              color: '#dc2626',
+              fontWeight: 'bold'
+            }}>
+              ⚠️ <strong>UPDATE EMAILJS CREDENTIALS:</strong> Replace YOUR_TEMPLATE_ID_HERE and YOUR_PUBLIC_KEY_HERE with your actual EmailJS values!
+            </div>
+          )}
 
           {/* Stats Cards */}
           <div className={styles.statsGrid}>
@@ -336,7 +467,20 @@ const Admissions = () => {
                 <span className={styles.count}>({filteredApplications.length})</span>
               </h2>
               {selectedCategory === 'pending' && (
-                <p className={styles.fcfsNote}>⏰ First Come First Serve Order</p>
+                <div style={{
+                  background: '#f0f9ff',
+                  padding: '0.75rem 1rem',
+                  borderRadius: '6px',
+                  fontSize: '0.875rem',
+                  color: '#0369a1',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  marginTop: '0.5rem'
+                }}>
+                  <Envelope size={16} />
+                  <span>📧 Automated Email Notifications</span>
+                </div>
               )}
             </div>
 
@@ -371,7 +515,6 @@ const Admissions = () => {
         </div>
       </div>
 
-      {/* Application Details Modal */}
       <ApplicationDetailsModal
         applicationId={selectedApplicationId}
         isOpen={showModal}

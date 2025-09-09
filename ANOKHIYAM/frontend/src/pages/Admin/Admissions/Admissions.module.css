@@ -659,3 +659,23 @@
     flex-direction: column;
   }
 }
+.smsButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.875rem;
+}
+
+.smsButton:hover {
+  background: #2563eb;
+  transform: translateY(-1px);
+}
