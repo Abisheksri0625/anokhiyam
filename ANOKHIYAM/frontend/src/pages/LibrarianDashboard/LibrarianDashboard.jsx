@@ -8,12 +8,27 @@ import ActiveStudentsCard from '../../components/LibrarianCards/ActiveStudentsCa
 import RoleBasedUserManagement from '../../components/UserManagement/RoleBasedUserManagement';
 import styles from './LibrarianDashboard.module.css';
 
+// ✅ Added imports for charts
+import { PieChart, Pie, Cell, Tooltip } from 'recharts';
+
 const LibrarianDashboard = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [isCollapsed, setIsCollapsed] = useState(false);
 
+  // ✅ Extended data with borrows, returns, and popularBook
+  const domainData = [
+    { domain: "Computer Science", borrow: 70, return: 30, popularBook: "Data Structures & Algorithms" },
+    { domain: "Information Technology", borrow: 60, return: 40, popularBook: "Database Management Systems" },
+    { domain: "Electronics", borrow: 55, return: 45, popularBook: "Digital Logic Design" },
+    { domain: "Mechanical", borrow: 65, return: 35, popularBook: "Thermodynamics" },
+    { domain: "Civil Engineering", borrow: 50, return: 50, popularBook: "Strength of Materials" },
+    { domain: "Biotechnology", borrow: 45, return: 55, popularBook: "Genetics: A Conceptual Approach" },
+  ];
+
+  const COLORS = ["#8b5cf6", "#06b6d4"]; // borrow vs return colors
+
   const renderContent = () => {
-    switch(activeTab) {
+    switch (activeTab) {
       case 'users':
         return <RoleBasedUserManagement />;
       case 'issue-book':
@@ -35,7 +50,9 @@ const LibrarianDashboard = () => {
           <>
             <div className={styles.pageHeader}>
               <h1 className={styles.pageTitle}>Library Dashboard</h1>
-              <p className={styles.pageSubtitle}>Welcome back, Librarian! Here's your library overview.</p>
+              <p className={styles.pageSubtitle}>
+                Welcome back, Librarian! Here's your library overview.
+              </p>
             </div>
 
             <div className={styles.statsGrid}>
@@ -45,56 +62,46 @@ const LibrarianDashboard = () => {
               <ActiveStudentsCard />
             </div>
 
+            {/* ✅ Donut Charts with Stats */}
             <div className={styles.actionsSection}>
-              <h2 className={styles.sectionTitle}>Quick Actions</h2>
+              <h2 className={styles.sectionTitle}>Borrow vs Return by Domain</h2>
               <div className={styles.actionGrid}>
-                <button className={styles.actionBtn} onClick={() => setActiveTab('users')}>
-                  <span className={styles.actionIcon}>👤</span>
-                  <div className={styles.actionContent}>
-                    <h4 className={styles.actionTitle}>Register Student</h4>
-                    <p className={styles.actionDesc}>Add student to library system</p>
-                  </div>
-                </button>
+                {domainData.map((item, index) => (
+                  <div key={index} className={styles.chartCard}>
+                    <h4 className={styles.chartTitle}>{item.domain}</h4>
+                    <div className={styles.chartRow}>
+                      <div className={styles.chartContainer}>
+                        <PieChart width={160} height={160}>
+                          <Pie
+                            data={[
+                              { name: "Borrow", value: item.borrow },
+                              { name: "Return", value: item.return },
+                            ]}
+                            dataKey="value"
+                            innerRadius={45}
+                            outerRadius={65}
+                            paddingAngle={3}
+                          >
+                            {[
+                              { name: "Borrow", value: item.borrow },
+                              { name: "Return", value: item.return },
+                            ].map((entry, i) => (
+                              <Cell key={`cell-${i}`} fill={COLORS[i % COLORS.length]} />
+                            ))}
+                          </Pie>
+                          <Tooltip />
+                        </PieChart>
+                      </div>
 
-                <button className={styles.actionBtn} onClick={() => setActiveTab('issue-book')}>
-                  <span className={styles.actionIcon}>📚</span>
-                  <div className={styles.actionContent}>
-                    <h4 className={styles.actionTitle}>Issue Book</h4>
-                    <p className={styles.actionDesc}>Issue a book to a student</p>
+                      {/* ✅ Stats beside chart */}
+                      <div className={styles.chartStats}>
+                        <p><strong>Borrows:</strong> {item.borrow}</p>
+                        <p><strong>Returns:</strong> {item.return}</p>
+                        <p><strong>Popular:</strong> {item.popularBook}</p>
+                      </div>
+                    </div>
                   </div>
-                </button>
-
-                <button className={styles.actionBtn} onClick={() => setActiveTab('return-book')}>
-                  <span className={styles.actionIcon}>↩️</span>
-                  <div className={styles.actionContent}>
-                    <h4 className={styles.actionTitle}>Return Book</h4>
-                    <p className={styles.actionDesc}>Process book returns</p>
-                  </div>
-                </button>
-
-                <button className={styles.actionBtn}>
-                  <span className={styles.actionIcon}>➕</span>
-                  <div className={styles.actionContent}>
-                    <h4 className={styles.actionTitle}>Add New Book</h4>
-                    <p className={styles.actionDesc}>Add new books to inventory</p>
-                  </div>
-                </button>
-
-                <button className={styles.actionBtn}>
-                  <span className={styles.actionIcon}>🔍</span>
-                  <div className={styles.actionContent}>
-                    <h4 className={styles.actionTitle}>Search Catalog</h4>
-                    <p className={styles.actionDesc}>Search library catalog</p>
-                  </div>
-                </button>
-
-                <button className={styles.actionBtn}>
-                  <span className={styles.actionIcon}>⏰</span>
-                  <div className={styles.actionContent}>
-                    <h4 className={styles.actionTitle}>Overdue Reports</h4>
-                    <p className={styles.actionDesc}>View overdue book reports</p>
-                  </div>
-                </button>
+                ))}
               </div>
             </div>
 
@@ -102,7 +109,7 @@ const LibrarianDashboard = () => {
               <h2 className={styles.sectionTitle}>Recent Activities</h2>
               <div className={styles.activityList}>
                 <div className={styles.activityItem}>
-                  <div className={styles.activityIcon}>📚</div>
+                  <div className={styles.activityIcon}></div>
                   <div className={styles.activityContent}>
                     <h4>Book Issued</h4>
                     <p>"Data Structures & Algorithms" issued to John Smith (CS-2021-045)</p>
@@ -111,7 +118,7 @@ const LibrarianDashboard = () => {
                 </div>
 
                 <div className={styles.activityItem}>
-                  <div className={styles.activityIcon}>↩️</div>
+                  <div className={styles.activityIcon}></div>
                   <div className={styles.activityContent}>
                     <h4>Book Returned</h4>
                     <p>"Introduction to AI" returned by Sarah Johnson (IT-2020-123)</p>
@@ -120,7 +127,7 @@ const LibrarianDashboard = () => {
                 </div>
 
                 <div className={styles.activityItem}>
-                  <div className={styles.activityIcon}>➕</div>
+                  <div className={styles.activityIcon}></div>
                   <div className={styles.activityContent}>
                     <h4>New Books Added</h4>
                     <p>Added 25 new books to Computer Science section</p>
@@ -136,8 +143,8 @@ const LibrarianDashboard = () => {
 
   return (
     <div className={styles.dashboardContainer}>
-      <LibrarianSidebar 
-        activeItem="dashboard" 
+      <LibrarianSidebar
+        activeItem="dashboard"
         isCollapsed={isCollapsed}
         setIsCollapsed={setIsCollapsed}
       />
@@ -145,7 +152,7 @@ const LibrarianDashboard = () => {
         <LibrarianHeader isCollapsed={isCollapsed} />
         <div className={styles.content}>
           {activeTab !== 'overview' && (
-            <button 
+            <button
               className={styles.backBtn}
               onClick={() => setActiveTab('overview')}
             >
