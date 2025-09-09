@@ -11,9 +11,8 @@ const StudentRecords = () => {
     time: 'All',
   });
   const [selectedStudent, setSelectedStudent] = useState(null);
-  const [showFullHistory, setShowFullHistory] = useState(false);
 
-  const students = [
+    const students = [
     {
       id: 'CS21-001',
       name: 'John Doe',
@@ -26,8 +25,6 @@ const StudentRecords = () => {
         { book: 'Data Structures', status: 'Returned', fine: 0 },
         { book: 'Algorithms', status: 'Overdue', fine: 50 },
         { book: 'Operating Systems', status: 'Returned', fine: 0 },
-        { book: 'Networks', status: 'Returned', fine: 0 },
-        { book: 'AI Basics', status: 'Returned', fine: 0 },
       ],
     },
     {
@@ -54,7 +51,6 @@ const StudentRecords = () => {
       history: [
         { book: 'Thermodynamics', status: 'Returned', fine: 0 },
         { book: 'Machine Design', status: 'Overdue', fine: 100 },
-        { book: 'Fluid Mechanics', status: 'Returned', fine: 0 },
       ],
     },
     {
@@ -130,7 +126,9 @@ const StudentRecords = () => {
       borrowed: 2,
       returned: 2,
       fines: 0,
-      history: [{ book: 'Engineering Graphics', status: 'Returned', fine: 0 }],
+      history: [
+        { book: 'Engineering Graphics', status: 'Returned', fine: 0 },
+      ],
     },
     {
       id: 'CS19-018',
@@ -145,69 +143,8 @@ const StudentRecords = () => {
         { book: 'AI Advanced', status: 'Overdue', fine: 50 },
       ],
     },
-    {
-      id: 'EE20-009',
-      name: 'Mohit Kumar',
-      department: 'EE',
-      year: '3rd Year',
-      borrowed: 6,
-      returned: 6,
-      fines: 0,
-      history: [
-        { book: 'Microcontrollers', status: 'Returned', fine: 0 },
-        { book: 'Analog Circuits', status: 'Returned', fine: 0 },
-      ],
-    },
-    {
-      id: 'ME21-011',
-      name: 'Divya Joshi',
-      department: 'ME',
-      year: '2nd Year',
-      borrowed: 5,
-      returned: 5,
-      fines: 0,
-      history: [
-        { book: 'Material Science', status: 'Returned', fine: 0 },
-        { book: 'Kinematics', status: 'Returned', fine: 0 },
-      ],
-    },
-    {
-      id: 'CS22-020',
-      name: 'Rohit Sharma',
-      department: 'CS',
-      year: '1st Year',
-      borrowed: 3,
-      returned: 3,
-      fines: 0,
-      history: [{ book: 'Intro to Programming', status: 'Returned', fine: 0 }],
-    },
-    {
-      id: 'EE22-025',
-      name: 'Pooja Mishra',
-      department: 'EE',
-      year: '1st Year',
-      borrowed: 4,
-      returned: 3,
-      fines: 1,
-      history: [
-        { book: 'Basic Electronics', status: 'Overdue', fine: 50 },
-        { book: 'Maths for Engineers', status: 'Returned', fine: 0 },
-      ],
-    },
-    {
-      id: 'ME20-018',
-      name: 'Harsh Jain',
-      department: 'ME',
-      year: '3rd Year',
-      borrowed: 6,
-      returned: 6,
-      fines: 0,
-      history: [
-        { book: 'Dynamics of Machines', status: 'Returned', fine: 0 },
-        { book: 'Manufacturing Processes', status: 'Returned', fine: 0 },
-      ],
-    },
   ];
+
 
   const filteredStudents = students.filter((student) => {
     const deptMatch =
@@ -270,29 +207,35 @@ const StudentRecords = () => {
             </select>
           </div>
 
-          {/* Student Cards */}
-          <div className={styles.cardsGrid}>
+          {/* Table Header */}
+          <div className={styles.tableHeader}>
+            <span>Name</span>
+            <span>ID</span>
+            <span>Department</span>
+            <span>Year</span>
+            <span>Borrowed</span>
+            <span>Returned</span>
+            <span>Fines</span>
+            <span>Actions</span>
+          </div>
+
+          {/* Student Rows */}
+          <div className={styles.tableBody}>
             {filteredStudents.map((student) => (
-              <div
-                key={student.id}
-                className={styles.card}
-                onClick={() => {
-                  setSelectedStudent(student);
-                  setShowFullHistory(false);
-                }}
-              >
-                <h3>{student.name}</h3>
-                <p>
-                  <strong>ID:</strong> {student.id}
-                </p>
-                <p>
-                  <strong>Dept:</strong> {student.department} |{' '}
-                  <strong>Year:</strong> {student.year}
-                </p>
-                <p>
-                  Borrowed: {student.borrowed} | Returned: {student.returned}
-                </p>
-                <p>Fines: {student.fines}</p>
+              <div key={student.id} className={styles.tableRow}>
+                <span>{student.name}</span>
+                <span>{student.id}</span>
+                <span>{student.department}</span>
+                <span>{student.year}</span>
+                <span>{student.borrowed}</span>
+                <span>{student.returned}</span>
+                <span>{student.fines}</span>
+                <button
+                  className={styles.viewBtn}
+                  onClick={() => setSelectedStudent(student)}
+                >
+                  View Full History
+                </button>
               </div>
             ))}
           </div>
@@ -320,23 +263,12 @@ const StudentRecords = () => {
 
                 <h3>Borrowing History</h3>
                 <ul>
-                  {(showFullHistory
-                    ? selectedStudent.history
-                    : selectedStudent.history.slice(0, 2)
-                  ).map((record, index) => (
+                  {selectedStudent.history.map((record, index) => (
                     <li key={index}>
                       {record.book} - {record.status} (Fine: ₹{record.fine})
                     </li>
                   ))}
                 </ul>
-                {selectedStudent.history.length > 2 && (
-                  <button
-                    className={styles.cleanHistoryBtn}
-                    onClick={() => setShowFullHistory(!showFullHistory)}
-                  >
-                    {showFullHistory ? 'Show Less' : 'View All Records'}
-                  </button>
-                )}
               </div>
             </div>
           )}
