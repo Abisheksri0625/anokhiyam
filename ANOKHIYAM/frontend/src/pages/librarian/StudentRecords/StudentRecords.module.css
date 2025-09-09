@@ -23,6 +23,7 @@
   margin-top: 70px;
 }
 
+/* Filters */
 .filters {
   display: flex;
   gap: 1rem;
@@ -38,53 +39,51 @@
   cursor: pointer;
 }
 
-.cardsGrid {
+/* Table Layout */
+.tableHeader,
+.tableRow {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-  gap: 1.5rem;
-}
-
-.card {
-  background: rgb(243, 197, 59);
-  padding: 1.5rem;
-  border-radius: 1rem;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.card:hover {
-  transform: translateY(-5px);
-}
-
-.card h3 {
-  margin: 0 0 0.5rem 0;
-  color: #1f2937;
-}
-
-.card p {
-  margin: 0.25rem 0;
-  color: #000000;
+  grid-template-columns: 1.5fr 1fr 1fr 1fr 0.8fr 0.8fr 0.8fr 1fr;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
   font-size: 0.9rem;
 }
-.cleanHistoryBtn {
-  background: #fbbf24; /* Bright yellow */
-  color: #1f2937;      /* Dark text for contrast */
+
+.tableHeader {
+  background: rgb(243, 197, 59); /* yellow bar */
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.tableRow {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  margin-bottom: 0.5rem;
+  transition: background 0.2s ease;
+}
+
+.tableRow:hover {
+  background: #f3f4f6;
+}
+
+/* Button */
+.viewBtn {
+  background: rgb(243, 197, 59); /* blue */
+  color: rgb(0, 0, 0);
   border: none;
-  padding: 10px 20px;
+  padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
-  margin-top: 12px;
-  font-size: 15px;
-  font-weight: 500;
+  font-size: 0.85rem;
   transition: background 0.3s ease, transform 0.2s ease;
 }
 
-.cleanHistoryBtn:hover {
-  background: #facc15; /* Slightly darker yellow */
+.viewBtn:hover {
+  background: rgb(243, 197, 59);
   transform: translateY(-2px);
 }
-
 
 /* Modal */
 .modalOverlay {
@@ -146,5 +145,11 @@
 
   .filters {
     flex-direction: column;
+  }
+
+  .tableHeader,
+  .tableRow {
+    grid-template-columns: 1fr 1fr;
+    row-gap: 0.5rem;
   }
 }
