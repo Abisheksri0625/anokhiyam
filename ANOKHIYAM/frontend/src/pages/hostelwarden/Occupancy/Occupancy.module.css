@@ -21,29 +21,362 @@
   flex: 1;
   padding: 2rem;
   margin-top: 70px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.comingSoon {
+.occupancyContainer {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
   text-align: center;
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.header p {
+  font-size: 1.1rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Controls Section */
+.controlsSection {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   background: white;
-  padding: 3rem;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1.5rem;
+}
+
+.floorSelector {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.floorLabel {
+  font-weight: 600;
+  color: #374151;
+  font-size: 1rem;
+}
+
+.floorSelect {
+  padding: 0.75rem 1rem;
+  border: 2px solid #d1d5db;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  background: white;
+  color: #374151;
+  min-width: 150px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.floorSelect:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.floorStats {
+  display: flex;
+  gap: 2rem;
+}
+
+.statItem {
+  text-align: center;
+}
+
+.statNumber {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.statLabel {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+/* Legend */
+.legend {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  background: white;
+  padding: 1rem 1.5rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.legendColor {
+  width: 20px;
+  height: 20px;
+  border-radius: 0.25rem;
+  border: 2px solid #e5e7eb;
+}
+
+/* Room Layout */
+.roomLayout {
+  background: white;
+  padding: 2rem;
   border-radius: 1rem;
   box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
 }
 
-.comingSoon h1 {
-  font-size: 2rem;
+.floorTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
   color: #1f2937;
-  margin-bottom: 1rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #f3f4f6;
 }
 
-.comingSoon p {
-  font-size: 1.25rem;
-  color: #6b7280;
+.roomGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 1rem;
+  justify-items: center;
+}
+
+.roomBox {
+  width: 120px;
+  height: 80px;
+  border: 3px solid;
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  font-weight: 600;
+}
+
+.roomBox:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.roomBox.occupied {
+  background-color: #fee2e2;
+  border-color: #dc2626;
+  color: #7f1d1d;
+}
+
+.roomBox.partial {
+  background-color: #fef3c7;
+  border-color: #f59e0b;
+  color: #92400e;
+}
+
+.roomBox.vacant {
+  background-color: #dcfce7;
+  border-color: #16a34a;
+  color: #14532d;
+}
+
+.roomBox.selected {
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
+  transform: translateY(-3px);
+}
+
+.roomNumber {
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.roomOccupancy {
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+/* Modal Styles - FIXED VERSION */
+.roomDetailsModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modalOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modalContent {
+  position: relative;
+  background: white;
+  border-radius: 1rem;
+  max-width: 500px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  z-index: 1001;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.modalHeader h3 {
   margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #6b7280;
+  cursor: pointer;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.closeBtn:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.modalBody {
+  padding: 1.5rem;
+}
+
+.roomInfo {
+  margin-bottom: 1.5rem;
+}
+
+.infoItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid #f3f4f6;
+  font-size: 0.875rem;
+}
+
+.infoItem:last-child {
+  border-bottom: none;
+}
+
+.statusBadge {
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.statusBadge.occupied {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.statusBadge.partial {
+  background: #fef3c7;
+  color: #f59e0b;
+}
+
+.statusBadge.vacant {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.studentsSection h4 {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.studentsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.studentCard {
+  background: #f9fafb;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border-left: 4px solid #3b82f6;
+}
+
+.studentName {
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.5rem;
+}
+
+.studentDetails {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+.studentDegree {
+  font-weight: 500;
+}
+
+.studentYear {
+  font-style: italic;
+}
+
+.noStudents {
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+  padding: 2rem;
 }
 
 /* Mobile Responsive */
@@ -60,11 +393,82 @@
     padding: 1rem;
   }
   
-  .comingSoon h1 {
-    font-size: 1.5rem;
+  .header h1 {
+    font-size: 1.75rem;
   }
   
-  .comingSoon p {
-    font-size: 1rem;
+  .controlsSection {
+    flex-direction: column;
+    gap: 1.5rem;
+    align-items: stretch;
+  }
+  
+  .floorStats {
+    justify-content: space-around;
+  }
+  
+  .legend {
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  
+  .roomGrid {
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 0.75rem;
+  }
+  
+  .roomBox {
+    width: 100px;
+    height: 70px;
+  }
+  
+  .roomNumber {
+    font-size: 0.8rem;
+  }
+  
+  .roomOccupancy {
+    font-size: 0.7rem;
+  }
+  
+  .modalContent {
+    width: 95%;
+    max-height: 90vh;
+  }
+  
+  .modalHeader {
+    padding: 1rem;
+  }
+  
+  .modalBody {
+    padding: 1rem;
+  }
+  
+  .studentDetails {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .floorStats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+  
+  .roomGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .roomBox {
+    width: 80px;
+    height: 60px;
+  }
+  
+  .roomNumber {
+    font-size: 0.75rem;
+  }
+  
+  .roomOccupancy {
+    font-size: 0.65rem;
   }
 }
