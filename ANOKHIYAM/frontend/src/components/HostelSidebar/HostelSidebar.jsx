@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './HostelSidebar.module.css';
-import LogoImage from '../../assets/Result.png'; // Adjust path as needed
+import LogoImage from '../../assets/logo.png'; // Adjust path as needed
 
 const HostelSidebar = ({ activeItem = 'Dashboard', isCollapsed, setIsCollapsed }) => {
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ const HostelSidebar = ({ activeItem = 'Dashboard', isCollapsed, setIsCollapsed }
         { id: 'students', label: 'Student Records', icon: 'students', path: '/hostel/students' },
         { id: 'check-in-out', label: 'Check In/Out', icon: 'checkin', path: '/hostel/check-in-out' },
         { id: 'visitors', label: 'Visitor Logs', icon: 'visitors', path: '/hostel/visitors' },
-        { id: 'maintenance', label: 'Maintenance', icon: 'maintenance', path: '/hostel/maintenance' },
+        { id: 'outpass requests', label: 'Outpass Requests', icon: 'outpass', path: '/hostel/outpass' },
         { id: 'reports', label: 'Reports', icon: 'reports', path: '/hostel/reports' }
       ]
     },
