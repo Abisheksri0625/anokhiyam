@@ -21,50 +21,130 @@
   flex: 1;
   padding: 2rem;
   margin-top: 70px;
+}
+
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.filters select {
+  padding: 0.5rem 1rem;
+  border: 1px solid #d1d5db;
+  border-radius: 0.5rem;
+  background: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background: rgb(243, 197, 59);
+  padding: 1.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card h3 {
+  margin: 0 0 0.5rem 0;
+  color: #1f2937;
+}
+
+.card p {
+  margin: 0.25rem 0;
+  color: #000000;
+  font-size: 0.9rem;
+}
+.cleanHistoryBtn {
+  background: #fbbf24; /* Bright yellow */
+  color: #1f2937;      /* Dark text for contrast */
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.cleanHistoryBtn:hover {
+  background: #facc15; /* Slightly darker yellow */
+  transform: translateY(-2px);
+}
+
+
+/* Modal */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 1000;
 }
 
-.comingSoon {
-  text-align: center;
+.modalContent {
   background: white;
-  padding: 3rem;
+  padding: 2rem;
   border-radius: 1rem;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+  width: 500px;
+  max-width: 90%;
+  max-height: 80%;
+  overflow-y: auto;
+  position: relative;
 }
 
-.comingSoon h1 {
-  font-size: 2rem;
-  color: #1f2937;
+.modalContent h2 {
   margin-bottom: 1rem;
 }
 
-.comingSoon p {
-  font-size: 1.25rem;
-  color: #6b7280;
-  margin: 0;
+.modalContent p {
+  margin: 0.5rem 0;
 }
 
-/* Mobile Responsive */
+.modalContent ul {
+  margin-top: 1rem;
+  padding-left: 1.5rem;
+}
+
+.closeBtn {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
   .mainContent {
     margin-left: 0;
   }
-  
+
   .mainContent.collapsed {
     margin-left: 0;
   }
-  
-  .content {
-    padding: 1rem;
-  }
-  
-  .comingSoon h1 {
-    font-size: 1.5rem;
-  }
-  
-  .comingSoon p {
-    font-size: 1rem;
+
+  .filters {
+    flex-direction: column;
   }
 }
