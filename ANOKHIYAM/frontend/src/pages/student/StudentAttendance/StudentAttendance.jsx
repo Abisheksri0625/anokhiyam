@@ -12,15 +12,6 @@ const StudentAttendance = () => {
   const [activeTab, setActiveTab] = useState("attendance");
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  // Example attendance data (period-wise expansion can be added later)
-  const attendanceData = [
-    { date: "2025-09-01", status: "P" },
-    { date: "2025-09-02", status: "A" },
-    { date: "2025-09-03", status: "L" },
-    { date: "2025-09-04", status: "P" },
-    { date: "2025-09-05", status: "P" }
-  ];
-
   // Govt/National Holidays (can expand this list)
   const holidays = [
     { date: "2025-01-26", label: "Republic Day" },
@@ -74,7 +65,7 @@ const StudentAttendance = () => {
 
           {/* Dynamic Content */}
           <div className={styles.content}>
-            {activeTab === "attendance" && <Attendance data={attendanceData} />}
+            {activeTab === "attendance" && <Attendance />}
             {activeTab === "leave" && <LeaveRequest />}
             {activeTab === "calendar" && <YearCalendar holidays={holidays} />}
           </div>

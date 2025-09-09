@@ -1,85 +1,230 @@
-.attendanceContainer {
+/* TeachAttendance.module.css */
+.container {
   padding: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
-.sectionTitle {
-  font-size: 22px;
-  font-weight: 600;
-  margin-bottom: 12px;
+.header {
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.header h1 {
   color: #1f2937;
+  margin: 0;
 }
 
-.datePicker {
+.header p {
+  color: #6b7280;
+  margin: 10px 0 0 0;
+  font-size: 16px;
+}
+
+.dateControl {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  justify-content: center;
+}
+
+.dateControl label {
+  font-size: 18px;
+  color: #374151;
+  font-weight: 600;
+}
+
+.dateInput {
+  padding: 12px 16px;
+  border: 2px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 16px;
+  background: white;
+  transition: border-color 0.2s;
+  min-width: 200px;
+}
+
+.dateInput:focus {
+  outline: none;
+  border-color: #10b981;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.loading p {
+  font-size: 18px;
+  color: #6b7280;
+}
+
+.noStudents {
+  text-align: center;
+  padding: 40px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.noStudents p {
+  font-size: 18px;
+  color: #6b7280;
+}
+
+.studentCount {
+  display: flex;
+  justify-content: space-between;
   margin-bottom: 20px;
-  padding: 8px 12px;
-  font-size: 14px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
-  background-color: #fff;
+  padding: 20px;
+  background: linear-gradient(135deg, #10b981, #22c55e);
+  color: white;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+}
+
+.studentCount p {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.tableContainer {
+  overflow-x: auto;
+  margin-bottom: 30px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  max-height: 600px;
+  overflow-y: auto;
 }
 
 .attendanceTable {
   width: 100%;
   border-collapse: collapse;
-  background-color: #ffffff;
-  border-radius: 6px;
-  overflow: hidden;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  min-width: 1100px;
 }
 
 .attendanceTable th,
 .attendanceTable td {
-  border: 1px solid #e5e7eb;
-  padding: 10px;
+  padding: 15px 10px;
   text-align: center;
-  font-size: 14px;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .attendanceTable th {
-  background-color: #f9fafb;
+  background: #f9fafb;
   font-weight: 600;
   color: #374151;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 2px solid #10b981;
 }
 
-.present {
-  background-color: #e6f4ea;
-  color: #2e7d32;
-  font-weight: 600;
-  cursor: pointer;
+.attendanceTable tbody tr:hover {
+  background: #f0f9ff;
 }
 
-.absent {
-  background-color: #fdecea;
-  color: #c62828;
-  font-weight: 600;
-  cursor: pointer;
+.attendanceTable tbody tr:nth-child(even) {
+  background: #fafafa;
 }
 
-.dropdown {
-  font-size: 14px;
-  padding: 4px 6px;
-  border-radius: 4px;
-  border: 1px solid #d1d5db;
-  background-color: #ffffff;
-  color: #374151;
+.attendanceTable tbody tr:nth-child(even):hover {
+  background: #f0f9ff;
 }
 
-.exportButtons {
-  margin-top: 24px;
-}
-
-.exportButton {
-  padding: 10px 18px;
-  font-size: 14px;
-  font-weight: 600;
-  border: none;
+.statusSelect {
+  padding: 8px 12px;
+  border: 2px solid #d1d5db;
   border-radius: 6px;
-  background: linear-gradient(135deg, #ec4899 0%, #be185d 50%, #9d174d 100%);
-  color: white;
+  background: white;
+  font-weight: 600;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  transition: all 0.2s;
+  min-width: 80px;
 }
 
-.exportButton:hover {
-  transform: scale(1.03);
+.statusSelect:focus {
+  outline: none;
+  border-color: #10b981;
+}
+
+.statusSelect.P {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #22c55e;
+}
+
+.statusSelect.A {
+  background: #fee2e2;
+  color: #dc2626;
+  border-color: #ef4444;
+}
+
+.submitSection {
+  text-align: center;
+  padding: 20px;
+}
+
+.submitButton {
+  background: linear-gradient(135deg, #10b981, #22c55e);
+  color: white;
+  border: none;
+  padding: 18px 40px;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.submitButton:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.6);
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.2);
+}
+
+@media (max-width: 768px) {
+  .dateControl {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .studentCount {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+  
+  .tableContainer {
+    font-size: 14px;
+  }
+  
+  .attendanceTable th,
+  .attendanceTable td {
+    padding: 10px 5px;
+  }
+  
+  .statusSelect {
+    min-width: 70px;
+    padding: 6px 8px;
+  }
 }

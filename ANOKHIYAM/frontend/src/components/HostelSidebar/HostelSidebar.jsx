@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './HostelSidebar.module.css';
-import LogoImage from '../../assets/logo.png'; // Adjust path as needed
+import LogoImage from '../../assets/Result.png'; // Adjust path as needed
 
 const HostelSidebar = ({ activeItem = 'Dashboard', isCollapsed, setIsCollapsed }) => {
   const navigate = useNavigate();

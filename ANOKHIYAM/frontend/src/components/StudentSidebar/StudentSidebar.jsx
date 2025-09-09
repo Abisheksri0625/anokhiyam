@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './StudentSidebar.module.css';
-import LogoImage from '../../assets/logo.png'; // Adjust your logo path
+import LogoImage from '../../assets/Result.png'; // Adjust your logo path
 
 
 const StudentSidebar = ({ activeItem = 'Dashboard', isCollapsed, setIsCollapsed }) => {

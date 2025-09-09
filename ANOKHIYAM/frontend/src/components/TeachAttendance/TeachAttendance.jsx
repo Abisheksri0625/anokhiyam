@@ -1,177 +1,236 @@
+// TeachAttendance.jsx
 import React, { useState, useEffect } from 'react';
-import * as XLSX from 'xlsx';
-import { saveAs } from 'file-saver';
+import { db } from '../../config/firebase';
+import { 
+  collection, 
+  getDocs, 
+  doc, 
+  setDoc 
+} from 'firebase/firestore';
 import styles from './TeachAttendance.module.css';
 
-const periods = ['P1', 'P2', 'P3', 'P4', 'P5', 'P6', 'P7', 'P8'];
-const useDummyData = true;
-
 const TeachAttendance = () => {
-  const [date, setDate] = useState('');
-  const [attendance, setAttendance] = useState([]);
-  const [editingCell, setEditingCell] = useState({ studentId: null, period: null });
-  const teacherId = 'T123';
+  const [students, setStudents] = useState([]);
+  const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
+  const [attendance, setAttendance] = useState({});
+  const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    const today = new Date().toISOString().split('T')[0];
-    setDate(today);
-    loadAttendance(today);
+    fetchAllStudents();
   }, []);
 
-  const loadAttendance = selectedDate => {
-    const saved = localStorage.getItem(`attendance_${selectedDate}`);
-    if (saved) {
-      setAttendance(JSON.parse(saved));
-    } else {
-      fetchStudents(selectedDate);
+  const fetchAllStudents = async () => {
+    try {
+      setLoading(true);
+      console.log('Fetching all students...');
+      
+      const studentsRef = collection(db, 'student_credentials');
+      const snapshot = await getDocs(studentsRef);
+      
+      const studentData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      
+      console.log('All students fetched:', studentData);
+      setStudents(studentData);
+      
+      // Initialize attendance state for all students and periods (default: Present)
+      const initialAttendance = {};
+      studentData.forEach(student => {
+        initialAttendance[student.id] = {
+          1: 'P', 2: 'P', 3: 'P', 4: 'P',
+          5: 'P', 6: 'P', 7: 'P', 8: 'P'
+        };
+      });
+      setAttendance(initialAttendance);
+      
+    } catch (error) {
+      console.error('Error fetching students:', error);
+      alert('Error fetching students. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const fetchStudents = async selectedDate => {
-    let studentData;
+  const handleAttendanceChange = (studentId, period, status) => {
+    setAttendance(prev => ({
+      ...prev,
+      [studentId]: {
+        ...prev[studentId],
+        [period]: status
+      }
+    }));
+  };
 
-    if (useDummyData) {
-      studentData = [
-        { id: 'S001', name: 'Aarav Kumar', roll: '101' },
-        { id: 'S002', name: 'Diya Sharma', roll: '102' },
-        { id: 'S003', name: 'Rohan Mehta', roll: '103' },
-        { id: 'S004', name: 'Sneha Iyer', roll: '104' },
-        { id: 'S005', name: 'Kabir Singh', roll: '105' },
-        { id: 'S006', name: 'Meera Joshi', roll: '106' },
-        { id: 'S007', name: 'Aditya Rao', roll: '107' },
-        { id: 'S008', name: 'Tanvi Desai', roll: '108' },
-        { id: 'S009', name: 'Vikram Patel', roll: '109' },
-        { id: 'S010', name: 'Ishita Nair', roll: '110' }
-      ];
-    } else {
-      const res = await axios.get(`/api/teacher/${teacherId}/students`);
-      studentData = res.data;
+  // Helper function to clean data and remove undefined values
+  const cleanAttendanceData = (student, periods) => {
+    const presentPeriods = Object.values(periods).filter(p => p === 'P').length;
+    
+    // Create clean data object, only including defined values
+    const cleanData = {
+      studentId: student.id,
+      date: selectedDate,
+      periods: periods,
+      submittedBy: 'teacher',
+      submittedAt: new Date().toISOString(),
+      totalPeriods: 8,
+      presentPeriods: presentPeriods
+    };
+
+    // Only add fields if they exist and are not undefined
+    if (student.firstName && student.lastName) {
+      cleanData.studentName = `${student.firstName} ${student.lastName}`;
+    }
+    
+    if (student.acceptedStudentId) {
+      cleanData.acceptedStudentId = student.acceptedStudentId;
+    }
+    
+    if (student.loginEmail) {
+      cleanData.loginEmail = student.loginEmail;
     }
 
-    const freshAttendance = studentData.map(student => ({
-      ...student,
-      status: periods.reduce((acc, p) => ({ ...acc, [p]: 'P' }), {}),
-    }));
-
-    setAttendance(freshAttendance);
-    localStorage.setItem(`attendance_${selectedDate}`, JSON.stringify(freshAttendance));
+    return cleanData;
   };
 
-  const updateAttendance = updated => {
-    setAttendance(updated);
-    localStorage.setItem(`attendance_${date}`, JSON.stringify(updated));
-  };
+  const submitAttendance = async () => {
+    if (students.length === 0) {
+      alert('No students found to mark attendance.');
+      return;
+    }
 
-  const getStudentPercent = student => {
-    const presentCount = Object.values(student.status).filter(val => val === 'P').length;
-    return Math.round((presentCount / periods.length) * 100);
-  };
+    try {
+      setSubmitting(true);
+      console.log('Submitting attendance for', students.length, 'students');
+      
+      const attendancePromises = students.map(async (student) => {
+        try {
+          // Clean the data to remove any undefined values
+          const cleanData = cleanAttendanceData(student, attendance[student.id]);
+          
+          const docId = `${student.id}_${selectedDate}`;
+          console.log('Saving attendance for student:', student.firstName, student.lastName);
+          
+          await setDoc(doc(db, 'attendance', docId), cleanData);
+          return { success: true, studentId: student.id };
+        } catch (error) {
+          console.error('Error saving attendance for student:', student.firstName, error);
+          return { success: false, studentId: student.id, error };
+        }
+      });
 
-  const getClassAverage = () => {
-    const total = attendance.reduce((sum, student) => sum + getStudentPercent(student), 0);
-    return attendance.length ? Math.round(total / attendance.length) : 0;
-  };
+      const results = await Promise.all(attendancePromises);
+      const successful = results.filter(r => r.success).length;
+      const failed = results.filter(r => !r.success).length;
 
-  const exportAttendance = () => {
-    const data = attendance.map(student => ({
-      Roll: student.roll,
-      Name: student.name,
-      ...student.status
-    }));
-
-    const worksheet = XLSX.utils.json_to_sheet(data);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Attendance');
-    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
-    saveAs(blob, `Attendance_${date}.xlsx`);
+      if (failed === 0) {
+        alert(`✅ Attendance submitted successfully for all ${successful} students!`);
+      } else {
+        alert(`⚠️ Attendance submitted for ${successful} students. ${failed} failed to save.`);
+        console.log('Failed submissions:', results.filter(r => !r.success));
+      }
+      
+    } catch (error) {
+      console.error('Error submitting attendance:', error);
+      alert('Error submitting attendance. Please check console for details.');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
-    <div className={styles.attendanceContainer}>
-      <h2 className={styles.sectionTitle}>Attendance for {date}</h2>
-      <input
-        type="date"
-        value={date}
-        onChange={e => {
-          setDate(e.target.value);
-          loadAttendance(e.target.value);
-        }}
-        className={styles.datePicker}
-      />
-
-      <table className={styles.attendanceTable}>
-        <thead>
-          <tr>
-            <th>Roll No</th>
-            <th>Name</th>
-            {periods.map(p => (
-              <th key={p}>{p}</th>
-            ))}
-            <th>% Present</th>
-          </tr>
-        </thead>
-        <tbody>
-          {attendance.map(student => (
-            <tr key={student.id}>
-              <td>{student.roll}</td>
-              <td>{student.name}</td>
-              {periods.map(p => {
-                const isEditing = editingCell.studentId === student.id && editingCell.period === p;
-                return (
-                  <td
-                    key={p}
-                    className={student.status[p] === 'P' ? styles.present : styles.absent}
-                    onClick={() => setEditingCell({ studentId: student.id, period: p })}
-                  >
-                    {isEditing ? (
-                      <select
-                        value={student.status[p]}
-                        onChange={e => {
-                          const updated = attendance.map(s =>
-                            s.id === student.id
-                              ? {
-                                  ...s,
-                                  status: {
-                                    ...s.status,
-                                    [p]: e.target.value,
-                                  },
-                                }
-                              : s
-                          );
-                          updateAttendance(updated);
-                          setEditingCell({ studentId: null, period: null });
-                        }}
-                        onBlur={() => setEditingCell({ studentId: null, period: null })}
-                        className={styles.dropdown}
-                      >
-                        <option value="P">P</option>
-                        <option value="A">A</option>
-                      </select>
-                    ) : (
-                      student.status[p]
-                    )}
-                  </td>
-                );
-              })}
-              <td>{getStudentPercent(student)}%</td>
-            </tr>
-          ))}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colSpan={periods.length + 2}>
-              Class Attendance Average: {getClassAverage()}%
-            </td>
-          </tr>
-        </tfoot>
-      </table>
-
-      <div className={styles.exportButtons}>
-        <button onClick={exportAttendance} className={styles.exportButton}>
-          Export to Excel
-        </button>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <h1>Teacher Attendance Management</h1>
+        <p>Mark attendance for all students</p>
       </div>
+
+      <div className={styles.dateControl}>
+        <label htmlFor="dateSelect"><strong>Select Date:</strong></label>
+        <input
+          type="date"
+          id="dateSelect"
+          value={selectedDate}
+          onChange={e => setSelectedDate(e.target.value)}
+          className={styles.dateInput}
+        />
+      </div>
+
+      {loading && (
+        <div className={styles.loading}>
+          <p>Loading all students...</p>
+        </div>
+      )}
+
+      {!loading && students.length === 0 && (
+        <div className={styles.noStudents}>
+          <p>No students found in the system.</p>
+        </div>
+      )}
+
+      {!loading && students.length > 0 && (
+        <>
+          <div className={styles.studentCount}>
+            <p><strong>Total Students:</strong> {students.length}</p>
+            <p><strong>Date:</strong> {new Date(selectedDate).toLocaleDateString()}</p>
+          </div>
+
+          <div className={styles.tableContainer}>
+            <table className={styles.attendanceTable}>
+              <thead>
+                <tr>
+                  <th style={{minWidth: '50px'}}>S.No</th>
+                  <th style={{minWidth: '200px'}}>Student Name</th>
+                  <th style={{minWidth: '150px'}}>Roll No</th>
+                  {[1, 2, 3, 4, 5, 6, 7, 8].map(period => (
+                    <th key={period} style={{minWidth: '100px'}}>Period {period}</th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {students.map((student, index) => (
+                  <tr key={student.id}>
+                    <td><strong>{index + 1}</strong></td>
+                    <td>
+                      <strong>
+                        {student.firstName && student.lastName 
+                          ? `${student.firstName} ${student.lastName}` 
+                          : 'Name Missing'
+                        }
+                      </strong>
+                    </td>
+                    <td>{student.acceptedStudentId || 'No Roll No'}</td>
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map(period => (
+                      <td key={period}>
+                        <select
+                          value={attendance[student.id]?.[period] || 'P'}
+                          onChange={e => handleAttendanceChange(student.id, period, e.target.value)}
+                          className={`${styles.statusSelect} ${styles[attendance[student.id]?.[period] || 'P']}`}
+                        >
+                          <option value="P">Present</option>
+                          <option value="A">Absent</option>
+                        </select>
+                      </td>
+                    ))}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className={styles.submitSection}>
+            <button
+              onClick={submitAttendance}
+              disabled={submitting}
+              className={styles.submitButton}
+            >
+              {submitting ? 'Submitting Attendance...' : `Submit Attendance for ${students.length} Students`}
+            </button>
+          </div>
+        </>
+      )}
     </div>
   );
 };
