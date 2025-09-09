@@ -1,0 +1,49 @@
+.container {
+  padding: 1rem;
+  font-family: Arial, sans-serif;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.percentage {
+  font-weight: bold;
+  color: #333;
+}
+
+.dropdown {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table th,
+.table td {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+.P {
+  color: green;
+  font-weight: bold;
+}
+
+.A {
+  color: red;
+  font-weight: bold;
+}
+
+.L {
+  color: orange;
+  font-weight: bold;
+}

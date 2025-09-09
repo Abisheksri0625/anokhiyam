@@ -1,4 +1,5 @@
-.dashboardContainer {
+/* Page Layout */
+.pageContainer {
   display: flex;
   min-height: 100vh;
   background: #f8fafc;
@@ -20,7 +21,7 @@
 .content {
   flex: 1;
   padding: 2rem;
-  margin-top: 80px; /* match header height */
+  margin-top: 80px;
   max-width: 1600px;
   margin-left: auto;
   margin-right: auto;
@@ -29,6 +30,182 @@
   animation: fadeInUp 0.6s ease-out;
 }
 
+/* Section Styling */
+.section {
+  margin-bottom: 2rem;
+}
+
+/* Scrollable Card Sections */
+.scrollWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.scrollContainer {
+  display: flex;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  gap: 1rem;
+  padding: 1rem 0;
+}
+
+.scrollContainer::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollBtn {
+  position: absolute;
+  width: 40px;
+  height: 100%;
+  top: 0;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 1;
+  border: none;
+  background: transparent;
+}
+
+.scrollWrapper > .scrollBtn:first-child {
+  left: 0;
+}
+
+.scrollWrapper > .scrollBtn:last-child {
+  right: 0;
+}
+
+/* Card Styling */
+.card {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  overflow: hidden;
+  min-width: 240px;
+  max-width: 300px;
+  flex: 0 0 auto;
+}
+
+.cardImage {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
+/* Side-by-Side Layout */
+.sideBySideContainer {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.sideBox {
+  background: #fff;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  flex: 1;
+  min-width: 300px;
+}
+
+/* List Styling */
+.list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.list li {
+  background: #f1f5f9;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+/* Circulars Section */
+.circularList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.circularItem {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  padding: 0.75rem 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.circularItem:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+}
+
+.dateBox {
+  background: #dc2626;
+  color: white;
+  border-radius: 6px;
+  padding: 0.5rem 0.75rem;
+  text-align: center;
+  font-weight: 600;
+  margin-right: 1rem;
+  min-width: 70px;
+}
+
+.dateBox .month {
+  display: block;
+  font-size: 0.85rem;
+}
+
+.dateBox .day {
+  display: block;
+  font-size: 1.2rem;
+}
+
+.dateBox .year {
+  display: block;
+  font-size: 0.75rem;
+}
+
+.circularTitle {
+  font-size: 1rem;
+  color: #111827;
+}
+
+/* Modal */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0,0,0,0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalContent {
+  background: #fff;
+  border-radius: 10px;
+  padding: 1rem;
+  max-width: 90%;
+  max-height: 90%;
+  overflow: auto;
+}
+
+.modalContent img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+
+/* Animation */
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }

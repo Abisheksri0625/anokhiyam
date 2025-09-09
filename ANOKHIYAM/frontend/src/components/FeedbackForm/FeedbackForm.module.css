@@ -1,0 +1,82 @@
+.card {
+  background: none;
+  padding: 2rem;
+  margin-top: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  background-color: #f0fff0;
+}
+
+.table th,
+.table td {
+  border: 1px solid #a3d9a5;
+  padding: 0.5rem;
+  text-align: center;
+  color: #2e7d32;
+}
+
+.table th {
+  background-color: #c8e6c9;
+}
+
+.select {
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  width: 100%;
+  border: 1px solid #a3d9a5;
+  border-radius: 4px;
+  background-color: #f0fff0;
+  font-family: inherit;
+}
+
+.label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: bold;
+  color: #2e7d32;
+}
+
+.button {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(to right, #43a047, #66bb6a);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.button:hover {
+  background: linear-gradient(to right, #388e3c, #4caf50);
+}
+
+/* Validation styles */
+.invalid {
+  border: 2px solid red !important;
+  background-color: #ffe6e6 !important;
+}
+
+.invalidRow td {
+  background-color: #ffe6e6;
+}
+
+/* Confirmation screen */
+.confirmation {
+  padding: 2rem;
+  text-align: center;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0, 0, 0, 0.05);
+}
+
+.confirmation h2 {
+  color: #2e7d32;
+}
