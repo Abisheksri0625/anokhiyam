@@ -601,15 +601,18 @@ const AdmissionForm = () => {
                   className={`${styles.input} ${errors.selectedCourse ? styles.error : ''}`}
                 >
                   <option value="">-- Select a Course --</option>
-                  {availableCourses.length > 0 ? (
-                    availableCourses.map((course) => (
-                      <option key={course.id} value={course.name}>
-                        {course.name} ({course.duration}) - {course.seats} seats
-                      </option>
-                    ))
-                  ) : (
-                    <option value="" disabled>Loading courses...</option>
-                  )}
+                  <option value="Computer Science">Computer Science</option>
+                  <option value="Data Science">Data Science</option>
+                  <option value="Mathematics">Mathematics</option>
+                  <option value="Artificial Intelligence">Artificial Intelligence</option>
+                  <option value="Machine Learning">Machine Learning</option>
+                  <option value="Cybersecurity">Cybersecurity</option>
+                  <option value="Web Development">Web Development</option>
+                  <option value="Cloud Computing">Cloud Computing</option>
+                  <option value="Mobile App Development">Mobile App Development</option>
+                  <option value="Software Engineering">Software Engineering</option>
+                  <option value="Digital Marketing">Digital Marketing</option>
+                  <option value="UI/UX Design">UI/UX Design</option>
                 </select>
                 {errors.selectedCourse && <span className={styles.errorText}>{errors.selectedCourse}</span>}
               </div>
@@ -765,15 +768,16 @@ const AdmissionForm = () => {
 
   return (
     <div className={styles.container}>
+      {/* Minimal Back Button - Top Left Corner */}
+      <button 
+        onClick={() => navigate(-1)} 
+        className={styles.backButton}
+      >
+        <ArrowLeft size={20} weight="bold" />
+      </button>
+
       {/* Header */}
       <header className={styles.header}>
-        <button 
-          onClick={() => navigate(-1)} 
-          className={styles.backButton}
-        >
-          <ArrowLeft size={18} />
-          Back
-        </button>
         <h1>Admission Application Form</h1>
       </header>
 

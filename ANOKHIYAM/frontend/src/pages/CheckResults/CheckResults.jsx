@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './CheckResults.module.css';
-import { Eye, EyeSlash, ArrowLeft, Shield } from 'phosphor-react';
+import { Eye, EyeSlash, ArrowLeft } from 'phosphor-react';
 import { resultsService } from '../../services/resultsService';
-import Logo from '../../assets/logo.png';
+import Logo from '../../assets/Result.png';
 
 const CheckResults = () => {
   const navigate = useNavigate();
@@ -121,7 +121,7 @@ const CheckResults = () => {
         <div className={styles.formCard}>
           <div className={styles.formHeader}>
             <div className={styles.iconWrapper}>
-              <Shield size={32} weight="light" />
+              <img src={Logo} alt="Logo" className={styles.logoImage} />
             </div>
             <h1 className={styles.title}>Check Results</h1>
             <p className={styles.subtitle}>Enter your credentials to access entrance exam results</p>

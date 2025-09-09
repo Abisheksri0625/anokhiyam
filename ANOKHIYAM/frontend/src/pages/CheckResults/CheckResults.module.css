@@ -1,344 +1,209 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
-
+/* Container */
 .container {
   height: 100vh;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  display: flex;
+  flex-direction: column;
   font-family: 'Poppins', sans-serif;
-  position: relative;
   overflow: hidden;
+  background: linear-gradient(120deg, #2a0136, #aa59cd, #010001, #471456);
+  background-size: 400% 400%;
+  animation: gradientShift 18s ease infinite;
 }
 
-.backgroundPattern {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: radial-gradient(circle at 20% 20%, rgba(102, 126, 234, 0.03) 0%, transparent 50%),
-              radial-gradient(circle at 80% 80%, rgba(118, 75, 162, 0.03) 0%, transparent 50%);
-  pointer-events: none;
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
+/* Header */
 .header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  padding: 2rem 3rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  z-index: 10;
+  padding: 1rem 2rem;
+  position: relative;
+  z-index: 2;
 }
 
 .backButton {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.75rem 1.5rem;
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 50px;
-  color: #64748b;
+  gap: 6px;
+  background: transparent;
+  border: none;
+  font-size: 0.9rem;
   font-weight: 500;
+  color: #ffffff;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  font-family: 'Poppins', sans-serif;
-  font-size: 0.875rem;
+  transition: color 0.3s ease;
 }
 
 .backButton:hover {
-  background: #f8fafc;
-  color: #667eea;
-  transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+  color: #312e81;
 }
 
-.logo {
-  display: flex;
-  align-items: center;
+.logo img {
+  height: 32px; /* smaller logo just for header */
+  object-fit: contain;
 }
 
-.logoImage {
-  height: 32px;
-  width: auto;
-  opacity: 0.8;
-}
-
+/* Main Content */
 .mainContent {
-  height: 100vh;
+  flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
-}
-
-.formCard {
-  background: white;
-  border-radius: 20px;
-  padding: 3rem 2.5rem;
-  width: 100%;
-  max-width: 420px;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  padding: 1rem;
   position: relative;
-  animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 2;
 }
 
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(40px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Form Card */
+.formCard {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 2rem 2.5rem;
+  width: 100%;
+  max-width: 600px;   /* balanced width */
+  max-height: 90vh;   /* ensures no scroll */
+  overflow: hidden;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.8s ease forwards;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(25px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Form Header */
 .formHeader {
   text-align: center;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1.5rem;
 }
 
 .iconWrapper {
-  width: 60px;
-  height: 60px;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-  border-radius: 16px;
   display: flex;
-  align-items: center;
   justify-content: center;
-  margin: 0 auto 1.5rem;
-  color: #667eea;
-  animation: float 3s ease-in-out infinite;
+  margin-bottom: 0.8rem;
 }
 
-@keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-5px); }
+.iconWrapper img {
+  height: 48px;  /* compact logo size inside card */
+  object-fit: contain;
 }
 
 .title {
-  font-size: 1.75rem;
+  font-size: 1.7rem;
   font-weight: 600;
-  color: #1e293b;
-  margin-bottom: 0.5rem;
-  letter-spacing: -0.025em;
+  color: #1e1b4b;
+  margin-bottom: 0.4rem;
 }
 
 .subtitle {
-  color: #64748b;
-  font-size: 0.875rem;
-  font-weight: 400;
-  line-height: 1.5;
+  font-size: 0.9rem;
+  color: #6b7280;
 }
 
-.form {
-  display: flex;
-  flex-direction: column;
-  gap: 1.25rem;
-}
-
+/* Inputs */
 .inputGroup {
-  position: relative;
+  margin-bottom: 1rem;
 }
 
 .input {
   width: 100%;
-  padding: 1rem 1.25rem;
-  border: 1.5px solid #e2e8f0;
-  border-radius: 12px;
+  padding: 0.9rem 1rem;
+  border: 1.5px solid #ddd6fe;
+  border-radius: 10px;
   font-size: 0.95rem;
-  font-family: 'Poppins', sans-serif;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: #fafafa;
-  color: #1e293b;
-  box-sizing: border-box;
-}
-
-.input::placeholder {
-  color: #94a3b8;
-  font-weight: 400;
+  outline: none;
+  transition: all 0.3s ease;
+  background: #fff;
 }
 
 .input:focus {
-  outline: none;
-  border-color: #667eea;
-  background: white;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.08);
-  transform: translateY(-1px);
-}
-
-.input:disabled {
-  background: #f1f5f9;
-  cursor: not-allowed;
-  opacity: 0.7;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
 }
 
 .inputError {
-  border-color: #ef4444 !important;
-  background: #fef2f2 !important;
+  border-color: #dc2626;
 }
 
+.errorText {
+  font-size: 0.78rem;
+  color: #dc2626;
+  margin-top: 4px;
+  display: block;
+}
+
+/* Password wrapper */
 .passwordWrapper {
   position: relative;
 }
 
 .passwordInput {
-  padding-right: 3rem;
+  padding-right: 2.5rem;
 }
 
 .eyeButton {
   position: absolute;
-  right: 1rem;
+  right: 10px;
   top: 50%;
   transform: translateY(-50%);
   background: none;
   border: none;
-  color: #94a3b8;
   cursor: pointer;
-  padding: 0.5rem;
-  border-radius: 6px;
-  transition: all 0.2s ease;
+  color: #6b7280;
 }
 
-.eyeButton:hover {
-  color: #667eea;
-  background: rgba(102, 126, 234, 0.1);
-}
-
-.eyeButton:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-.errorText {
-  color: #ef4444;
-  font-size: 0.75rem;
-  font-weight: 500;
-  margin-top: 0.5rem;
-  display: block;
-}
-
-.submitButton {
-  width: 100%;
-  padding: 1rem;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  margin-top: 0.75rem;
-  font-family: 'Poppins', sans-serif;
-  position: relative;
-  overflow: hidden;
-}
-
-.submitButton::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(135deg, #764ba2, #667eea);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.submitButton:hover:not(:disabled)::before {
-  opacity: 1;
-}
-
-.submitButton:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
-}
-
-.submitButton:disabled {
-  cursor: not-allowed;
-  opacity: 0.8;
-}
-
-.loadingContent {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  position: relative;
-  z-index: 1;
-}
-
-.spinner {
-  width: 16px;
-  height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-radius: 50%;
-  border-top-color: white;
-  animation: spin 0.8s linear infinite;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-@media (max-width: 640px) {
-  .formCard {
-    margin: 1rem;
-    padding: 2.5rem 2rem;
-  }
-  
-  .header {
-    padding: 1.5rem 1.5rem;
-  }
-  
-  .title {
-    font-size: 1.5rem;
-  }
-}
-/* Add these new styles to your existing CSS */
-
-.errorAlert {
-  background-color: #fee2e2;
-  border: 1px solid #fecaca;
-  color: #dc2626;
-  padding: 1rem;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-}
-
+/* Info Box */
 .infoBox {
-  background: #f0f9ff;
-  border: 1px solid #bae6fd;
-  border-radius: 8px;
-  padding: 1rem;
-  margin: 1rem 0;
+  background: #eef2ff;
+  border: 1px solid #c7d2fe;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
+  color: #3730a3;
 }
 
 .infoBox h4 {
-  color: #0369a1;
-  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.95rem;
   font-weight: 600;
-  margin: 0 0 0.5rem 0;
 }
 
-.infoBox ul {
-  margin: 0;
-  padding-left: 1rem;
+/* Button */
+.submitButton {
+  width: 100%;
+  padding: 0.9rem;
+  background: linear-gradient(135deg, #d563f1, #8b5cf6, #ec4899);
+  color: white;
+  font-weight: 600;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.infoBox li {
-  color: #0369a1;
-  font-size: 0.75rem;
-  margin-bottom: 0.25rem;
+.submitButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 24px rgba(99, 102, 241, 0.25);
 }
 
-.infoBox li:last-child {
-  margin-bottom: 0;
+/* Error Alert */
+.errorAlert {
+  background: #fee2e2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  padding: 0.9rem;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  font-size: 0.85rem;
 }
