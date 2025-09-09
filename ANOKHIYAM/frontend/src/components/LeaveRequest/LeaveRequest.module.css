@@ -1,22 +1,31 @@
 .container {
-  max-width: 600px;
+  max-width: 800px;
   margin: auto;
   padding: 2rem;
   font-family: Arial, sans-serif;
-  background: transparent;
-  box-shadow: none;
 }
 
-h2 {
-  margin-bottom: 1.5rem;
-  text-align: center;
-  color: #333;
+.studentInfo {
+  background: #f0f9ff;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border-left: 4px solid #22c55e;
+}
+
+.studentInfo p {
+  margin: 5px 0;
+  color: #374151;
 }
 
 .form {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
 }
 
 .row {
@@ -37,11 +46,17 @@ textarea,
 input[type="file"] {
   padding: 1rem;
   font-size: 1rem;
-  border: 1px solid #ccc;
+  border: 2px solid #d1d5db;
   border-radius: 6px;
   background: white;
-  box-shadow: 0 0 4px rgba(0,0,0,0.05);
-  width: 100%;
+  transition: border-color 0.2s;
+}
+
+input[type="date"]:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: #22c55e;
 }
 
 textarea {
@@ -53,10 +68,12 @@ textarea {
   display: flex;
   justify-content: space-between;
   gap: 1rem;
+  margin-top: 1rem;
 }
 
 .cancel,
-.submit {
+.submit,
+.newRequestBtn {
   flex: 1;
   padding: 0.75rem 1rem;
   border: none;
@@ -64,53 +81,130 @@ textarea {
   color: white;
   cursor: pointer;
   font-weight: bold;
-  background-image: linear-gradient(to right, #38b2ac, #2f855a);
-  transition: opacity 0.2s ease;
+  background: linear-gradient(135deg, #22c55e, #10b981);
+  transition: all 0.2s ease;
+}
+
+.cancel {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .cancel:hover,
-.submit:hover {
-  opacity: 0.9;
+.submit:hover,
+.newRequestBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
-/* Tracking journey UI */
-.trackingCard {
-  background: white;
-  border-radius: 10px;
-  padding: 1rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-  margin-top: 1rem;
-}
-
-.trackingPath {
+/* Request List Styles */
+.requestsList {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  margin-top: 2rem;
-  padding-left: 1rem;
-  border-left: 2px solid #ccc;
+  gap: 1rem;
+  margin-bottom: 2rem;
 }
 
-.step {
+.requestCard {
+  background: white;
+  border-radius: 10px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+  border-left: 4px solid #22c55e;
+}
+
+.requestHeader {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 0.75rem;
-  font-size: 1rem;
-  font-weight: bold;
-  color: #2e7d32;
   margin-bottom: 1rem;
 }
 
-.icon {
-  font-size: 1.25rem;
+.requestHeader h3 {
+  margin: 0;
+  color: #374151;
 }
 
-.label {
-  font-size: 1rem;
+.status {
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  color: white;
+  font-weight: bold;
+  font-size: 0.875rem;
 }
 
-.connector {
-  height: 20px;
-  border-left: 2px solid #ccc;
-  margin-left: 0.6rem;
+.requestDetails {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
+.requestDetails p {
+  margin: 0.25rem 0;
+  color: #6b7280;
+}
+
+.newRequestBtn {
+  max-width: 300px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .requestDetails {
+    grid-template-columns: 1fr;
+  }
+  
+  .buttonGroup {
+    flex-direction: column;
+  }
+}
+/* Add to LeaveRequest.module.css */
+
+.approvedBanner {
+  background: linear-gradient(135deg, #10b981, #22c55e);
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 15px;
+  font-weight: bold;
+  text-align: center;
+  animation: slideIn 0.5s ease-out;
+}
+
+.rejectedBanner {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 15px;
+  font-weight: bold;
+  text-align: center;
+  animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Update existing status styles */
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  color: white;
+  font-weight: bold;
+  font-size: 0.875rem;
 }

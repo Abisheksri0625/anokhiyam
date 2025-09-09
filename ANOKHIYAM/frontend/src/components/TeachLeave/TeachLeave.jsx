@@ -1,126 +1,166 @@
 import React, { useState, useEffect } from 'react';
+import { db } from '../../config/firebase';
+import { 
+  collection, 
+  query, 
+  where, 
+  onSnapshot,
+  doc,
+  updateDoc,
+  getDocs
+} from 'firebase/firestore';
 import styles from './TeachLeave.module.css';
-
-const teacherClass = 'CSE-A'; // Class assigned to this teacher
 
 const TeachLeave = () => {
   const [requests, setRequests] = useState([]);
+  const [activeTab, setActiveTab] = useState('Pending');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const stored = localStorage.getItem('leaveRequests');
-    const allRequests = stored ? JSON.parse(stored) : [];
-    const filtered = allRequests.filter(req => req.class === teacherClass && req.status === 'Pending');
-    setRequests(filtered);
-  }, []);
+    fetchLeaveRequests();
+  }, [activeTab]);
 
-  const getDays = (from, to) => {
-    const start = new Date(from);
-    const end = new Date(to);
-    const days = [];
-    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-      days.push(new Date(d).toISOString().split('T')[0]);
-    }
-    return days;
-  };
-
-  const requiresProof = (req) => {
-    const days = getDays(req.from, req.to).length;
-    const keywords = ['marriage', 'death', 'health'];
-    return (
-      days > 2 &&
-      keywords.some(k => req.reason.toLowerCase().includes(k)) &&
-      !req.proof
+  const fetchLeaveRequests = () => {
+    const requestsRef = collection(db, 'leave_requests');
+    const q = query(
+      requestsRef, 
+      where('status', '==', activeTab)
     );
-  };
 
-  const markAbsent = (studentId, dates) => {
-    dates.forEach(date => {
-      const key = `attendance_${date}`;
-      const stored = localStorage.getItem(key);
-      if (!stored) return;
-
-      const data = JSON.parse(stored);
-      const updated = data.map(student =>
-        student.id === studentId
-          ? {
-              ...student,
-              status: Object.fromEntries(
-                Object.entries(student.status).map(([period, val]) => [period, 'A'])
-              )
-            }
-          : student
-      );
-      localStorage.setItem(key, JSON.stringify(updated));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const requestData = snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
+      
+      // Sort by createdAt on the client side to avoid index issues
+      requestData.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+      
+      setRequests(requestData);
+      setLoading(false);
     });
+
+    return unsubscribe;
   };
 
-  const handleAction = (id, action) => {
-    const updatedRequests = requests.map(req =>
-      req.id === id ? { ...req, status: action } : req
-    );
-    setRequests(updatedRequests);
+  const handleAction = async (requestId, newStatus) => {
+    try {
+      const requestRef = doc(db, 'leave_requests', requestId);
+      await updateDoc(requestRef, {
+        status: newStatus,
+        updatedAt: new Date().toISOString(),
+        reviewedBy: 'teacher'
+      });
 
-    const allStored = JSON.parse(localStorage.getItem('leaveRequests')) || [];
-    const updatedStored = allStored.map(req =>
-      req.id === id ? { ...req, status: action } : req
-    );
-    localStorage.setItem('leaveRequests', JSON.stringify(updatedStored));
-
-    if (action === 'Accepted') {
-      const req = updatedRequests.find(r => r.id === id);
-      const leaveDates = getDays(req.from, req.to);
-      markAbsent(req.studentId, leaveDates);
+      alert(`✅ Request ${newStatus.toLowerCase()} successfully!`);
+    } catch (error) {
+      console.error('Error updating request:', error);
+      alert('Error updating request. Please try again.');
     }
+  };
+
+  const requiresProof = (request) => {
+    const keywords = ['marriage', 'death', 'health', 'medical'];
+    return (
+      request.days > 2 &&
+      keywords.some(k => request.reason.toLowerCase().includes(k)) &&
+      !request.proof
+    );
   };
 
   return (
     <div className={styles.leaveContainer}>
-      <h2 className={styles.title}>Leave Requests for Class {teacherClass}</h2>
-      <table className={styles.leaveTable}>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Roll No</th>
-            <th>Type</th>
-            <th>Reason</th>
-            <th>From</th>
-            <th>To</th>
-            <th>Days</th>
-            <th>Proof</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {requests.map(req => {
-            const days = getDays(req.from, req.to).length;
-            return (
-              <tr key={req.id}>
-                <td>{req.name}</td>
-                <td>{req.roll}</td>
-                <td>{req.type}</td>
-                <td>{req.reason}</td>
-                <td>{req.from}</td>
-                <td>{req.to}</td>
-                <td>{days}</td>
-                <td>
-                  {requiresProof(req) ? (
-                    <span className={styles.missingProof}>Required</span>
-                  ) : req.proof ? (
-                    <a href={`#/${req.proof}`} className={styles.proofLink}>View</a>
-                  ) : (
-                    '—'
-                  )}
-                </td>
-                <td>
-                  <button className={styles.accept} onClick={() => handleAction(req.id, 'Accepted')}>Accept</button>
-                  <button className={styles.reject} onClick={() => handleAction(req.id, 'Rejected')}>Reject</button>
-                  <button className={styles.forward} onClick={() => handleAction(req.id, 'Forwarded to HOD')}>Forward</button>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <div className={styles.header}>
+        <h2>Leave Request Management</h2>
+      </div>
+
+      {/* Tab Navigation - Removed "Forwarded to HOD" */}
+      <div className={styles.tabNavigation}>
+        {['Pending', 'Accepted', 'Rejected'].map(tab => (
+          <button
+            key={tab}
+            className={`${styles.tabButton} ${activeTab === tab ? styles.activeTab : ''}`}
+            onClick={() => setActiveTab(tab)}
+          >
+            {tab} ({requests.length})
+          </button>
+        ))}
+      </div>
+
+      {loading ? (
+        <div className={styles.loading}>Loading requests...</div>
+      ) : (
+        <div className={styles.requestsContainer}>
+          {requests.length > 0 ? (
+            <table className={styles.leaveTable}>
+              <thead>
+                <tr>
+                  <th>Student Name</th>
+                  <th>Roll No</th>
+                  <th>Type</th>
+                  <th>From</th>
+                  <th>To</th>
+                  <th>Days</th>
+                  <th>Reason</th>
+                  <th>Proof</th>
+                  <th>Submitted</th>
+                  {activeTab === 'Pending' && <th>Actions</th>}
+                </tr>
+              </thead>
+              <tbody>
+                {requests.map(request => (
+                  <tr key={request.id}>
+                    <td><strong>{request.studentName}</strong></td>
+                    <td>{request.rollNumber}</td>
+                    <td>
+                      <span className={styles.leaveType}>{request.type}</span>
+                    </td>
+                    <td>{new Date(request.from).toLocaleDateString()}</td>
+                    <td>{new Date(request.to).toLocaleDateString()}</td>
+                    <td><strong>{request.days}</strong></td>
+                    <td className={styles.reasonCell}>
+                      <div className={styles.reasonText}>{request.reason}</div>
+                    </td>
+                    <td>
+                      {requiresProof(request) ? (
+                        <span className={styles.missingProof}>Required</span>
+                      ) : request.proof ? (
+                        <span className={styles.proofAvailable}>Available</span>
+                      ) : (
+                        <span className={styles.notRequired}>Not Required</span>
+                      )}
+                    </td>
+                    <td>{new Date(request.createdAt).toLocaleDateString()}</td>
+                    {activeTab === 'Pending' && (
+                      <td>
+                        <div className={styles.actionButtons}>
+                          <button
+                            className={styles.acceptBtn}
+                            onClick={() => handleAction(request.id, 'Accepted')}
+                          >
+                            ✅ Accept
+                          </button>
+                          <button
+                            className={styles.rejectBtn}
+                            onClick={() => handleAction(request.id, 'Rejected')}
+                          >
+                            ❌ Reject
+                          </button>
+                        </div>
+                      </td>
+                    )}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <div className={styles.noRequests}>
+              <h3>No {activeTab.toLowerCase()} requests found</h3>
+              <p>All {activeTab.toLowerCase()} leave requests will appear here.</p>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
