@@ -9,73 +9,51 @@ const TeacherInterventions = () => {
     localStorage.setItem('teacherSidebarCollapsed', isCollapsed);
   }, [isCollapsed]);
 
-  const classes = ['II CSE-A', 'III CSE-A', 'II CSE-B'];
-  const teachers = {
-    Mary: ['Math', 'Physics'],
-    Joseph: ['Chemistry', 'Biology'],
-  };
+  const classes = ['II CSE', 'III CSE'];
+  const sections = ['A', 'B'];
+  const subjects = ['Digital Image', 'Data Structures', 'Data Science', 'Discrete Maths', 'Operating System'];
 
   const students = [
-    { name: 'John D', class: 'II CSE-A', marks: { Math: 35, Physics: 70 } },
-    { name: 'Meera', class: 'III CSE-A', marks: { Chemistry: 40, Biology: 85 } },
-    { name: 'Arjun', class: 'II CSE-B', marks: { Math: 28, Physics: 60 } },
-    { name: 'Sneha', class: 'II CSE-A', marks: { Math: 80, Physics: 45 } },
-    { name: 'Ravi', class: 'III CSE-A', marks: { Chemistry: 38, Biology: 42 } },
-    { name: 'Divya', class: 'II CSE-B', marks: { Math: 48, Physics: 52 } },
-    { name: 'Kiran', class: 'II CSE-A', marks: { Math: 42, Physics: 49 } },
-    { name: 'Fatima', class: 'III CSE-A', marks: { Chemistry: 47, Biology: 50 } },
+    { name: 'John Doe', regNo: '101', class: 'II CSE', section: 'A', marks: { 'Digital Image': 38, 'Data Structures': 55 } },
+    { name: 'Priya S', regNo: '102', class: 'II CSE', section: 'A', marks: { 'Digital Image': 42, 'Data Structures': 48 } },
+    { name: 'Akash M', regNo: '103', class: 'II CSE', section: 'B', marks: { 'Digital Image': 40, 'Data Structures': 60 } },
+    { name: 'Meera', regNo: '104', class: 'III CSE', section: 'A', marks: { 'Data Science': 44, 'Discrete Maths': 50 } },
+    { name: 'Ravi', regNo: '105', class: 'III CSE', section: 'A', marks: { 'Data Science': 38, 'Discrete Maths': 42 } },
+    { name: 'Divya', regNo: '106', class: 'II CSE', section: 'B', marks: { 'Digital Image': 48, 'Data Structures': 52 } },
   ];
 
   const [formData, setFormData] = useState({
     class: '',
-    teacher: '',
+    section: '',
     subject: '',
     date: '',
     time: '',
   });
 
-  const [selectedStudents, setSelectedStudents] = useState([]);
-  const [selectAll, setSelectAll] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
-    setSelectedStudents([]);
-    setSelectAll(false);
+    setShowPopup(false);
   };
-
-  const getSubjects = () => teachers[formData.teacher] || [];
 
   const getEligibleStudents = () => {
-    if (!formData.class || !formData.subject) return [];
+    const { class: cls, section, subject } = formData;
+    if (!cls || !section || !subject) return [];
     return students.filter(
-      s => s.class === formData.class && s.marks[formData.subject] < 50
+      s => s.class === cls && s.section === section && s.marks[subject] < 45
     );
-  };
-
-  const handleStudentToggle = (studentName) => {
-    setSelectedStudents(prev =>
-      prev.includes(studentName)
-        ? prev.filter(name => name !== studentName)
-        : [...prev, studentName]
-    );
-    setSelectAll(false);
-  };
-
-  const handleSelectAll = () => {
-    const eligible = getEligibleStudents().map(s => s.name);
-    if (selectAll) {
-      setSelectedStudents([]);
-    } else {
-      setSelectedStudents(eligible);
-    }
-    setSelectAll(!selectAll);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log('Scheduled Intervention:', { ...formData, selectedStudents });
-    alert(`Scheduled for: ${selectedStudents.join(', ')}`);
+    if (getEligibleStudents().length === 0) {
+      alert('No eligible students found.');
+      return;
+    }
+    setShowPopup(true);
+    setTimeout(() => setShowPopup(false), 4000);
   };
 
   return (
@@ -83,11 +61,32 @@ const TeacherInterventions = () => {
       <TeacherSidebar activeItem="interventions" isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
       <div className={`${styles.mainContent} ${isCollapsed ? styles.collapsed : ''}`}>
         <TeacherHeader isCollapsed={isCollapsed} />
+
+        {showPopup && (
+          <div style={{
+            position: 'fixed',
+            top: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            backgroundColor: '#10b981',
+            color: 'white',
+            padding: '1rem 2rem',
+            borderRadius: '8px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+            zIndex: 9999,
+            fontWeight: '600',
+            animation: 'fadeInOut 4s ease forwards'
+          }}>
+            ✅ Message Sent to Students Successfully
+          </div>
+        )}
+
         <div className={styles.content}>
           <div className={styles.pageHeader}>
             <h1 className={styles.pageTitle}>Interventions</h1>
             <p className={styles.pageSubtitle}>Schedule extra classes for students needing support</p>
           </div>
+
           <div className={styles.contentArea}>
             <form className={styles.formContainer} onSubmit={handleSubmit}>
               <div className={styles.row}>
@@ -97,57 +96,64 @@ const TeacherInterventions = () => {
                   {classes.map((cls, i) => <option key={i} value={cls}>{cls}</option>)}
                 </select>
 
-                <label>Teacher:</label>
-                <select name="teacher" value={formData.teacher} onChange={handleChange}>
-                  <option value="">Select Teacher</option>
-                  {Object.keys(teachers).map((t, i) => <option key={i} value={t}>{t}</option>)}
+                <label>Section:</label>
+                <select name="section" value={formData.section} onChange={handleChange}>
+                  <option value="">Select Section</option>
+                  {sections.map((sec, i) => <option key={i} value={sec}>{sec}</option>)}
                 </select>
 
                 <label>Subject:</label>
                 <select name="subject" value={formData.subject} onChange={handleChange}>
                   <option value="">Select Subject</option>
-                  {getSubjects().map((subj, i) => <option key={i} value={subj}>{subj}</option>)}
+                  {subjects.map((subj, i) => <option key={i} value={subj}>{subj}</option>)}
                 </select>
               </div>
 
-              <div className={styles.row}>
+              {formData.subject && (
+                <>
+                  <h3 style={{ marginTop: '1rem' }}>
+                    Students Below 45 in <strong>{formData.subject}</strong>
+                  </h3>
+                  <table style={{
+                    width: '100%',
+                    marginTop: '1rem',
+                    borderCollapse: 'collapse',
+                    border: '1px solid #e5e7eb'
+                  }}>
+                    <thead>
+                      <tr style={{ background: '#f3f4f6' }}>
+                        <th style={{ padding: '0.75rem', border: '1px solid #e5e7eb' }}>S.No</th>
+                        <th style={{ padding: '0.75rem', border: '1px solid #e5e7eb' }}>Student Name</th>
+                        <th style={{ padding: '0.75rem', border: '1px solid #e5e7eb' }}>Register No.</th>
+                        <th style={{ padding: '0.75rem', border: '1px solid #e5e7eb' }}>Marks</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {getEligibleStudents().length === 0 ? (
+                        <tr>
+                          <td colSpan="4" style={{ padding: '1rem', textAlign: 'center' }}>No students found.</td>
+                        </tr>
+                      ) : (
+                        getEligibleStudents().map((s, i) => (
+                          <tr key={i}>
+                            <td style={{ padding: '0.75rem', border: '1px solid #e5e7eb' }}>{i + 1}</td>
+                            <td style={{ padding: '0.75rem', border: '1px solid #e5e7eb' }}>{s.name}</td>
+                            <td style={{ padding: '0.75rem', border: '1px solid #e5e7eb' }}>{s.regNo}</td>
+                            <td style={{ padding: '0.75rem', border: '1px solid #e5e7eb' }}>{s.marks[formData.subject]}</td>
+                          </tr>
+                        ))
+                      )}
+                    </tbody>
+                  </table>
+                </>
+              )}
+
+              <div className={styles.row} style={{ marginTop: '2rem' }}>
                 <label>Date:</label>
                 <input type="date" name="date" value={formData.date} onChange={handleChange} />
 
                 <label>Time:</label>
-                <select name="time" value={formData.time} onChange={handleChange}>
-                  <option value="">Select Time</option>
-                  <option value="9AM">9AM</option>
-                  <option value="2PM">2PM</option>
-                </select>
-              </div>
-
-              <div className={styles.studentSection}>
-                <p>Students with low marks in <strong>{formData.subject}</strong>:</p>
-                {getEligibleStudents().length > 0 && (
-                  <label className={styles.checkboxLabel}>
-                    <input
-                      type="checkbox"
-                      checked={selectAll}
-                      onChange={handleSelectAll}
-                    />
-                    Select All
-                  </label>
-                )}
-                {getEligibleStudents().length === 0 ? (
-                  <p>No students found.</p>
-                ) : (
-                  getEligibleStudents().map((s, i) => (
-                    <label key={i} className={styles.checkboxLabel}>
-                      <input
-                        type="checkbox"
-                        checked={selectedStudents.includes(s.name)}
-                        onChange={() => handleStudentToggle(s.name)}
-                      />
-                      {s.name} — {s.marks[formData.subject]} marks
-                    </label>
-                  ))
-                )}
+                <input type="time" name="time" value={formData.time} onChange={handleChange} />
               </div>
 
               <button type="submit" className={styles.submitButton}>Schedule Extra Class</button>
