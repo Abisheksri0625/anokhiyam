@@ -1,3 +1,4 @@
+/* Layout Structure */
 .pageContainer {
   display: flex;
   min-height: 100vh;
@@ -7,99 +8,61 @@
 
 .mainContent {
   flex: 1;
-  margin-left: 280px;
+  margin-left: 200px;
+  transition: margin-left 0.3s ease;
   display: flex;
   flex-direction: column;
-  transition: margin-left 0.3s ease;
+  align-items: center; /* Center horizontally */
 }
 
 .mainContent.collapsed {
   margin-left: 70px;
 }
 
+/* Content Container */
 .content {
-  flex: 1;
-  padding: 2rem;
-  margin-top: 70px;
-  max-width: 1600px;
-  margin-left: auto;
-  margin-right: auto;
   width: 100%;
+  max-width: 1500px;
+  margin-top: 90px;
+  padding: 12rem;
   box-sizing: border-box;
+  background: #ffffff;
+  border-radius: 1rem;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
   animation: fadeInUp 0.6s ease-out;
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
+/* Page Header */
 .pageHeader {
   margin-bottom: 2rem;
+  text-align: center;
 }
 
 .pageTitle {
   font-size: 2rem;
   font-weight: 700;
   color: #1f2937;
-  margin: 0 0 0.5rem 0;
+  margin-bottom: 0.5rem;
 }
 
 .pageSubtitle {
   font-size: 1rem;
   color: #6b7280;
-  margin: 0;
   font-weight: 400;
+  margin: 0;
 }
 
-.contentArea {
-  background: white;
-  border-radius: 1rem;
-  padding: 2rem;
-  box-shadow: 0 2px 15px rgba(0,0,0,0.08);
-  min-height: 400px;
+/* Form Row */
+.formRow {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 2rem;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 1024px) {
-  .mainContent {
-    margin-left: 0;
-  }
-  .mainContent.collapsed {
-    margin-left: 0;
-  }
-  .content {
-    padding: 1.5rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .mainContent,
-  .mainContent.collapsed {
-    margin-left: 0;
-  }
-  .content {
-    padding: 1rem;
-    margin-top: 62px;
-  }
-  .pageTitle {
-    font-size: 1.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .content {
-    padding: 0.5rem;
-  }
-}
 .formGroup {
-  margin-bottom: 1.5rem;
+  flex: 1;
+  min-width: 200px;
 }
 
 .formGroup label {
@@ -109,8 +72,7 @@
   color: #374151;
 }
 
-.formGroup select,
-.formGroup input {
+.formGroup select {
   width: 100%;
   padding: 0.5rem 0.75rem;
   border: 1px solid #d1d5db;
@@ -119,37 +81,39 @@
   background: #fff;
 }
 
-.marksTable {
+/* Table Styling */
+.table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 2rem;
   margin-bottom: 2rem;
 }
 
-.marksTable th,
-.marksTable td {
+.table th,
+.table td {
   border: 1px solid #e5e7eb;
   padding: 0.75rem;
   text-align: left;
 }
 
-.marksTable th {
+.table th {
   background: #f9fafb;
   font-weight: 600;
   color: #374151;
 }
 
-.marksTable input {
+.table input {
   width: 100%;
   padding: 0.4rem;
   border: 1px solid #d1d5db;
   border-radius: 0.375rem;
+  font-size: 1rem;
 }
 
+/* Button Group */
 .buttonGroup {
   display: flex;
+  justify-content: center;
   gap: 1rem;
-  margin-top: 1rem;
 }
 
 .saveBtn,
@@ -180,3 +144,43 @@
   background: linear-gradient(135deg, #db2777 0%, #9d174d 100%);
 }
 
+/* Animation */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1024px) {
+  .mainContent {
+    margin-left: 0;
+  }
+  .mainContent.collapsed {
+    margin-left: 0;
+  }
+  .content {
+    padding: 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: 1rem;
+    margin-top: 62px;
+  }
+  .pageTitle {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .content {
+    padding: 0.5rem;
+  }
+}

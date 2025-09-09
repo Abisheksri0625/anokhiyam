@@ -4,18 +4,17 @@ import TeacherSidebar from '../../../components/TeacherSidebar/TeacherSidebar';
 import TeacherHeader from '../../../components/TeacherHeader/TeacherHeader';
 import styles from './TeacherGradebook.module.css';
 
-const classes = ['CSE A', 'CSE B', 'CSE C'];
-const sections = ['A', 'B', 'C'];
+const classes = ['III CSE-A', 'II CSE-B', 'IV CSE-A'];
+const subjects = ['Operating Systems', 'Digital Image Processing', 'Computer Architecture'];
+const models = ['Model 1', 'Model 2', 'Model 3'];
 
 const students = [
-  { regNo: '21CS001', name: 'John David', class: 'CSE A', section: 'A' },
-  { regNo: '21CS002', name: 'Priya Sharma', class: 'CSE A', section: 'A' },
-  { regNo: '21CS003', name: 'Arjun Kumar', class: 'CSE B', section: 'B' },
-  { regNo: '21CS004', name: 'Sneha Reddy', class: 'CSE C', section: 'C' },
-  { regNo: '21CS005', name: 'Michael Raj', class: 'CSE C', section: 'C' }
+  { regNo: '21CS001', name: 'John David', class: 'III CSE-A' },
+  { regNo: '21CS002', name: 'Priya Sharma', class: 'III CSE-A' },
+  { regNo: '21CS003', name: 'Arjun Kumar', class: 'II CSE-B' },
+  { regNo: '21CS004', name: 'Sneha Reddy', class: 'IV CSE-A' },
+  { regNo: '21CS005', name: 'Michael Raj', class: 'II CSE-B' }
 ];
-
-const subjects = ['Subject 1', 'Subject 2', 'Subject 3', 'Subject 4', 'Subject 5'];
 
 const TeacherGradebook = () => {
   const [isCollapsed, setIsCollapsed] = useState(() => {
@@ -23,30 +22,36 @@ const TeacherGradebook = () => {
     return saved === 'true';
   });
 
-  const [selectedClass, setSelectedClass] = useState('');
-  const [selectedSection, setSelectedSection] = useState('');
-  const [selectedStudent, setSelectedStudent] = useState('');
-  const [selectedSubject, setSelectedSubject] = useState('');
-  const [marks, setMarks] = useState(() =>
-    subjects.reduce((acc, subject) => ({ ...acc, [subject]: '' }), {})
-  );
+  const [selectedClass, setSelectedClass] = useState(classes[0]);
+  const [selectedSubject, setSelectedSubject] = useState(subjects[0]);
+  const [selectedModel, setSelectedModel] = useState(models[0]);
+  const [marks, setMarks] = useState({});
 
   useEffect(() => {
     localStorage.setItem('teacherSidebarCollapsed', isCollapsed);
   }, [isCollapsed]);
 
-  const filteredStudents = students.filter(
-    (s) => s.class === selectedClass && s.section === selectedSection
-  );
+  useEffect(() => {
+    const filtered = students.filter((s) => s.class === selectedClass);
+    const initialMarks = {};
+    filtered.forEach((student) => {
+      initialMarks[student.regNo] = '';
+    });
+    setMarks(initialMarks);
+  }, [selectedClass, selectedSubject, selectedModel]);
 
-  const handleMarkChange = (subject, value) => {
+  const handleMarkChange = (regNo, value) => {
     const numeric = Math.max(0, Math.min(100, Number(value)));
-    setMarks((prev) => ({ ...prev, [subject]: numeric }));
+    setMarks((prev) => ({ ...prev, [regNo]: numeric }));
   };
 
   const handleSave = () => {
-    const regNo = students.find((s) => s.name === selectedStudent)?.regNo || '';
-    console.log('Saved Marks:', { selectedClass, selectedSection, selectedStudent, regNo, marks });
+    console.log('Saved Marks:', {
+      class: selectedClass,
+      subject: selectedSubject,
+      model: selectedModel,
+      marks
+    });
     alert('Marks saved successfully!');
   };
 
@@ -56,18 +61,18 @@ const TeacherGradebook = () => {
     doc.text('Gradebook Entry', 20, 20);
     doc.setFontSize(12);
     doc.text(`Class: ${selectedClass}`, 20, 30);
-    doc.text(`Section: ${selectedSection}`, 20, 36);
-    doc.text(`Student: ${selectedStudent}`, 20, 42);
-    const regNo = students.find((s) => s.name === selectedStudent)?.regNo || '';
-    doc.text(`Register No: ${regNo}`, 20, 48);
+    doc.text(`Subject: ${selectedSubject}`, 20, 36);
+    doc.text(`Model: ${selectedModel}`, 20, 42);
 
     let y = 60;
-    subjects.forEach((subject) => {
-      doc.text(`${subject}: ${marks[subject] || '-'}`, 20, y);
-      y += 8;
-    });
+    students
+      .filter((s) => s.class === selectedClass)
+      .forEach((student) => {
+        doc.text(`${student.name} (${student.regNo}): ${marks[student.regNo] || '-'}`, 20, y);
+        y += 8;
+      });
 
-    doc.save(`${selectedStudent}_Gradebook.pdf`);
+    doc.save(`${selectedClass}_${selectedSubject}_${selectedModel}_Gradebook.pdf`);
   };
 
   return (
@@ -81,115 +86,69 @@ const TeacherGradebook = () => {
         <TeacherHeader isCollapsed={isCollapsed} />
         <div className={styles.content}>
           <div className={styles.pageHeader}>
-            <h1 className={styles.pageTitle}>Enter Marks</h1>
-            <p className={styles.pageSubtitle}>Staff Portal - Gradebook Entry</p>
+            <h1 className={styles.pageTitle}>Gradebook Entry</h1>
+            <p className={styles.pageSubtitle}>Staff Portal - Model Exam Marks</p>
           </div>
 
-          <div className={styles.contentArea}>
-            {/* Class Selection */}
+          <div className={styles.formRow}>
             <div className={styles.formGroup}>
-              <label>Select Class:</label>
-              <select value={selectedClass} onChange={(e) => {
-                setSelectedClass(e.target.value);
-                setSelectedSection('');
-                setSelectedStudent('');
-              }}>
-                <option value="">-- Select Class --</option>
+              <label>Class</label>
+              <select value={selectedClass} onChange={(e) => setSelectedClass(e.target.value)}>
                 {classes.map((cls) => (
                   <option key={cls} value={cls}>{cls}</option>
                 ))}
               </select>
             </div>
 
-            {/* Section Selection */}
-            {selectedClass && (
-              <div className={styles.formGroup}>
-                <label>Select Section:</label>
-                <select value={selectedSection} onChange={(e) => {
-                  setSelectedSection(e.target.value);
-                  setSelectedStudent('');
-                }}>
-                  <option value="">-- Select Section --</option>
-                  {sections.map((sec) => (
-                    <option key={sec} value={sec}>{sec}</option>
-                  ))}
-                </select>
-              </div>
-            )}
+            <div className={styles.formGroup}>
+              <label>Subject</label>
+              <select value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)}>
+                {subjects.map((subj) => (
+                  <option key={subj} value={subj}>{subj}</option>
+                ))}
+              </select>
+            </div>
 
-            {/* Student Selection */}
-            {selectedClass && selectedSection && (
-              <div className={styles.formGroup}>
-                <label>Select Student:</label>
-                <select value={selectedStudent} onChange={(e) => setSelectedStudent(e.target.value)}>
-                  <option value="">-- Select Student --</option>
-                  {filteredStudents.map((student) => (
-                    <option key={student.regNo} value={student.name}>{student.name}</option>
-                  ))}
-                </select>
-              </div>
-            )}
+            <div className={styles.formGroup}>
+              <label>Model Exam</label>
+              <select value={selectedModel} onChange={(e) => setSelectedModel(e.target.value)}>
+                {models.map((model) => (
+                  <option key={model} value={model}>{model}</option>
+                ))}
+              </select>
+            </div>
+          </div>
 
-            {/* Register No */}
-            {selectedStudent && (
-              <div className={styles.formGroup}>
-                <label>Register No:</label>
-                <input
-                  type="text"
-                  readOnly
-                  value={students.find((s) => s.name === selectedStudent)?.regNo || ''}
-                />
-              </div>
-            )}
+          <table className={styles.table}>
+            <thead>
+              <tr>
+                <th>Register No</th>
+                <th>Name</th>
+                <th>Marks</th>
+              </tr>
+            </thead>
+            <tbody>
+              {students.filter((s) => s.class === selectedClass).map((student) => (
+                <tr key={student.regNo}>
+                  <td>{student.regNo}</td>
+                  <td>{student.name}</td>
+                  <td>
+                    <input
+                      type="number"
+                      min="0"
+                      max="100"
+                      value={marks[student.regNo] || ''}
+                      onChange={(e) => handleMarkChange(student.regNo, e.target.value)}
+                    />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
-            {/* Subject Selection */}
-            {selectedStudent && (
-              <div className={styles.formGroup}>
-                <label>Select Subject:</label>
-                <select value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)}>
-                  <option value="">-- Select Subject --</option>
-                  {subjects.map((subject, idx) => (
-                    <option key={idx} value={subject}>{subject}</option>
-                  ))}
-                </select>
-              </div>
-            )}
-
-            {/* Marks Table */}
-            {selectedStudent && (
-              <table className={styles.marksTable}>
-                <thead>
-                  <tr>
-                    <th>Subject</th>
-                    <th>Marks (Out of 100)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {subjects.map((subject, idx) => (
-                    <tr key={idx}>
-                      <td>{subject}</td>
-                      <td>
-                        <input
-                          type="number"
-                          min="0"
-                          max="100"
-                          value={marks[subject]}
-                          onChange={(e) => handleMarkChange(subject, e.target.value)}
-                        />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            )}
-
-            {/* Action Buttons */}
-            {selectedStudent && (
-              <div className={styles.buttonGroup}>
-                <button onClick={handleSave} className={styles.saveBtn}>Save Marks</button>
-                <button onClick={handleExport} className={styles.exportBtn}>Export as PDF</button>
-              </div>
-            )}
+          <div className={styles.buttonGroup}>
+            <button className={styles.saveBtn} onClick={handleSave}>Save Marks</button>
+            <button className={styles.exportBtn} onClick={handleExport}>Export PDF</button>
           </div>
         </div>
       </div>
