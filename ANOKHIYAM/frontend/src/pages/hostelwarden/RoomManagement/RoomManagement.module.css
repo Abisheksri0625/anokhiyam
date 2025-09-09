@@ -5,462 +5,792 @@
   font-family: 'Poppins', sans-serif;
 }
 
+.sidebarWidth {
+  width: 280px;
+  flex-shrink: 0;
+}
+
 .mainContent {
   flex: 1;
-  margin-left: 280px;
+  margin-left: 0;
   display: flex;
   flex-direction: column;
-  transition: margin-left 0.3s ease;
+  background: #f8fafc;
+  padding: 2rem 2rem 3rem 2rem;
+  box-sizing: border-box;
 }
 
 .mainContent.collapsed {
-  margin-left: 70px;
+  padding-left: 1.5rem;
 }
 
-.content {
-  flex: 1;
-  padding: 2rem;
-  margin-top: 70px;
-}
-
-.roomManagementContainer {
+.pageContent {
   width: 100%;
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
+  padding-top: 6rem;
+  box-sizing: border-box;
 }
 
 .header {
-  text-align: center;
-  margin-bottom: 2rem;
+  text-align: left;
+  margin-bottom: 0.8rem;
 }
 
-.header h1 {
-  font-size: 2.5rem;
-  color: #1f2937;
-  margin-bottom: 0.5rem;
-}
-
-.header p {
-  font-size: 1.1rem;
-  color: #6b7280;
-  margin: 0;
-}
-
-/* Statistics Cards */
-.statsContainer {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1.5rem;
-  margin-bottom: 2rem;
-}
-
-.statCard {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 1rem;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
-  text-align: center;
-  border-left: 4px solid #f63b3b;
-}
-
-.statNumber {
-  font-size: 2.5rem;
+.pageTitle {
+  font-size: 2.25rem;
   font-weight: 700;
+  margin-bottom: 0.25rem;
   color: #1f2937;
-  margin-bottom: 0.5rem;
 }
 
-.statLabel {
-  font-size: 0.875rem;
+.pageSubtitle {
+  font-size: 1.12rem;
   color: #6b7280;
+  margin-bottom: 1.5rem;
   font-weight: 500;
 }
 
-/* Tabs */
 .tabsContainer {
   display: flex;
+  gap: 1.5rem;
   background: white;
-  border-radius: 0.75rem;
-  padding: 0.5rem;
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
   margin-bottom: 1.5rem;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.07);
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
 }
 
 .tab {
   flex: 1;
-  padding: 1rem;
+  padding: 0.9rem 0;
   border: none;
   background: transparent;
-  color: #6b7280;
-  font-weight: 500;
-  border-radius: 0.5rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.tab:hover {
-  background: #f3f4f6;
+  border-radius: 8px;
+  color: #2563eb;
+  transition: background-color 0.3s ease;
+  font-size: 1.1rem;
+  text-align: center;
+  min-width: 0;
 }
 
 .tab.active {
-  background: #3b82f6;
+  background: #2563eb;
   color: white;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
 }
 
-/* Filters */
-.filtersSection {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 0.75rem;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
-  margin-bottom: 1.5rem;
+.tab:hover:not(.active) {
+  background: #f0f4ff;
 }
 
-.filterGroup {
-  display: flex;
-  gap: 1rem;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.filterSelect {
-  padding: 0.75rem 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  background: white;
-  color: #374151;
-  min-width: 150px;
-  cursor: pointer;
-}
-
-.filterSelect:focus {
-  outline: none;
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
-}
-
-/* Table Styles */
 .tableContainer {
   background: white;
-  border-radius: 0.75rem;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
+  border-radius: 12px;
+  padding: 1rem 1rem 1.2rem 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  overflow-x: hidden;
+  width: 100%;
+  margin: 0;
+  align-items: flex-start;
 }
 
 .roomsTable {
   width: 100%;
   border-collapse: collapse;
+  table-layout: fixed;
+  word-wrap: break-word;
+  word-break: break-word;
 }
 
-.roomsTable th {
-  background: #f9fafb;
-  padding: 1.25rem 1rem;
-  text-align: left;
-  font-weight: 600;
-  color: #374151;
-  font-size: 0.875rem;
-  border-bottom: 1px solid #e5e7eb;
-}
-
+.roomsTable th,
 .roomsTable td {
-  padding: 1.25rem 1rem;
-  border-bottom: 1px solid #f3f4f6;
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+  font-size: 0.95rem;
   color: #374151;
-  font-size: 0.875rem;
+  vertical-align: middle;
+  max-width: 140px;
+  white-space: normal;
 }
 
-.roomsTable tbody tr:hover {
-  background: #f9fafb;
+.roomsTable thead th {
+  font-weight: 700;
+  color: #111827;
+  text-align: left;
 }
 
-.studentInfo {
-  max-width: 200px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* Status Badges */
 .statusBadge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  display: inline-block;
+  min-width: 65px;
+  padding: 0.3rem 0.8rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.77rem;
+  color: white;
+  user-select: none;
   text-transform: capitalize;
 }
 
-.occupied {
-  background: #fef2f2;
-  color: #dc2626;
+.pending {
+  background-color: #2563eb;
 }
 
-.available {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.partial {
-  background: #fef3c7;
-  color: #d97706;
-}
-
-.maintenance {
-  background: #e0e7ff;
-  color: #4338ca;
-}
-
-/* Maintenance Badges */
-.maintenanceBadge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-  text-transform: capitalize;
-}
-
-.good {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.attention {
-  background: #fef3c7;
-  color: #d97706;
-}
-
-.repair {
-  background: #fef2f2;
-  color: #dc2626;
-}
-
-.under-repair {
-  background: #e0e7ff;
-  color: #4338ca;
-}
-
-/* Priority Badges */
-.priorityBadge {
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
-  font-size: 0.75rem;
-  font-weight: 600;
-}
-
-.high {
-  background: #fef2f2;
-  color: #dc2626;
-}
-
-.medium {
-  background: #fef3c7;
-  color: #d97706;
-}
-
-.low {
-  background: #dcfce7;
-  color: #166534;
-}
-
-/* Action Buttons */
-.actionButtons {
-  display: flex;
-  gap: 0.5rem;
-}
-
-.actionBtn {
-  padding: 0.375rem 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.375rem;
-  background: white;
-  color: #374151;
-  font-size: 0.75rem;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.actionBtn:hover {
-  background: #f3f4f6;
-  border-color: #9ca3af;
-}
-
-/* Room Allocation Grid */
-.allocationGrid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1.5rem;
-}
-
-.roomCard {
-  background: white;
-  border-radius: 0.75rem;
-  padding: 1.5rem;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
-  border-left: 4px solid;
-  transition: transform 0.2s ease;
-}
-
-.roomCard:hover {
-  transform: translateY(-2px);
-}
-
-.roomCard.occupied {
-  border-left-color: #dc2626;
-}
-
-.roomCard.available {
-  border-left-color: #16a34a;
-}
-
-.roomCard.partial {
-  border-left-color: #d97706;
-}
-
-.roomCard.maintenance {
-  border-left-color: #4338ca;
-}
-
-.roomHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.roomHeader h3 {
-  margin: 0;
-  font-size: 1.25rem;
-  color: #1f2937;
-}
-
-.statusIndicator {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-}
-
-.statusIndicator.occupied {
-  background-color: #dc2626;
-}
-
-.statusIndicator.available {
+.accepted {
   background-color: #16a34a;
 }
 
-.statusIndicator.partial {
-  background-color: #d97706;
+.rejected {
+  background-color: #dc2626;
 }
 
-.statusIndicator.maintenance {
-  background-color: #4338ca;
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;  /* allow buttons to wrap */
+  justify-content: flex-start;
+  align-items: center;
 }
 
-.roomDetails p {
-  margin: 0.5rem 0;
-  font-size: 0.875rem;
-  color: #6b7280;
+.acceptButton,
+.rejectButton {
+  padding: 0.5rem 1.1rem;
+  border-radius: 9px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.95rem;
+  user-select: none;
+  min-width: 75px;
+  max-width: 100%;
+  white-space: nowrap;
+  box-sizing: border-box;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  transition: background-color 0.2s ease;
+  color: white;
 }
 
-.roomActions {
+.acceptButton {
+  background-color: #16a34a;
+}
+
+.acceptButton:hover {
+  background-color: #128c3e;
+}
+
+.rejectButton {
+  background-color: #dc2626;
+}
+
+.rejectButton:hover {
+  background-color: #a72121;
+}
+
+/* Allocation cards grid */
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
   margin-top: 1.5rem;
 }
 
-.assignBtn {
-  width: 100%;
-  padding: 0.75rem;
+/* Room cards */
+.roomCard {
+  background: #fff;
+  border-radius: 1.1rem;
+  padding: 1.2rem 1rem 1.5rem 1rem;
+  box-shadow: 0 2px 16px rgba(37,99,235,0.07);
+  border-left: 5px solid #2563eb;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.roomCard.vacant {
+  border-left-color: #22c55e;
+}
+
+.roomCard.partiallyoccupied {
+  border-left-color: #facc15;
+}
+
+.roomCard.occupied {
+  border-left-color: #cbd5e1;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.roomCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 1.12rem;
+  margin-bottom: 0.8rem;
+}
+
+.roomId {
+  color: #2563eb;
+}
+
+.roomType {
+  color: #374151;
+  font-size: 0.98rem;
+}
+
+.roomCardDetails {
+  margin-bottom: 1.1rem;
+  font-size: 0.98rem;
+  color: #475569;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.assignedStudents {
+  font-style: italic;
+  color: #3b82f6;
+}
+
+.assignButton {
+  background-color: #2563eb;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.7rem 1.2rem;
+  border-radius: 12px;
   border: none;
-  border-radius: 0.5rem;
-  background: #3b82f6;
-  color: white;
-  font-weight: 500;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: background-color 0.3s;
+  margin-top: 0.7rem;
+  box-shadow: 0 2px 10px rgba(37,99,235,0.07);
+  align-self: flex-end;
+  width: 100%;
 }
 
-.assignBtn:hover:not(:disabled) {
-  background: #2563eb;
+.assignButton:hover {
+  background: #1e40af;
 }
 
-.assignBtn:disabled {
-  background: #9ca3af;
-  cursor: not-allowed;
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-/* Mobile Responsive */
-@media (max-width: 768px) {
-  .mainContent {
-    margin-left: 0;
+.modalBox {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+  padding: 2rem 2.5rem;
+  width: 350px;
+  max-width: 90vw;
+}
+
+.assignForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+
+.assignForm input {
+  padding: 0.7rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  background-color: #fefefe;
+  color: #22223b;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.cancelButton {
+  background: #eaeaea;
+  color: #374151;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.cancelButton:hover {
+  background: #c5c5c5;
+}
+
+/* Responsive Cards */
+@media (max-width: 600px){
+  .cardGrid {
+    grid-template-columns: 1fr;
+    gap: 1.3rem;
   }
-  
-  .mainContent.collapsed {
-    margin-left: 0;
-  }
-  
-  .content {
+  .modalBox {
     padding: 1rem;
   }
-  
-  .header h1 {
-    font-size: 1.75rem;
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+  .dashboardContainer {
+    flex-direction: column;
   }
-  
-  .statsContainer {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
+  .sidebarWidth {
+    width: 100%;
+    min-width: 0;
   }
-  
-  .statCard {
+  .mainContent, .mainContent.collapsed {
+    margin-left: 0;
     padding: 1rem;
   }
-  
-  .statNumber {
-    font-size: 1.75rem;
-  }
-  
-  .tabsContainer {
-    flex-direction: column;
-    gap: 0.25rem;
-  }
-  
-  .tab {
-    text-align: center;
-  }
-  
-  .filterGroup {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  
-  .filterSelect {
-    min-width: unset;
-  }
-  
-  .tableContainer {
-    overflow-x: auto;
-  }
-  
-  .roomsTable {
-    min-width: 800px;
-  }
-  
-  .allocationGrid {
-    grid-template-columns: 1fr;
-  }
-  
-  .actionButtons {
-    flex-direction: column;
+  .pageContent {
+    padding-top: 5rem;
+    max-width: 100%;
   }
 }
 
-@media (max-width: 480px) {
-  .statsContainer {
-    grid-template-columns: 1fr;
-  }
-  
+@media (max-width: 600px) {
   .roomsTable th,
   .roomsTable td {
-    padding: 0.75rem 0.5rem;
-    font-size: 0.8rem;
+    padding: 0.5rem 0.2rem;
+    font-size: 0.85rem;
+  }
+  .tabsContainer {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .actions {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .acceptButton,
+  .rejectButton {
+    width: 100%;
+    min-width: unset;
+  }
+  .selectGroup {
+    flex-direction: column;
+  }
+  .assignButton {
+    width: 100%;
+  }
+}
+
+
+.dashboardContainer {
+  display: flex;
+  min-height: 100vh;
+  background: #f8fafc;
+  font-family: 'Poppins', sans-serif;
+}
+
+.sidebarWidth {
+  width: 280px;
+  flex-shrink: 0;
+}
+
+.mainContent {
+  flex: 1;
+  margin-left: 0;
+  display: flex;
+  flex-direction: column;
+  background: #f8fafc;
+  padding: 2rem 2rem 3rem 2rem;
+  box-sizing: border-box;
+}
+
+.mainContent.collapsed {
+  padding-left: 1.5rem;
+}
+
+.pageContent {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding-top: 6rem;
+  box-sizing: border-box;
+}
+
+.header {
+  text-align: left;
+  margin-bottom: 0.8rem;
+}
+
+.pageTitle {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  color: #1f2937;
+}
+
+.pageSubtitle {
+  font-size: 1.12rem;
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+  font-weight: 500;
+}
+
+.tabsContainer {
+  display: flex;
+  gap: 1.5rem;
+  background: white;
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.07);
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.tab {
+  flex: 1;
+  padding: 0.9rem 0;
+  border: none;
+  background: transparent;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 8px;
+  color: #2563eb;
+  transition: background-color 0.3s ease;
+  font-size: 1.1rem;
+  text-align: center;
+  min-width: 0;
+}
+
+.tab.active {
+  background: #2563eb;
+  color: white;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
+}
+
+.tab:hover:not(.active) {
+  background: #f0f4ff;
+}
+
+.tableContainer {
+  background: white;
+  border-radius: 12px;
+  padding: 1rem 1rem 1.2rem 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  overflow-x: hidden;
+  width: 100%;
+  margin: 0;
+  align-items: flex-start;
+}
+
+.roomsTable {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+.roomsTable th,
+.roomsTable td {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  text-align: left;
+  font-size: 0.95rem;
+  color: #374151;
+  vertical-align: middle;
+  max-width: 140px;
+  white-space: normal;
+}
+
+.roomsTable thead th {
+  font-weight: 700;
+  color: #111827;
+  text-align: left;
+}
+
+.statusBadge {
+  display: inline-block;
+  min-width: 65px;
+  padding: 0.3rem 0.8rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.77rem;
+  color: white;
+  user-select: none;
+  text-transform: capitalize;
+}
+
+.pending {
+  background-color: #2563eb;
+}
+
+.accepted {
+  background-color: #16a34a;
+}
+
+.rejected {
+  background-color: #dc2626;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;  /* allow buttons to wrap */
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.acceptButton,
+.rejectButton {
+  padding: 0.5rem 1.1rem;
+  border-radius: 9px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  font-size: 0.95rem;
+  user-select: none;
+  min-width: 75px;
+  max-width: 100%;
+  white-space: nowrap;
+  box-sizing: border-box;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  transition: background-color 0.2s ease;
+  color: white;
+}
+
+.acceptButton {
+  background-color: #16a34a;
+}
+
+.acceptButton:hover {
+  background-color: #128c3e;
+}
+
+.rejectButton {
+  background-color: #dc2626;
+}
+
+.rejectButton:hover {
+  background-color: #a72121;
+}
+
+/* Allocation cards grid */
+.cardGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+  margin-top: 1.5rem;
+}
+
+/* Room cards */
+.roomCard {
+  background: #fff;
+  border-radius: 1.1rem;
+  padding: 1.2rem 1rem 1.5rem 1rem;
+  box-shadow: 0 2px 16px rgba(37,99,235,0.07);
+  border-left: 5px solid #2563eb;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.roomCard.vacant {
+  border-left-color: #22c55e;
+}
+
+.roomCard.partiallyoccupied {
+  border-left-color: #facc15;
+}
+
+.roomCard.occupied {
+  border-left-color: #cbd5e1;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.roomCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 1.12rem;
+  margin-bottom: 0.8rem;
+}
+
+.roomId {
+  color: #2563eb;
+}
+
+.roomType {
+  color: #374151;
+  font-size: 0.98rem;
+}
+
+.roomCardDetails {
+  margin-bottom: 1.1rem;
+  font-size: 0.98rem;
+  color: #475569;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.assignedStudents {
+  font-style: italic;
+  color: #3b82f6;
+}
+
+.assignButton {
+  background-color: #2563eb;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.7rem 1.2rem;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-top: 0.7rem;
+  box-shadow: 0 2px 10px rgba(37,99,235,0.07);
+  align-self: flex-end;
+  width: 100%;
+}
+
+.assignButton:hover {
+  background: #1e40af;
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.25);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modalBox {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+  padding: 2rem 2.5rem;
+  width: 350px;
+  max-width: 90vw;
+}
+
+.assignForm {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1.2rem;
+}
+
+.assignForm input {
+  padding: 0.7rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-family: inherit;
+  background-color: #fefefe;
+  color: #22223b;
+}
+
+.modalActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.cancelButton {
+  background: #eaeaea;
+  color: #374151;
+  font-weight: 600;
+  font-size: 1rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.cancelButton:hover {
+  background: #c5c5c5;
+}
+
+/* Responsive Cards */
+@media (max-width: 600px){
+  .cardGrid {
+    grid-template-columns: 1fr;
+    gap: 1.3rem;
+  }
+  .modalBox {
+    padding: 1rem;
+  }
+}
+
+/* Responsive */
+
+@media (max-width: 900px) {
+  .dashboardContainer {
+    flex-direction: column;
+  }
+  .sidebarWidth {
+    width: 100%;
+    min-width: 0;
+  }
+  .mainContent, .mainContent.collapsed {
+    margin-left: 0;
+    padding: 1rem;
+  }
+  .pageContent {
+    padding-top: 5rem;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 600px) {
+  .roomsTable th,
+  .roomsTable td {
+    padding: 0.5rem 0.2rem;
+    font-size: 0.85rem;
+  }
+  .tabsContainer {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .actions {
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .acceptButton,
+  .rejectButton {
+    width: 100%;
+    min-width: unset;
+  }
+  .selectGroup {
+    flex-direction: column;
+  }
+  .assignButton {
+    width: 100%;
   }
 }
