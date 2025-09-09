@@ -1,6 +1,7 @@
 .loginContainer {
   font-family: 'Poppins', sans-serif;
   height: 100vh;
+  overflow: hidden;
   display: flex;
   animation: fadeIn 0.6s ease-out;
 }

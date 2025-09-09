@@ -1,3 +1,4 @@
+/* Layout */
 .pageContainer {
   display: flex;
   min-height: 100vh;
@@ -30,16 +31,11 @@
 }
 
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
+/* Header */
 .pageHeader {
   margin-bottom: 2rem;
 }
@@ -48,16 +44,16 @@
   font-size: 2rem;
   font-weight: 700;
   color: #1f2937;
-  margin: 0 0 0.5rem 0;
+  margin-bottom: 0.5rem;
 }
 
 .pageSubtitle {
   font-size: 1rem;
   color: #6b7280;
-  margin: 0;
   font-weight: 400;
 }
 
+/* Form */
 .contentArea {
   background: white;
   border-radius: 1rem;
@@ -66,11 +62,61 @@
   min-height: 400px;
 }
 
-/* Responsive Adjustments */
+.formContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+label {
+  font-weight: 500;
+  color: #374151;
+  margin-right: 0.5rem;
+}
+
+select,
+input[type="date"] {
+  padding: 0.5rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 1rem;
+  background-color: #f9fafb;
+}
+
+.studentSection {
+  margin-top: 1rem;
+}
+
+.checkboxLabel {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #1f2937;
+}
+
+.submitButton {
+  background-color: #ec4899;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.submitButton:hover {
+  background-color: #db2777;
+}
+
+/* Responsive */
 @media (max-width: 1024px) {
-  .mainContent {
-    margin-left: 0;
-  }
+  .mainContent,
   .mainContent.collapsed {
     margin-left: 0;
   }
@@ -80,10 +126,6 @@
 }
 
 @media (max-width: 768px) {
-  .mainContent,
-  .mainContent.collapsed {
-    margin-left: 0;
-  }
   .content {
     padding: 1rem;
     margin-top: 62px;

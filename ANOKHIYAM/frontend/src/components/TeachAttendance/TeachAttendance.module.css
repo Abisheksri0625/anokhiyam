@@ -1,0 +1,85 @@
+.attendanceContainer {
+  padding: 20px;
+}
+
+.sectionTitle {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #1f2937;
+}
+
+.datePicker {
+  margin-bottom: 20px;
+  padding: 8px 12px;
+  font-size: 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background-color: #fff;
+}
+
+.attendanceTable {
+  width: 100%;
+  border-collapse: collapse;
+  background-color: #ffffff;
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.attendanceTable th,
+.attendanceTable td {
+  border: 1px solid #e5e7eb;
+  padding: 10px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.attendanceTable th {
+  background-color: #f9fafb;
+  font-weight: 600;
+  color: #374151;
+}
+
+.present {
+  background-color: #e6f4ea;
+  color: #2e7d32;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.absent {
+  background-color: #fdecea;
+  color: #c62828;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.dropdown {
+  font-size: 14px;
+  padding: 4px 6px;
+  border-radius: 4px;
+  border: 1px solid #d1d5db;
+  background-color: #ffffff;
+  color: #374151;
+}
+
+.exportButtons {
+  margin-top: 24px;
+}
+
+.exportButton {
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #ec4899 0%, #be185d 50%, #9d174d 100%);
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.exportButton:hover {
+  transform: scale(1.03);
+}

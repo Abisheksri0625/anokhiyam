@@ -1,100 +1,56 @@
 .pageContainer {
   display: flex;
-  min-height: 100vh;
-  background: #f8fafc;
-  font-family: 'Poppins', sans-serif;
+  height: 100vh;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
 }
 
 .mainContent {
   flex: 1;
-  margin-left: 280px;
   display: flex;
   flex-direction: column;
   transition: margin-left 0.3s ease;
+  margin-left: 220px;
 }
 
-.mainContent.collapsed {
-  margin-left: 70px;
+.collapsed {
+  margin-left: 60px;
 }
 
-.content {
-  flex: 1;
-  padding: 2rem;
-  margin-top: 70px;
-  max-width: 1600px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
-  box-sizing: border-box;
-  animation: fadeInUp 0.6s ease-out;
+.taskbar {
+  display: flex;
+  gap: 12px;
+  padding: 16px 20px;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.tabButton {
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #ec4899 0%, #be185d 50%, #9d174d 100%);
+  color: white;
+  cursor: pointer;
+  transition: transform 0.2s ease;
 }
 
-.pageHeader {
-  margin-bottom: 2rem;
+.tabButton:hover {
+  transform: scale(1.03);
 }
 
-.pageTitle {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #1f2937;
-  margin: 0 0 0.5rem 0;
+.active {
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
 }
 
-.pageSubtitle {
-  font-size: 1rem;
-  color: #6b7280;
-  margin: 0;
-  font-weight: 400;
-}
-
-.contentArea {
-  background: white;
-  border-radius: 1rem;
-  padding: 2rem;
-  box-shadow: 0 2px 15px rgba(0,0,0,0.08);
-  min-height: 400px;
-}
-
-/* Responsive Adjustments */
-@media (max-width: 1024px) {
-  .mainContent {
-    margin-left: 0;
-  }
-  .mainContent.collapsed {
-    margin-left: 0;
-  }
-  .content {
-    padding: 1.5rem;
-  }
-}
-
-@media (max-width: 768px) {
-  .mainContent,
-  .mainContent.collapsed {
-    margin-left: 0;
-  }
-  .content {
-    padding: 1rem;
-    margin-top: 62px;
-  }
-  .pageTitle {
-    font-size: 1.5rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .content {
-    padding: 0.5rem;
-  }
+.sectionBox {
+  padding: 20px;
+  background-color: white;
+  border-radius: 8px;
+  margin: 20px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+  flex-grow: 1;
 }

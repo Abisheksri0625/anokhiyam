@@ -1,15 +1,12 @@
-.pageContainer {
+.wrapper {
   display: flex;
-  min-height: 100vh;
-  background: #f8fafc;
-  font-family: 'Poppins', sans-serif;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .mainContent {
   flex: 1;
   margin-left: 280px;
-  display: flex;
-  flex-direction: column;
   transition: margin-left 0.3s ease;
 }
 
@@ -17,43 +14,69 @@
   margin-left: 70px;
 }
 
+.container {
+  padding: 6rem 2rem 2rem;
+  font-family: 'Poppins', sans-serif;
+  height: calc(100vh - 80px); /* Adjust for fixed header */
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.pageTitle {
+  font-size: 2rem;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  padding: 1rem;
+  text-align: center;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.toggle {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.toggle button {
+  margin: 0 0.5rem;
+  padding: 0.5rem 1.5rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 1rem;
+  transition: background 0.3s ease;
+}
+
+.active {
+  background: linear-gradient(to right, #059669, #10b981);
+  color: white;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3);
+}
+
+.inactive {
+  background-color: #e0f2f1;
+  color: #065f46;
+}
+
 .content {
   flex: 1;
-  padding: 2rem;
-  margin-top: 80px;
-  max-width: 1600px;
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
-  box-sizing: border-box;
-  animation: fadeInUp 0.6s ease-out;
+  overflow-y: auto;
+  padding-right: 0.5rem;
 }
 
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+/* Scrollbar styling */
+.content::-webkit-scrollbar {
+  width: 8px;
 }
 
-@media (max-width: 1024px) {
-  .mainContent,
-  .mainContent.collapsed {
-    margin-left: 0;
-  }
-  .content {
-    padding: 1.5rem;
-  }
+.content::-webkit-scrollbar-thumb {
+  background-color: rgba(16, 185, 129, 0.5);
+  border-radius: 4px;
 }
 
-@media (max-width: 768px) {
-  .content {
-    padding: 1rem;
-    margin-top: 62px;
-  }
+.content::-webkit-scrollbar-track {
+  background: transparent;
 }
-
-@media (max-width: 480px) {
-  .content {
-    padding: 0.5rem;
-  }
-}
-    
