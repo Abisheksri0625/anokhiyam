@@ -28,6 +28,7 @@ import AdmissionForm from './pages/AdmissionForm/AdmissionForm';
 // ============================================================================
 // STUDENT PAGES
 // ============================================================================
+import StudentProfile from './pages/student/StudentProfile/StudentProfile';
 import StudentGrades from './pages/student/StudentGrades/StudentGrades';
 import StudentAttendance from './pages/student/StudentAttendance/StudentAttendance';
 import StudentAssignments from './pages/student/StudentAssignments/StudentAssignments';
@@ -35,10 +36,8 @@ import StudentSchedule from './pages/student/StudentSchedule/StudentSchedule';
 import StudentLibrary from './pages/student/StudentLibrary/StudentLibrary';
 import StudentHostel from './pages/student/StudentHostel/StudentHostel';
 import StudentFees from './pages/student/StudentFees/StudentFees';
-import StudentFeedback from './pages/student/StudentFeedback/StudentFeedback';
 import StudentNotifications from './pages/student/StudentNotifications/StudentNotifications';
 import StudentSettings from './pages/student/StudentSettings/StudentSettings';
-import StudentProfile from './pages/student/StudentProfile/StudentProfile';
 
 // ============================================================================
 // ADMIN PAGES
@@ -87,7 +86,7 @@ import Occupancy from './pages/hostelwarden/Occupancy/Occupancy';
 import HostelStudentRecords from './pages/hostelwarden/StudentRecords/StudentRecords';
 import CheckInOut from './pages/hostelwarden/CheckInOut/CheckInOut';
 import VisitorLogs from './pages/hostelwarden/VisitorLogs/VisitorLogs';
-import Maintenance from './pages/hostelwarden/Maintenance/Maintenance';
+import Outpass from './pages/hostelwarden/Outpass/Outpass';
 import HostelReports from './pages/hostelwarden/Reports/Reports';
 import HostelNotifications from './pages/hostelwarden/HostelNotifications/HostelNotifications';
 import HostelSettings from './pages/hostelwarden/HostelSettings/HostelSettings';
@@ -190,14 +189,6 @@ function App() {
               element={
                 <ProtectedRoute requiredRole="student">
                   <StudentFees />
-                </ProtectedRoute>
-              } 
-            />
-            <Route 
-              path="/student/feedback" 
-              element={
-                <ProtectedRoute requiredRole="student">
-                  <StudentFeedback />
                 </ProtectedRoute>
               } 
             />
@@ -538,10 +529,10 @@ function App() {
               } 
             />
             <Route 
-              path="/hostel/maintenance" 
+              path="/hostel/outpass" 
               element={
                 <ProtectedRoute requiredRole="hostel_warden">
-                  <Maintenance />
+                  <Outpass />
                 </ProtectedRoute>
               } 
             />
