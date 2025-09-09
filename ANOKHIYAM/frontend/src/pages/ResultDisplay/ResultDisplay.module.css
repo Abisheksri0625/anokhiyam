@@ -1,0 +1,440 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+.container {
+  height: 100vh;
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  font-family: 'Poppins', sans-serif;
+  position: relative;
+  overflow: hidden;
+}
+
+.backgroundPattern {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.03) 0%, transparent 50%),
+              radial-gradient(circle at 75% 75%, rgba(118, 75, 162, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 2rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 10;
+}
+
+.backButton, .downloadButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 50px;
+  color: #64748b;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Poppins', sans-serif;
+  font-size: 0.875rem;
+}
+
+.backButton:hover, .downloadButton:hover {
+  background: #f8fafc;
+  color: #667eea;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logoImage {
+  height: 32px;
+  width: auto;
+  opacity: 0.8;
+}
+
+.mainContent {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.resultContainer {
+  background: white;
+  border-radius: 20px;
+  padding: 3rem 2.5rem;
+  width: 100%;
+  max-width: 900px;
+  max-height: calc(100vh - 4rem);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  animation: slideUp 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Result Header */
+.resultHeader {
+  text-align: center;
+}
+
+.statusWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.statusIcon {
+  width: 80px;
+  height: 80px;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: float 3s ease-in-out infinite;
+}
+
+.passIcon {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(5, 150, 105, 0.1));
+  color: #10b981;
+}
+
+.failIcon {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(220, 38, 38, 0.1));
+  color: #ef4444;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-5px); }
+}
+
+.statusContent {
+  text-align: left;
+}
+
+.resultTitle {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.025em;
+}
+
+.resultStatus {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.passStatus {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+}
+
+.failStatus {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+  color: white;
+}
+
+/* Student Info */
+.studentInfo {
+  margin: 1rem 0;
+}
+
+.infoCard {
+  background: #f8fafc;
+  border-radius: 16px;
+  padding: 1.5rem;
+}
+
+.infoRow {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+}
+
+.infoItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #1e293b;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+
+.infoItem svg {
+  color: #667eea;
+}
+
+/* Results Content */
+.resultsContent {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+.scoreSection {
+  display: flex;
+  justify-content: center;
+}
+
+.scoreCard {
+  padding: 2rem;
+  border-radius: 20px;
+  text-align: center;
+  color: white;
+  min-width: 250px;
+}
+
+.passCard {
+  background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.failCard {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.scoreNumber {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.scoreLabel {
+  font-size: 1rem;
+  opacity: 0.9;
+  margin-bottom: 0.5rem;
+}
+
+.scoreStatus {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.subjectsSection {
+  flex: 1;
+}
+
+.sectionTitle {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 1rem;
+}
+
+.subjectsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.subjectCard {
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 1rem;
+  border-left: 4px solid transparent;
+}
+
+.subjectCard:has(.pass) {
+  border-left-color: #10b981;
+}
+
+.subjectCard:has(.fail) {
+  border-left-color: #ef4444;
+}
+
+.subjectHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.subjectName {
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.subjectStatus {
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.subjectStatus.pass {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.subjectStatus.fail {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.subjectDetails {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+}
+
+.subjectMarks {
+  font-weight: 600;
+  color: #374151;
+}
+
+.subjectPercentage {
+  color: #6b7280;
+}
+
+.progressBar {
+  width: 100%;
+  height: 6px;
+  background: #e5e7eb;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  transition: width 0.8s ease;
+}
+
+.passProgress {
+  background: linear-gradient(90deg, #10b981, #059669);
+}
+
+.failProgress {
+  background: linear-gradient(90deg, #ef4444, #dc2626);
+}
+
+/* Action Sections */
+.actionSection {
+  background: #f0fdf4;
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  border: 1px solid #bbf7d0;
+}
+
+.congratsMessage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: #059669;
+  font-weight: 500;
+  margin-bottom: 1.5rem;
+}
+
+.admissionButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 1rem 2rem;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Poppins', sans-serif;
+}
+
+.admissionButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+}
+
+.failureSection {
+  background: #fef2f2;
+  border-radius: 16px;
+  padding: 2rem;
+  text-align: center;
+  border: 1px solid #fecaca;
+}
+
+.failureMessage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: #dc2626;
+}
+
+.failureText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-weight: 500;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .resultContainer {
+    margin: 1rem;
+    padding: 2rem 1.5rem;
+  }
+  
+  .header {
+    padding: 1.5rem;
+  }
+  
+  .statusWrapper {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .resultsContent {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  
+  .infoRow {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  
+  .resultTitle {
+    font-size: 1.5rem;
+  }
+  
+  .scoreNumber {
+    font-size: 2.5rem;
+  }
+}

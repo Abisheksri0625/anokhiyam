@@ -1,0 +1,134 @@
+.dashboardContainer {
+  display: flex;
+  min-height: 100vh;
+  background: #f8fafc;
+  font-family: 'Poppins', sans-serif;
+}
+
+.mainContent {
+  flex: 1;
+  margin-left: 280px;
+  display: flex;
+  flex-direction: column;
+  transition: margin-left 0.3s ease;
+}
+
+.mainContent.collapsed {
+  margin-left: 70px;
+}
+
+.content {
+  flex: 1;
+  padding: 2rem;
+  margin-top: 70px;
+}
+
+.pageTitle {
+  font-size: 2rem;
+  font-weight: 600;
+  color: #1f2937;
+  margin-bottom: 0.25rem;
+}
+
+.pageSubtitle {
+  font-size: 1rem;
+  color: #6b7280;
+  margin-bottom: 2rem;
+}
+
+.requestsList {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.requestCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  padding: 1.25rem;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.requestCard:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+.requestInfo p {
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+  color: #374151;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.approveBtn,
+.waitBtn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.approveBtn {
+  background: #10b981;
+  color: white;
+}
+
+.approveBtn:hover {
+  background: #059669;
+}
+
+.approveBtn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+.waitBtn {
+  background: #f59e0b;
+  color: white;
+}
+
+.waitBtn:hover {
+  background: #d97706;
+}
+
+.noRequests {
+  text-align: center;
+  font-size: 1rem;
+  color: #6b7280;
+  margin-top: 2rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .mainContent {
+    margin-left: 0;
+  }
+
+  .mainContent.collapsed {
+    margin-left: 0;
+  }
+
+  .requestCard {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .actions {
+    flex-direction: row;
+    gap: 1rem;
+  }
+}
