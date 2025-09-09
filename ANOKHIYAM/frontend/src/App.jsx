@@ -28,7 +28,6 @@ import AdmissionForm from './pages/AdmissionForm/AdmissionForm';
 // ============================================================================
 // STUDENT PAGES
 // ============================================================================
-import StudentProfile from './pages/student/StudentProfile/StudentProfile';
 import StudentGrades from './pages/student/StudentGrades/StudentGrades';
 import StudentAttendance from './pages/student/StudentAttendance/StudentAttendance';
 import StudentAssignments from './pages/student/StudentAssignments/StudentAssignments';
@@ -36,8 +35,10 @@ import StudentSchedule from './pages/student/StudentSchedule/StudentSchedule';
 import StudentLibrary from './pages/student/StudentLibrary/StudentLibrary';
 import StudentHostel from './pages/student/StudentHostel/StudentHostel';
 import StudentFees from './pages/student/StudentFees/StudentFees';
+import StudentFeedback from './pages/student/StudentFeedback/StudentFeedback';
 import StudentNotifications from './pages/student/StudentNotifications/StudentNotifications';
 import StudentSettings from './pages/student/StudentSettings/StudentSettings';
+import StudentProfile from './pages/student/StudentProfile/StudentProfile';
 
 // ============================================================================
 // ADMIN PAGES
@@ -189,6 +190,14 @@ function App() {
               element={
                 <ProtectedRoute requiredRole="student">
                   <StudentFees />
+                </ProtectedRoute>
+              } 
+            />
+            <Route 
+              path="/student/feedback" 
+              element={
+                <ProtectedRoute requiredRole="student">
+                  <StudentFeedback />
                 </ProtectedRoute>
               } 
             />

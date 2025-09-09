@@ -3,23 +3,25 @@ import { useNavigate } from 'react-router-dom';
 import styles from './StudentSidebar.module.css';
 import LogoImage from '../../assets/logo.png'; // Adjust your logo path
 
+
 const StudentSidebar = ({ activeItem = 'Dashboard', isCollapsed, setIsCollapsed }) => {
   const navigate = useNavigate();
   const [hoveredItem, setHoveredItem] = useState(null);
+
 
   const menuItems = [
     {
       section: 'MAIN',
       items: [
         { id: 'dashboard', label: 'Dashboard', icon: 'dashboard', path: '/student-dashboard' },
-        { id: 'profile', label: 'Profile', icon: 'profile', path: '/student/profile' },
         { id: 'grades', label: 'Grades', icon: 'grades', path: '/student/grades' },
         { id: 'attendance', label: 'Attendance', icon: 'attendance', path: '/student/attendance' },
         { id: 'assignments', label: 'Assignments', icon: 'assignments', path: '/student/assignments' },
         { id: 'schedule', label: 'Class Schedule', icon: 'schedule', path: '/student/schedule' },
         { id: 'library', label: 'Library', icon: 'library', path: '/student/library' },
         { id: 'hostel', label: 'Hostel', icon: 'hostel', path: '/student/hostel' },
-        { id: 'fees', label: 'Fee Payment', icon: 'fees', path: '/student/fees' }
+        { id: 'fees', label: 'Fee Payment', icon: 'fees', path: '/student/fees' },
+        { id: 'feedback', label: 'Feedback & Report', icon: 'feedback', path: '/student/feedback' }
       ]
     },
     {
@@ -31,6 +33,7 @@ const StudentSidebar = ({ activeItem = 'Dashboard', isCollapsed, setIsCollapsed 
     }
   ];
 
+
   // Icons (replace or adjust as necessary)
   const getIcon = (iconType) => {
     const icons = {
@@ -38,12 +41,6 @@ const StudentSidebar = ({ activeItem = 'Dashboard', isCollapsed, setIsCollapsed 
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M3 9L12 2L21 9V20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V9Z"/>
           <path d="M9 22V12H15V22"/>
-        </svg>
-      ),
-      profile: (
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <circle cx="12" cy="7" r="4"/>
-          <path d="M5.5 21H18.5C19.3284 21 20 20.3284 20 19.5V18C20 16.3431 17.3137 15 14 15H10C6.68629 15 4 16.3431 4 18V19.5C4 20.3284 4.67157 21 5.5 21Z"/>
         </svg>
       ),
       grades: (
@@ -99,6 +96,13 @@ const StudentSidebar = ({ activeItem = 'Dashboard', isCollapsed, setIsCollapsed 
           <line x1="1" y1="10" x2="23" y2="10"/>
         </svg>
       ),
+      feedback: (
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z"/>
+          <path d="M7 8H17"/>
+          <path d="M7 12H13"/>
+        </svg>
+      ),
       notifications: (
         <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M18 8c0-3.114-1.762-5.692-4.5-6.5v0a6.992 6.992 0 0 0-2 0v0C7.762 2.308 6 4.886 6 8c0 4.177-1 7-1 7h14s-1-2.823-1-7z"/>
@@ -115,9 +119,11 @@ const StudentSidebar = ({ activeItem = 'Dashboard', isCollapsed, setIsCollapsed 
     return icons[iconType] || icons.dashboard;
   };
 
+
   const handleMenuClick = (item) => {
     navigate(item.path);
   };
+
 
   return (
     <div className={`${styles.sidebar} ${isCollapsed ? styles.collapsed : ''}`}>
@@ -136,6 +142,7 @@ const StudentSidebar = ({ activeItem = 'Dashboard', isCollapsed, setIsCollapsed 
           </>
         )}
 
+
         {isCollapsed && (
           <div className={styles.collapsedHeader}>
             <div className={styles.logoIcon}>
@@ -152,6 +159,7 @@ const StudentSidebar = ({ activeItem = 'Dashboard', isCollapsed, setIsCollapsed 
           </div>
         )}
       </div>
+
 
       <div className={styles.menu}>
         {menuItems.map((section, sectionIndex) => (
@@ -181,5 +189,6 @@ const StudentSidebar = ({ activeItem = 'Dashboard', isCollapsed, setIsCollapsed 
     </div>
   );
 };
+
 
 export default StudentSidebar;

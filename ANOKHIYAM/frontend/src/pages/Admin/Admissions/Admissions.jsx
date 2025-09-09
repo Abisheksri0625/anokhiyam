@@ -8,7 +8,8 @@ import {
   doc, 
   updateDoc,
   serverTimestamp,
-  getDoc
+  getDoc,
+  addDoc
 } from 'firebase/firestore';
 import { db } from '../../../config/firebase';
 import AdminSidebar from '../../../components/AdminSidebar/AdminSidebar';
@@ -23,14 +24,16 @@ import {
   Users,
   TrendUp,
   User,
-  Envelope
+  Envelope,
+  CreditCard
 } from 'phosphor-react';
 import emailjs from '@emailjs/browser';
 
-// ============ EMAILJS CONFIGURATION - REPLACE WITH YOUR VALUES ============
-const EMAILJS_SERVICE_ID = 'service_7o20qlk';           // ✅ You have this
-const EMAILJS_TEMPLATE_ID = 'template_avvkrhs';     // ← Get from EmailJS dashboard
-const EMAILJS_PUBLIC_KEY = 'igm9usvUOfWwmFVTU';       // ← Get from EmailJS dashboard
+// ============ EMAILJS CONFIGURATION ============
+const EMAILJS_SERVICE_ID = 'service_7o20qlk';           
+const EMAILJS_ADMISSION_TEMPLATE_ID = 'template_avvkrhs';  // Admission confirmation template
+const EMAILJS_CREDENTIALS_TEMPLATE_ID = 'template_739g1n7'; // New credentials template  
+const EMAILJS_PUBLIC_KEY = 'igm9usvUOfWwmFVTU';         
 
 const Admissions = () => {
   const [applications, setApplications] = useState([]);
@@ -48,11 +51,14 @@ const Admissions = () => {
   
   const [showModal, setShowModal] = useState(false);
   const [selectedApplicationId, setSelectedApplicationId] = useState(null);
+  const [credentials, setCredentials] = useState([]);
+  const [loadingCredentials, setLoadingCredentials] = useState(false);
 
   const categories = [
     { id: 'pending', label: 'Pending Review', color: '#f59e0b', icon: Clock },
     { id: 'accepted', label: 'Accepted', color: '#10b981', icon: CheckCircle },
-    { id: 'rejected', label: 'Rejected', color: '#ef4444', icon: XCircle }
+    { id: 'rejected', label: 'Rejected', color: '#ef4444', icon: XCircle },
+    { id: 'credentials', label: 'Student Credentials', color: '#3b82f6', icon: User }
   ];
 
   const castes = [
@@ -65,7 +71,6 @@ const Admissions = () => {
   ];
 
   useEffect(() => {
-    // Initialize EmailJS
     if (EMAILJS_PUBLIC_KEY && EMAILJS_PUBLIC_KEY !== 'YOUR_PUBLIC_KEY_HERE') {
       emailjs.init(EMAILJS_PUBLIC_KEY);
       console.log('✅ EmailJS initialized');
@@ -79,6 +84,12 @@ const Admissions = () => {
   useEffect(() => {
     filterApplications();
   }, [applications, selectedCategory, selectedCaste]);
+
+  useEffect(() => {
+    if (selectedCategory === 'credentials') {
+      loadStudentCredentials();
+    }
+  }, [selectedCategory]);
 
   const loadApplications = () => {
     try {
@@ -147,17 +158,59 @@ const Admissions = () => {
     setSelectedApplicationId(null);
   };
 
-  // ============ WORKING EMAIL FUNCTION ============
-  const sendEmailNotification = async (studentData, status, rejectionReason = '') => {
+  // ============ CREDENTIAL GENERATION FUNCTIONS ============
+  const generateRandomPassword = () => {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&*';
+    let password = '';
+    for (let i = 0; i < 10; i++) {
+      password += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    return password;
+  };
+
+  // ============ CREATE STUDENT USER RECORD (FIRESTORE ONLY - NO FIREBASE AUTH) ============
+  const createStudentUserRecord = async (email, password, userData) => {
     try {
-      console.log('📧 Sending email notification...');
+      console.log('👤 Creating student user record for:', email);
+
+      // Create user record in Firestore only (NO Firebase Auth creation)
+      // Student will create Firebase Auth account on first login
+      await addDoc(collection(db, 'users'), {
+        email: email,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        displayName: userData.fullName,
+        role: 'student', // ← STUDENT ROLE
+        institutionCode: 'DEMO001',
+        isActive: true,
+        course: userData.course,
+        category: userData.category,
+        // Temporary password for first-time login
+        tempPassword: password,
+        passwordChanged: false, // ← Will be set to true on first login
+        createdDate: serverTimestamp(),
+        createdBy: 'admin',
+        lastLogin: null
+      });
+
+      console.log('✅ Student user record created in Firestore (no Firebase Auth created)');
+      return { success: true, message: 'User record created' };
+
+    } catch (error) {
+      console.error('❌ Failed to create student user record:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
+  // ============ EMAIL FUNCTION 1: ADMISSION CONFIRMATION ============
+  const sendAdmissionConfirmationEmail = async (studentData, status, rejectionReason = '') => {
+    try {
+      console.log('📧 Sending admission confirmation email...');
       
-      // Validate EmailJS configuration
-      if (!EMAILJS_SERVICE_ID || !EMAILJS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
+      if (!EMAILJS_SERVICE_ID || !EMAILJS_ADMISSION_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
         throw new Error('EmailJS configuration incomplete');
       }
 
-      // Get student data
       const studentName = `${studentData.personalInfo?.firstName || ''} ${studentData.personalInfo?.lastName || ''}`.trim();
       const studentEmail = studentData.contactInfo?.studentEmail;
       
@@ -165,39 +218,75 @@ const Admissions = () => {
         throw new Error('Student email not found');
       }
 
-      // EXACT parameters that match template variables
       const templateParams = {
-        to_email: studentEmail,                    // {{to_email}}
-        student_name: studentName,                 // {{student_name}}
-        course_name: studentData.selectedCourse,   // {{course_name}}
-        college_name: 'ANOKHIYAM College',         // {{college_name}}
-        admission_status: status,                  // {{admission_status}}
-        rejection_reason: rejectionReason || '',   // {{rejection_reason}}
-        contact_phone: '9876543210'                // {{contact_phone}}
+        to_email: studentEmail,
+        student_name: studentName,
+        course_name: studentData.selectedCourse,
+        college_name: 'ANOKHIYAM College',
+        admission_status: status,
+        rejection_reason: rejectionReason || '',
+        contact_phone: '9876543210'
       };
 
-      console.log('📧 Sending with params:', templateParams);
+      console.log('📧 Admission email params:', templateParams);
 
-      // Send email
       const response = await emailjs.send(
         EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
+        EMAILJS_ADMISSION_TEMPLATE_ID,
         templateParams,
         EMAILJS_PUBLIC_KEY
       );
 
-      console.log('✅ Email sent successfully');
+      console.log('✅ Admission confirmation email sent');
       return { success: true };
       
     } catch (error) {
-      console.error('❌ Email failed:', error);
+      console.error('❌ Admission email failed:', error);
       return { success: false, error: error.message };
     }
   };
 
-  // ============ ACCEPT APPLICATION ============
+  // ============ EMAIL FUNCTION 2: CREDENTIALS EMAIL ============
+  const sendCredentialsEmail = async (credentialData) => {
+    try {
+      console.log('🔑 Sending credentials email...');
+
+      if (!EMAILJS_SERVICE_ID || !EMAILJS_CREDENTIALS_TEMPLATE_ID || !EMAILJS_PUBLIC_KEY) {
+        throw new Error('EmailJS credentials configuration incomplete');
+      }
+
+      const templateParams = {
+        to_email: credentialData.studentEmail,
+        student_name: credentialData.studentName,
+        course_name: credentialData.course,
+        college_name: 'ANOKHIYAM College',
+        admission_status: 'confirmed',
+        username: credentialData.loginEmail,    // ← ACTUAL EMAIL ADDRESS
+        password: credentialData.loginPassword, // ← TEMP PASSWORD
+        login_url: 'https://your-website.com/login', // ← REPLACE WITH YOUR LOGIN URL
+        contact_phone: '9876543210'
+      };
+
+      console.log('🔑 Credentials email params:', templateParams);
+
+      const response = await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_CREDENTIALS_TEMPLATE_ID,
+        templateParams,
+        EMAILJS_PUBLIC_KEY
+      );
+
+      console.log('✅ Credentials email sent');
+      return { success: true };
+    } catch (error) {
+      console.error('❌ Credentials email failed:', error);
+      return { success: false, error: error.message };
+    }
+  };
+
+  // ============ ENHANCED ACCEPT APPLICATION (USING ACTUAL EMAIL) ============
   const handleAcceptApplication = async (applicationId) => {
-    if (!window.confirm('✅ Accept this application?\n\nStudent will receive email notification.')) {
+    if (!window.confirm('✅ Accept this application?\n\nThis will:\n- Update application status\n- Add to accepted students\n- Generate login credentials using STUDENT EMAIL\n- Send ADMISSION CONFIRMATION email')) {
       return;
     }
 
@@ -211,30 +300,91 @@ const Admissions = () => {
       }
 
       const applicationData = docSnap.data();
-      const studentName = applicationData.personalInfo?.firstName || 'Student';
+      console.log('📋 Processing application:', applicationData);
 
-      console.log('✅ Processing acceptance for:', studentName);
+      const studentDetails = {
+        firstName: applicationData.personalInfo?.firstName || '',
+        lastName: applicationData.personalInfo?.lastName || '',
+        fullName: `${applicationData.personalInfo?.firstName || ''} ${applicationData.personalInfo?.lastName || ''}`.trim(),
+        studentEmail: applicationData.contactInfo?.studentEmail || '', // ← ACTUAL STUDENT EMAIL
+        studentPhone: applicationData.contactInfo?.studentPhone || '',
+        selectedCourse: applicationData.selectedCourse || '',
+        category: applicationData.personalInfo?.category || '',
+        uid: applicationData.uid || '',
+        entrancePercentage: applicationData.academicInfo?.entrancePercentage || 0
+      };
 
-      // Update Firestore
+      // STEP 1: Update application status
       await updateDoc(docRef, {
         status: 'accepted',
         processedDate: serverTimestamp(),
         processedBy: 'admin'
       });
 
-      // Send email
-      const emailResult = await sendEmailNotification(applicationData, 'accepted');
+      // STEP 2: Add to accepted_students collection
+      const acceptedStudentDoc = await addDoc(collection(db, 'accepted_students'), {
+        applicationId: applicationId,
+        uid: studentDetails.uid,
+        firstName: studentDetails.firstName,
+        lastName: studentDetails.lastName,
+        fullName: studentDetails.fullName,
+        studentEmail: studentDetails.studentEmail, // ← ACTUAL EMAIL
+        studentPhone: studentDetails.studentPhone,
+        course: studentDetails.selectedCourse,
+        category: studentDetails.category,
+        entrancePercentage: studentDetails.entrancePercentage,
+        acceptedDate: serverTimestamp(),
+        acceptedBy: 'admin',
+        feesPaid: false,
+        paymentStatus: 'pending'
+      });
 
-      // Show result
-      if (emailResult.success) {
-        alert(`✅ ${studentName} accepted successfully!\n📧 Email sent to ${applicationData.contactInfo?.studentEmail}`);
-      } else {
-        alert(`✅ ${studentName} accepted!\n❌ Email failed: ${emailResult.error}`);
-      }
+      // STEP 3: Generate PASSWORD (use actual email)
+      const password = generateRandomPassword();
+
+      console.log('🔑 Generated credentials:', { 
+        email: studentDetails.studentEmail, // ← ACTUAL EMAIL
+        password: password 
+      });
+
+      // STEP 4: Add to student_credentials collection (EMAIL-BASED)
+      const credentialsDoc = await addDoc(collection(db, 'student_credentials'), {
+        applicationId: applicationId,
+        acceptedStudentId: acceptedStudentDoc.id,
+        uid: studentDetails.uid,
+        studentEmail: studentDetails.studentEmail, // ← ACTUAL EMAIL
+        studentName: studentDetails.fullName,
+        firstName: studentDetails.firstName,
+        lastName: studentDetails.lastName,
+        course: studentDetails.selectedCourse,
+        loginEmail: studentDetails.studentEmail, // ← EMAIL FOR LOGIN
+        loginPassword: password, // ← PASSWORD FOR LOGIN
+        active: false, // ← Inactive until fees paid
+        credentialsSent: false,
+        feesPaid: false,
+        createdDate: serverTimestamp(),
+        lastEmailSent: null,
+        createdBy: 'admin'
+      });
+
+      // STEP 5: Send ADMISSION CONFIRMATION email
+      const admissionEmailResult = await sendAdmissionConfirmationEmail(applicationData, 'accepted');
+
+      // STEP 6: Show success message
+      let message = `🎉 ${studentDetails.fullName} ACCEPTED!\n\n`;
+      message += `✅ Application status updated\n`;
+      message += `✅ Added to accepted students\n`;
+      message += `🔑 Login credentials prepared:\n`;
+      message += `   Email: ${studentDetails.studentEmail}\n`; // ← SHOW ACTUAL EMAIL
+      message += `   Password: ${password}\n\n`;
+      message += admissionEmailResult.success ? '📧 Admission confirmation email sent\n' : '❌ Admission email failed\n';
+      message += `\n💡 Send login credentials from "Student Credentials" tab after fees payment`;
+      
+      alert(message);
 
     } catch (error) {
-      console.error('❌ Error accepting application:', error);
-      alert('❌ Error: ' + error.message);
+      console.error('❌ Auto-accept process failed:', error);
+      alert(`❌ Error: ${error.message}`);
     }
   };
 
@@ -262,9 +412,6 @@ const Admissions = () => {
       const applicationData = docSnap.data();
       const studentName = applicationData.personalInfo?.firstName || 'Student';
 
-      console.log('❌ Processing rejection for:', studentName);
-
-      // Update Firestore
       await updateDoc(docRef, {
         status: 'rejected',
         rejectionReason: reason.trim(),
@@ -272,10 +419,8 @@ const Admissions = () => {
         processedBy: 'admin'
       });
 
-      // Send email
-      const emailResult = await sendEmailNotification(applicationData, 'rejected', reason);
+      const emailResult = await sendAdmissionConfirmationEmail(applicationData, 'rejected', reason);
 
-      // Show result
       if (emailResult.success) {
         alert(`❌ ${studentName} rejected successfully!\n📧 Email sent to ${applicationData.contactInfo?.studentEmail}`);
       } else {
@@ -288,6 +433,112 @@ const Admissions = () => {
     }
   };
 
+  // ============ CREDENTIALS MANAGEMENT FUNCTIONS ============
+  const loadStudentCredentials = () => {
+    setLoadingCredentials(true);
+    try {
+      const q = query(
+        collection(db, 'student_credentials'),
+        orderBy('createdDate', 'desc')
+      );
+
+      const unsubscribe = onSnapshot(q, (querySnapshot) => {
+        const creds = [];
+        querySnapshot.forEach((doc) => {
+          creds.push({
+            id: doc.id,
+            ...doc.data()
+          });
+        });
+        setCredentials(creds);
+        setLoadingCredentials(false);
+      });
+
+      return () => unsubscribe();
+    } catch (error) {
+      console.error('Error loading credentials:', error);
+      setLoadingCredentials(false);
+    }
+  };
+
+  const toggleCredentialStatus = async (credentialId, currentStatus) => {
+    try {
+      await updateDoc(doc(db, 'student_credentials', credentialId), {
+        active: !currentStatus
+      });
+      alert(`✅ Credential status updated to ${!currentStatus ? 'ACTIVE' : 'INACTIVE'}`);
+    } catch (error) {
+      alert('❌ Error updating status: ' + error.message);
+    }
+  };
+
+  const markFeesPaid = async (credentialId) => {
+    try {
+      await updateDoc(doc(db, 'student_credentials', credentialId), {
+        feesPaid: true,
+        active: true,
+        paymentDate: serverTimestamp()
+      });
+      alert(`✅ Fees marked as paid! Account activated.`);
+    } catch (error) {
+      alert('❌ Error updating fees status: ' + error.message);
+    }
+  };
+
+  const sendCredentialsEmailToStudent = async (credential) => {
+    if (!credential.feesPaid) {
+      if (!window.confirm('⚠️ Fees not marked as paid yet.\n\nSend credentials email anyway?')) {
+        return;
+      }
+    }
+
+    try {
+      // STEP 1: Create user record in Firestore (NOT Firebase Auth)
+      const authResult = await createStudentUserRecord(
+        credential.studentEmail,
+        credential.loginPassword,
+        {
+          firstName: credential.firstName,
+          lastName: credential.lastName,
+          fullName: credential.studentName,
+          course: credential.course,
+          category: credential.category || 'OC'
+        }
+      );
+
+      if (!authResult.success && !authResult.message) {
+        alert('❌ Failed to create user record: ' + authResult.error);
+        return;
+      }
+
+      // STEP 2: Send credentials email
+      const result = await sendCredentialsEmail({
+        studentEmail: credential.studentEmail,
+        studentName: credential.studentName,
+        loginEmail: credential.studentEmail, // ← EMAIL FOR LOGIN (same as student email)
+        loginPassword: credential.loginPassword,
+        course: credential.course
+      });
+
+      if (result.success) {
+        // STEP 3: Update credentials status
+        await updateDoc(doc(db, 'student_credentials', credential.id), {
+          credentialsSent: true,
+          lastEmailSent: serverTimestamp(),
+          active: true, // ← ACTIVATE WHEN CREDENTIALS SENT
+          userRecordCreated: true // ← TRACK USER RECORD CREATION
+        });
+        
+        alert(`✅ Login credentials sent to ${credential.studentName}!\n👤 User record created in system\n📧 Email: ${credential.studentEmail}\n🔑 Password: ${credential.loginPassword}\n\n⚠️ Admin stays logged in - Student will create Firebase Auth account on first login`);
+      } else {
+        alert('❌ Failed to send credentials email');
+      }
+    } catch (error) {
+      alert('❌ Failed to send credentials: ' + error.message);
+    }
+  };
+
+  // ============ RENDER APPLICATION CARD ============
   const renderApplicationCard = (application) => (
     <div key={application.id} className={styles.applicationCard}>
       <div className={styles.cardHeader}>
@@ -340,11 +591,11 @@ const Admissions = () => {
           <button 
             className={styles.acceptButton}
             onClick={() => handleAcceptApplication(application.id)}
-            title="Accept and send email notification"
+            title="Accept and send admission confirmation"
           >
             <CheckCircle size={16} />
             <Envelope size={14} />
-            Accept & Email
+            Accept & Send Admission Email
           </button>
           <button 
             className={styles.rejectButton}
@@ -366,6 +617,86 @@ const Admissions = () => {
     </div>
   );
 
+  // ============ RENDER CREDENTIALS CARD ============
+  const renderCredentialCard = (credential) => (
+    <div key={credential.id} className={styles.applicationCard}>
+      <div className={styles.cardHeader}>
+        <div className={styles.studentInfo}>
+          <div className={styles.avatar}>
+            <User size={20} />
+          </div>
+          <div className={styles.studentDetails}>
+            <h3 className={styles.studentName}>{credential.studentName}</h3>
+            <p className={styles.studentId}>{credential.studentEmail}</p>
+          </div>
+        </div>
+        <div className={styles.statusContainer}>
+          <div className={`${styles.statusBadge} ${credential.active ? styles.active : styles.inactive}`}>
+            {credential.active ? 'ACTIVE' : 'INACTIVE'}
+          </div>
+          <div className={`${styles.statusBadge} ${credential.feesPaid ? styles.paid : styles.unpaid}`}>
+            {credential.feesPaid ? 'FEES PAID' : 'FEES PENDING'}
+          </div>
+        </div>
+      </div>
+
+      <div className={styles.cardBody}>
+        <div className={styles.infoRow}>
+          <span className={styles.label}>Course:</span>
+          <span className={styles.value}>{credential.course}</span>
+        </div>
+        <div className={styles.infoRow}>
+          <span className={styles.label}>Login Email:</span>
+          <span className={styles.value}>{credential.studentEmail}</span>
+        </div>
+        <div className={styles.infoRow}>
+          <span className={styles.label}>Password:</span>
+          <span className={styles.value}>{credential.loginPassword}</span>
+        </div>
+        <div className={styles.infoRow}>
+          <span className={styles.label}>Created:</span>
+          <span className={styles.value}>
+            {credential.createdDate?.toDate ? credential.createdDate.toDate().toLocaleDateString() : 'N/A'}
+          </span>
+        </div>
+        <div className={styles.infoRow}>
+          <span className={styles.label}>Credentials Sent:</span>
+          <span className={`${styles.value} ${credential.credentialsSent ? styles.sent : styles.notSent}`}>
+            {credential.credentialsSent ? 'YES' : 'NO'}
+          </span>
+        </div>
+      </div>
+
+      <div className={styles.cardFooter}>
+        {!credential.feesPaid && (
+          <button 
+            className={styles.payButton}
+            onClick={() => markFeesPaid(credential.id)}
+            title="Mark fees as paid"
+          >
+            <CreditCard size={16} />
+            Mark Fees Paid
+          </button>
+        )}
+        <button 
+          className={`${styles.acceptButton} ${!credential.active ? styles.rejectButton : ''}`}
+          onClick={() => toggleCredentialStatus(credential.id, credential.active)}
+          title={credential.active ? 'Deactivate login access' : 'Activate login access'}
+        >
+          {credential.active ? 'Deactivate' : 'Activate'}
+        </button>
+        <button 
+          className={styles.acceptButton}
+          onClick={() => sendCredentialsEmailToStudent(credential)}
+          title="Create user record & send login credentials (Admin stays logged in)"
+        >
+          <Envelope size={16} />
+          Send Credentials
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <div className={styles.dashboardContainer}>
       <AdminSidebar activeItem="admissions" />
@@ -376,29 +707,21 @@ const Admissions = () => {
           <div className={styles.pageHeader}>
             <h1 className={styles.pageTitle}>Admission Management</h1>
             <p className={styles.pageSubtitle}>
-              📧 Automated Email Notification System
+              📧 Dual Email System: Admission Confirmation + Login Credentials (Admin Safe)
             </p>
           </div>
-
-          {/* Configuration Warning */}
-          {(EMAILJS_TEMPLATE_ID === 'YOUR_TEMPLATE_ID_HERE' || EMAILJS_PUBLIC_KEY === 'YOUR_PUBLIC_KEY_HERE') && (
-            <div style={{ 
-              background: '#fef2f2', 
-              border: '2px solid #dc2626', 
-              padding: '1rem', 
-              borderRadius: '8px', 
-              marginBottom: '1rem',
-              color: '#dc2626',
-              fontWeight: 'bold'
-            }}>
-              ⚠️ <strong>UPDATE EMAILJS CREDENTIALS:</strong> Replace YOUR_TEMPLATE_ID_HERE and YOUR_PUBLIC_KEY_HERE with your actual EmailJS values!
-            </div>
-          )}
 
           {/* Stats Cards */}
           <div className={styles.statsGrid}>
             {categories.map((category) => {
               const IconComponent = category.icon;
+              let count = 0;
+              if (category.id === 'credentials') {
+                count = credentials.length;
+              } else {
+                count = stats[category.id] || 0;
+              }
+              
               return (
                 <div 
                   key={category.id} 
@@ -409,7 +732,7 @@ const Admissions = () => {
                     <IconComponent size={24} />
                   </div>
                   <div className={styles.statContent}>
-                    <h3>{stats[category.id] || 0}</h3>
+                    <h3>{count}</h3>
                     <p>{category.label}</p>
                   </div>
                 </div>
@@ -427,44 +750,49 @@ const Admissions = () => {
           </div>
 
           {/* Filter Controls */}
-          <div className={styles.filterControls}>
-            <div className={styles.filterGroup}>
-              <label>Status:</label>
-              <select 
-                value={selectedCategory} 
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className={styles.filterSelect}
-              >
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.label}
-                  </option>
-                ))}
-              </select>
-            </div>
+          {selectedCategory !== 'credentials' && (
+            <div className={styles.filterControls}>
+              <div className={styles.filterGroup}>
+                <label>Status:</label>
+                <select 
+                  value={selectedCategory} 
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className={styles.filterSelect}
+                >
+                  {categories.filter(cat => cat.id !== 'credentials').map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            <div className={styles.filterGroup}>
-              <label>Caste Category:</label>
-              <select 
-                value={selectedCaste} 
-                onChange={(e) => setSelectedCaste(e.target.value)}
-                className={styles.filterSelect}
-              >
-                {castes.map((caste) => (
-                  <option key={caste.id} value={caste.id}>
-                    {caste.label}
-                  </option>
-                ))}
-              </select>
+              <div className={styles.filterGroup}>
+                <label>Caste Category:</label>
+                <select 
+                  value={selectedCaste} 
+                  onChange={(e) => setSelectedCaste(e.target.value)}
+                  className={styles.filterSelect}
+                >
+                  {castes.map((caste) => (
+                    <option key={caste.id} value={caste.id}>
+                      {caste.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-          </div>
+          )}
 
           {/* Applications List */}
           <div className={styles.applicationsSection}>
             <div className={styles.sectionHeader}>
               <h2>
-                {categories.find(c => c.id === selectedCategory)?.label} - {selectedCaste === 'all' ? 'All Categories' : selectedCaste}
-                <span className={styles.count}>({filteredApplications.length})</span>
+                {selectedCategory === 'credentials' ? 'Student Credentials Management' : 
+                 `${categories.find(c => c.id === selectedCategory)?.label} - ${selectedCaste === 'all' ? 'All Categories' : selectedCaste}`}
+                <span className={styles.count}>
+                  ({selectedCategory === 'credentials' ? credentials.length : filteredApplications.length})
+                </span>
               </h2>
               {selectedCategory === 'pending' && (
                 <div style={{
@@ -479,35 +807,84 @@ const Admissions = () => {
                   marginTop: '0.5rem'
                 }}>
                   <Envelope size={16} />
-                  <span>📧 Automated Email Notifications</span>
+                  <span>📧 Admission confirmation email sent automatically on accept</span>
+                </div>
+              )}
+              {selectedCategory === 'credentials' && (
+                <div style={{
+                  background: '#f0f9ff',
+                  padding: '0.75rem 1rem',
+                  borderRadius: '6px',
+                  fontSize: '0.875rem',
+                  color: '#0369a1',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  marginTop: '0.5rem'
+                }}>
+                  <User size={16} />
+                  <CreditCard size={16} />
+                  <Envelope size={16} />
+                  <span>🔑 Manage credentials • Mark fees paid • Send credentials email (Admin Safe)</span>
                 </div>
               )}
             </div>
 
-            {loading && (
-              <div className={styles.loading}>
-                <div className={styles.spinner}></div>
-                <p>Loading applications...</p>
+            {/* CREDENTIALS TAB CONTENT */}
+            {selectedCategory === 'credentials' && (
+              <div>
+                {loadingCredentials && (
+                  <div className={styles.loading}>
+                    <div className={styles.spinner}></div>
+                    <p>Loading credentials...</p>
+                  </div>
+                )}
+
+                {!loadingCredentials && credentials.length === 0 && (
+                  <div className={styles.emptyState}>
+                    <User size={48} />
+                    <h3>No student credentials found</h3>
+                    <p>Credentials will appear here when students are accepted.</p>
+                  </div>
+                )}
+
+                {!loadingCredentials && credentials.length > 0 && (
+                  <div className={styles.applicationsGrid}>
+                    {credentials.map(renderCredentialCard)}
+                  </div>
+                )}
               </div>
             )}
 
-            {error && (
-              <div className={styles.error}>
-                <p>❌ {error}</p>
-              </div>
-            )}
+            {/* REGULAR APPLICATIONS CONTENT */}
+            {selectedCategory !== 'credentials' && (
+              <div>
+                {loading && (
+                  <div className={styles.loading}>
+                    <div className={styles.spinner}></div>
+                    <p>Loading applications...</p>
+                  </div>
+                )}
 
-            {!loading && filteredApplications.length === 0 && (
-              <div className={styles.emptyState}>
-                <Users size={48} />
-                <h3>No applications in this category</h3>
-                <p>Applications will appear here once students submit their forms.</p>
-              </div>
-            )}
+                {error && (
+                  <div className={styles.error}>
+                    <p>❌ {error}</p>
+                  </div>
+                )}
 
-            {!loading && filteredApplications.length > 0 && (
-              <div className={styles.applicationsGrid}>
-                {filteredApplications.map(renderApplicationCard)}
+                {!loading && filteredApplications.length === 0 && (
+                  <div className={styles.emptyState}>
+                    <Users size={48} />
+                    <h3>No applications in this category</h3>
+                    <p>Applications will appear here once students submit their forms.</p>
+                  </div>
+                )}
+
+                {!loading && filteredApplications.length > 0 && (
+                  <div className={styles.applicationsGrid}>
+                    {filteredApplications.map(renderApplicationCard)}
+                  </div>
+                )}
               </div>
             )}
           </div>

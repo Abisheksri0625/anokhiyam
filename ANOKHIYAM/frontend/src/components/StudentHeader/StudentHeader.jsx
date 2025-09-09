@@ -1,12 +1,21 @@
 import React, { useState } from 'react';
+import { useAuth } from '../../context/AuthContext';
 import styles from './StudentHeader.module.css';
 
 const StudentHeader = ({ isCollapsed, onMenuToggle }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [showUserDropdown, setShowUserDropdown] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
+  
+  const { userProfile, logout } = useAuth();
 
-  // You can add notification data and controls here...
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
 
   return (
     <header className={`${styles.header} ${isCollapsed ? styles.collapsed : ''}`}>
@@ -33,7 +42,6 @@ const StudentHeader = ({ isCollapsed, onMenuToggle }) => {
         </div>
       </div>
       <div className={styles.rightSection}>
-        {/* Add notification icon & dropdown here if needed */}
         <div className={styles.userContainer}>
           <button
             className={styles.userBtn}
@@ -41,11 +49,20 @@ const StudentHeader = ({ isCollapsed, onMenuToggle }) => {
             aria-label="User menu"
           >
             <div className={styles.userInfo}>
-              <span className={styles.userName}>John Smith</span>
-              <span className={styles.userRole}>Computer Science • Final Year</span>
+              <span className={styles.userName}>
+                {userProfile ? `${userProfile.firstName} ${userProfile.lastName}` : 'Loading...'}
+              </span>
+              <span className={styles.userRole}>
+                {userProfile ? `${userProfile.program || userProfile.course} • ${userProfile.year}` : 'Student'}
+              </span>
             </div>
             <div className={styles.userAvatar}>
-              <img src="/api/placeholder/40/40" alt="User avatar" />
+              <div className={styles.avatarPlaceholder}>
+                {userProfile ? 
+                  `${userProfile.firstName?.charAt(0) || ''}${userProfile.lastName?.charAt(0) || ''}` 
+                  : 'U'
+                }
+              </div>
             </div>
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={showUserDropdown ? styles.rotateIcon : ''}>
               <path d="M6 9L12 15L18 9"/>
@@ -55,7 +72,9 @@ const StudentHeader = ({ isCollapsed, onMenuToggle }) => {
             <div className={styles.userDropdown}>
               <a href="/student/profile">My Profile</a>
               <a href="/student/settings">Settings</a>
-              <button className={styles.logoutBtn}>Logout</button>
+              <button className={styles.logoutBtn} onClick={handleLogout}>
+                Logout
+              </button>
             </div>
           )}
         </div>

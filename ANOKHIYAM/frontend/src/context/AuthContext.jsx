@@ -5,9 +5,10 @@ import {
   signOut,
   setPersistence,
   browserSessionPersistence,
-  browserLocalPersistence
+  browserLocalPersistence,
+  createUserWithEmailAndPassword
 } from 'firebase/auth';
-import { doc, getDoc, query, collection, where, getDocs } from 'firebase/firestore';
+import { doc, query, collection, where, getDocs, updateDoc, serverTimestamp } from 'firebase/firestore';
 import { auth, db } from '../config/firebase';
 
 const AuthContext = createContext({});
@@ -22,12 +23,10 @@ export const AuthProvider = ({ children }) => {
   const [authInitialized, setAuthInitialized] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
 
-  // Validate user role against database
   const validateUserRole = async (email, selectedRole) => {
     try {
       console.log('🔍 Validating user role:', { email, selectedRole });
       
-      // Query Firestore to find user by email
       const usersRef = collection(db, 'users');
       const q = query(usersRef, where('email', '==', email));
       const querySnapshot = await getDocs(q);
@@ -42,19 +41,15 @@ export const AuthProvider = ({ children }) => {
       
       console.log('✅ User data from database:', userData);
       
-      // Check if user is active
       if (!userData.isActive) {
         throw new Error('Your account has been deactivated. Please contact your administrator.');
       }
       
-      // Check if selected role matches database role
       if (userData.role !== selectedRole) {
         throw new Error(`Access denied. You are not authorized for ${selectedRole} role. Your authorized role is: ${userData.role}`);
       }
       
-      // Store user profile
       setUserProfile(userData);
-      
       return userData;
       
     } catch (error) {
@@ -63,22 +58,64 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Login function with role validation
   const login = async (email, password, selectedRole, rememberMe = false) => {
     try {
-      // Set persistence based on "Remember Me" checkbox
       const persistence = rememberMe ? browserLocalPersistence : browserSessionPersistence;
       await setPersistence(auth, persistence);
       
-      // First authenticate with Firebase
-      console.log('🔐 Authenticating with Firebase...');
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      console.log('✅ Firebase authentication successful');
+      console.log('🔐 Starting login process...');
       
-      // Then validate role against database
-      console.log('🔍 Validating role...');
-      const userData = await validateUserRole(email, selectedRole);
-      console.log('✅ Role validation successful');
+      // Check Firestore user first
+      const usersRef = collection(db, 'users');
+      const q = query(usersRef, where('email', '==', email));
+      const querySnapshot = await getDocs(q);
+      
+      if (querySnapshot.empty) {
+        throw new Error('User not found in system database. Please contact your administrator.');
+      }
+      
+      const userDoc = querySnapshot.docs[0];
+      const userData = userDoc.data();
+      
+      console.log('✅ User found in Firestore:', userData);
+      
+      if (!userData.isActive) {
+        throw new Error('Your account has been deactivated. Please contact your administrator.');
+      }
+      
+      if (userData.role !== selectedRole) {
+        throw new Error(`Access denied. You are not authorized for ${selectedRole} role. Your authorized role is: ${userData.role}`);
+      }
+      
+      let userCredential;
+      
+      // Handle first-time student login
+      if (userData.role === 'student' && userData.tempPassword && !userData.passwordChanged) {
+        console.log('🆕 First-time student login detected');
+        console.log('🔍 Temp password from DB:', userData.tempPassword);
+        console.log('🔍 Input password:', password);
+        
+        if (password !== userData.tempPassword) {
+          throw new Error('Invalid temporary password. Please use the password sent to your email.');
+        }
+        
+        console.log('✅ Creating Firebase Auth account for student...');
+        userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        
+        await updateDoc(doc(db, 'users', userDoc.id), {
+          passwordChanged: true,
+          firstLogin: serverTimestamp(),
+          tempPassword: null
+        });
+        
+        console.log('✅ Student Firebase Auth account created successfully');
+      } else {
+        console.log('🔐 Regular Firebase Auth login...');
+        userCredential = await signInWithEmailAndPassword(auth, email, password);
+      }
+      
+      console.log('✅ Authentication successful');
+      setUserProfile(userData);
       
       return { userCredential, userData };
       
@@ -88,7 +125,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Get user's authorized roles
   const getUserRoles = async (email) => {
     try {
       const usersRef = collection(db, 'users');
@@ -100,7 +136,7 @@ export const AuthProvider = ({ children }) => {
       }
       
       const userData = querySnapshot.docs[0].data();
-      return [userData.role]; // Return array with user's single authorized role
+      return [userData.role];
       
     } catch (error) {
       console.error('Error getting user roles:', error);
@@ -108,21 +144,14 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout function that clears everything
   const logout = async () => {
     try {
-      // Clear stored role and any other app data
       localStorage.removeItem('userRole');
       localStorage.removeItem('lastLoginTime');
       sessionStorage.clear();
       
-      // Clear user profile
       setUserProfile(null);
-      
-      // Sign out from Firebase
       await signOut(auth);
-      
-      // Reset auth state
       setCurrentUser(null);
       
       console.log('✅ User logged out successfully');
@@ -137,12 +166,10 @@ export const AuthProvider = ({ children }) => {
       console.log('🔄 Auth state changed:', user ? user.email : 'No user');
       
       if (user) {
-        // User is signed in
         const storedRole = localStorage.getItem('userRole');
         console.log('📦 Stored role:', storedRole);
         
         if (storedRole) {
-          // Validate stored role against database
           try {
             console.log('🔍 Validating stored role...');
             await validateUserRole(user.email, storedRole);
@@ -154,12 +181,10 @@ export const AuthProvider = ({ children }) => {
             setCurrentUser(null);
           }
         } else {
-          // No role stored, user needs to select role
           console.log('⚠️ No role stored, user needs to select role');
           setCurrentUser(user);
         }
       } else {
-        // User is signed out
         console.log('👋 User signed out');
         setCurrentUser(null);
         setUserProfile(null);
@@ -174,7 +199,6 @@ export const AuthProvider = ({ children }) => {
     return unsubscribe;
   }, []);
 
-  // Store login time when user logs in successfully
   const setLoginTime = () => {
     localStorage.setItem('lastLoginTime', Date.now().toString());
   };
