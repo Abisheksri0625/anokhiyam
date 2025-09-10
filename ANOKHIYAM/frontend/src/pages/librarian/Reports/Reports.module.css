@@ -2,7 +2,7 @@
   display: flex;
   min-height: 100vh;
   background: #f8fafc;
-  font-family: 'Poppins', sans-serif;
+  font-family: "Poppins", sans-serif;
 }
 
 .mainContent {
@@ -21,50 +21,205 @@
   flex: 1;
   padding: 2rem;
   margin-top: 70px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.comingSoon {
-  text-align: center;
-  background: white;
-  padding: 3rem;
-  border-radius: 1rem;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
-}
-
-.comingSoon h1 {
-  font-size: 2rem;
+/* ========== Page Title ========== */
+.pageTitle {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
   color: #1f2937;
+}
+
+/* ========== Filters ========== */
+.filters {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.filters select,
+.filters input {
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+  background: white;
+}
+
+.filters input[type="text"] {
+  flex: 1;
+  min-width: 200px;
+}
+
+/* ========== Submit Feedback Form ========== */
+.formBox {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2rem;
+}
+
+.formBox h2 {
   margin-bottom: 1rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #374151;
 }
 
-.comingSoon p {
-  font-size: 1.25rem;
-  color: #6b7280;
-  margin: 0;
+.formBox form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
-/* Mobile Responsive */
+.formBox input,
+.formBox select,
+.formBox textarea {
+  padding: 0.8rem;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  outline: none;
+}
+
+.formBox textarea {
+  resize: none;
+}
+
+.formBox button {
+  background: #facc15; /* bright yellow */
+  color: #000;
+  border: none;
+  padding: 0.8rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.formBox button:hover {
+  background: #eab308;
+}
+
+/* ========== Table ========== */
+.tableBox {
+  background: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+}
+
+.tableBox h2 {
+  margin-bottom: 1rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #374151;
+}
+
+.tableBox table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.tableBox th,
+.tableBox td {
+  border: 1px solid #e5e7eb;
+  padding: 0.8rem;
+  text-align: left;
+}
+
+.tableBox th {
+  background: #f9fafb;
+  font-weight: 600;
+  color: #374151;
+}
+
+.tableBox tr:nth-child(even) {
+  background: #fdfdfd;
+}
+
+/* ========== Status Labels ========== */
+.statusPending {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+.statusResolved {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+/* ========== Reply Section ========== */
+.replyBox {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.replyBox input {
+  padding: 0.5rem 0.7rem;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  flex: 1;
+}
+
+.replyBox button {
+  background: #facc15;
+  border: none;
+  padding: 0.5rem 0.9rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.replyBox button:hover {
+  background: #eab308;
+}
+
+/* ========== Librarian Reply Bubble ========== */
+.replyRow td {
+  background: #f9fafb;
+  border-top: none;
+  padding: 0.75rem 1rem;
+}
+
+.replyBubble {
+  background: #fff8c5; /* soft yellow */
+  border: 1px solid #facc15;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #374151;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+/* ========== Responsive ========== */
 @media (max-width: 768px) {
   .mainContent {
     margin-left: 0;
   }
-  
+
   .mainContent.collapsed {
     margin-left: 0;
   }
-  
-  .content {
+
+  .filters {
+    flex-direction: column;
+  }
+
+  .filters input[type="text"] {
+    min-width: 100%;
+  }
+
+  .formBox,
+  .tableBox {
     padding: 1rem;
-  }
-  
-  .comingSoon h1 {
-    font-size: 1.5rem;
-  }
-  
-  .comingSoon p {
-    font-size: 1rem;
   }
 }
