@@ -143,7 +143,7 @@ const Attendance = () => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h2>Attendance Report</h2>
+        <h2>ATTENDANCE </h2>
         <p className={styles.percentage}>Overall Attendance: {overallAttendance}%</p>
       </div>
 
@@ -179,7 +179,6 @@ const Attendance = () => {
               <h3>Attendance for {new Date(currentDay.date).toLocaleDateString()}</h3>
               
               <div className={styles.dayInfo}>
-                <p><strong>Submitted by:</strong> {currentDay.submittedBy}</p>
                 <p><strong>Submitted at:</strong> {new Date(currentDay.submittedAt).toLocaleString()}</p>
               </div>
               
