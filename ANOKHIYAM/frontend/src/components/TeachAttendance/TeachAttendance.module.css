@@ -1,8 +1,10 @@
 /* TeachAttendance.module.css */
 .container {
   padding: 20px;
-  max-width: 1400px;
+  width: 100%;
+  max-width: 100%;
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .header {
@@ -31,6 +33,7 @@
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   justify-content: center;
+  flex-wrap: wrap;
 }
 
 .dateControl label {
@@ -51,22 +54,10 @@
 
 .dateInput:focus {
   outline: none;
-  border-color: #10b981;
+  border-color: #ec4899;
 }
 
-.loading {
-  text-align: center;
-  padding: 40px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
-.loading p {
-  font-size: 18px;
-  color: #6b7280;
-}
-
+.loading,
 .noStudents {
   text-align: center;
   padding: 40px;
@@ -75,6 +66,7 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }
 
+.loading p,
 .noStudents p {
   font-size: 18px;
   color: #6b7280;
@@ -85,10 +77,13 @@
   justify-content: space-between;
   margin-bottom: 20px;
   padding: 20px;
-  background: linear-gradient(135deg, #10b981, #22c55e);
+  background: linear-gradient(135deg, #ec4899, #f472b6);
   color: white;
   border-radius: 10px;
-  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+  flex-wrap: wrap;
+  gap: 10px;
+  text-align: center;
 }
 
 .studentCount p {
@@ -98,19 +93,16 @@
 }
 
 .tableContainer {
-  overflow-x: auto;
   margin-bottom: 30px;
   background: white;
   border-radius: 10px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  max-height: 600px;
-  overflow-y: auto;
+  overflow: hidden;
 }
 
 .attendanceTable {
   width: 100%;
   border-collapse: collapse;
-  min-width: 1100px;
 }
 
 .attendanceTable th,
@@ -121,25 +113,25 @@
 }
 
 .attendanceTable th {
-  background: #f9fafb;
+  background: #fdf2f8;
   font-weight: 600;
-  color: #374151;
+  color: #9d174d;
   position: sticky;
   top: 0;
   z-index: 10;
-  border-bottom: 2px solid #10b981;
+  border-bottom: 2px solid #ec4899;
 }
 
 .attendanceTable tbody tr:hover {
-  background: #f0f9ff;
+  background: #fce7f3;
 }
 
 .attendanceTable tbody tr:nth-child(even) {
-  background: #fafafa;
+  background: #fdf2f8;
 }
 
 .attendanceTable tbody tr:nth-child(even):hover {
-  background: #f0f9ff;
+  background: #fce7f3;
 }
 
 .statusSelect {
@@ -155,13 +147,13 @@
 
 .statusSelect:focus {
   outline: none;
-  border-color: #10b981;
+  border-color: #ec4899;
 }
 
 .statusSelect.P {
-  background: #dcfce7;
-  color: #166534;
-  border-color: #22c55e;
+  background: #fce7f3;
+  color: #9d174d;
+  border-color: #f472b6;
 }
 
 .statusSelect.A {
@@ -176,7 +168,7 @@
 }
 
 .submitButton {
-  background: linear-gradient(135deg, #10b981, #22c55e);
+  background: linear-gradient(135deg, #ec4899, #f472b6);
   color: white;
   border: none;
   padding: 18px 40px;
@@ -185,21 +177,21 @@
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+  box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
   text-transform: uppercase;
   letter-spacing: 1px;
 }
 
 .submitButton:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.6);
+  box-shadow: 0 8px 25px rgba(236, 72, 153, 0.6);
 }
 
 .submitButton:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
-  box-shadow: 0 6px 20px rgba(16, 185, 129, 0.2);
+  box-shadow: 0 6px 20px rgba(236, 72, 153, 0.2);
 }
 
 @media (max-width: 768px) {
@@ -207,22 +199,19 @@
     flex-direction: column;
     text-align: center;
   }
-  
+
   .studentCount {
     flex-direction: column;
     gap: 10px;
     text-align: center;
   }
-  
-  .tableContainer {
-    font-size: 14px;
-  }
-  
+
   .attendanceTable th,
   .attendanceTable td {
+    font-size: 14px;
     padding: 10px 5px;
   }
-  
+
   .statusSelect {
     min-width: 70px;
     padding: 6px 8px;

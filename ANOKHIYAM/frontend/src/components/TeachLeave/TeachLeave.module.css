@@ -5,11 +5,16 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   max-width: 1400px;
   margin: 0 auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
 }
 
 .header {
   margin-bottom: 30px;
   text-align: center;
+  flex-shrink: 0;
 }
 
 .header h2 {
@@ -24,6 +29,7 @@
   gap: 1rem;
   margin-bottom: 30px;
   border-bottom: 2px solid #e5e7eb;
+  flex-shrink: 0;
 }
 
 .tabButton {
@@ -44,9 +50,9 @@
 }
 
 .activeTab {
-  color: #22c55e !important;
+  color: #ec4899 !important;
   background: #f0f9ff !important;
-  border-bottom: 3px solid #22c55e;
+  border-bottom: 3px solid #ec4899;
 }
 
 .loading {
@@ -58,6 +64,8 @@
 
 .requestsContainer {
   overflow-x: auto;
+  flex: 1;
+  min-height: 0;
 }
 
 .leaveTable {
@@ -128,12 +136,12 @@
 }
 
 .acceptBtn {
-  background: #10b981;
+  background: #ec4899;
   color: white;
 }
 
 .acceptBtn:hover {
-  background: #059669;
+  background: #be185d;
   transform: translateY(-1px);
 }
 
@@ -164,7 +172,7 @@
 }
 
 .proofAvailable {
-  color: #10b981;
+  color: #ec4899;
   font-weight: 600;
   font-size: 12px;
 }
@@ -208,8 +216,8 @@
     flex-direction: column;
   }
 }
-/* Update TeachLeave.module.css - Remove forwardBtn styles */
 
+/* Updated action buttons styles */
 .actionButtons {
   display: flex;
   gap: 8px;
@@ -231,12 +239,12 @@
 }
 
 .acceptBtn {
-  background: #10b981;
+  background: #ec4899;
   color: white;
 }
 
 .acceptBtn:hover {
-  background: #059669;
+  background: #be185d;
   transform: translateY(-1px);
 }
 

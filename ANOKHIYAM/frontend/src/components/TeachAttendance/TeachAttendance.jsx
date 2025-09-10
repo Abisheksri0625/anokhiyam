@@ -143,8 +143,7 @@ const TeachAttendance = () => {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <h1>Teacher Attendance Management</h1>
-        <p>Mark attendance for all students</p>
+        <h1> Attendance System </h1>
       </div>
 
       <div className={styles.dateControl}>

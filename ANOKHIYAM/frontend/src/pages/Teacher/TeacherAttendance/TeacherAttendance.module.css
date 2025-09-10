@@ -3,6 +3,7 @@
   height: 100vh;
   font-family: 'Segoe UI', sans-serif;
   background-color: #f9f9f9;
+  overflow: hidden;
 }
 
 .mainContent {
@@ -11,6 +12,7 @@
   flex-direction: column;
   transition: margin-left 0.3s ease;
   margin-left: 220px;
+  overflow: hidden;
 }
 
 .collapsed {
@@ -24,6 +26,7 @@
   background-color: #ffffff;
   border-bottom: 1px solid #e5e7eb;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  flex-shrink: 0;
 }
 
 .tabButton {
@@ -52,5 +55,6 @@
   border-radius: 8px;
   margin: 20px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-  flex-grow: 1;
+  flex: 1;
+  overflow: hidden;
 }
