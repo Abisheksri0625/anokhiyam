@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import StudentSidebar from '../../../components/StudentSidebar/StudentSidebar';
+import StudentHeader from '../../../components/StudentHeader/StudentHeader';
 import styles from './StudentFeedback.module.css';
 
 const StudentFeedback = () => {
@@ -65,22 +66,25 @@ const StudentFeedback = () => {
   };
 
   return (
-    <div className={styles.pageWrapper}>
+    <div className={styles.pageContainer}>
       <StudentSidebar 
-        activeItem="Feedback & Report"
+        activeItem="feedback"
         isCollapsed={isCollapsed}
         setIsCollapsed={setIsCollapsed}
       />
       
-      <div className={`${styles.mainContent} ${isCollapsed ? styles.expanded : ''}`}>
-        <div className={styles.header}>
-          <div className={styles.headerContent}>
+      <div className={`${styles.mainContent} ${isCollapsed ? styles.collapsed : ''}`}>
+        <StudentHeader 
+          isCollapsed={isCollapsed} 
+          onMenuToggle={() => setIsCollapsed(!isCollapsed)} 
+        />
+        
+        <div className={styles.content}>
+          <div className={styles.pageHeader}>
             <h1>Feedback & Report</h1>
             <p>Share your thoughts and report issues to help us improve</p>
           </div>
-        </div>
 
-        <div className={styles.contentArea}>
           <div className={styles.tabContainer}>
             <div className={styles.tabs}>
               <button
@@ -108,9 +112,9 @@ const StudentFeedback = () => {
             </div>
           </div>
 
-          <div className={styles.content}>
+          <div className={styles.formContainer}>
             {activeTab === 'feedback' && (
-              <div className={styles.card}>
+              <div className={styles.formCard}>
                 <div className={styles.cardHeader}>
                   <h2>Submit Feedback</h2>
                   <p>Help us improve by sharing your thoughts and suggestions</p>
@@ -176,37 +180,40 @@ const StudentFeedback = () => {
                       value={feedbackForm.description}
                       onChange={handleFeedbackChange}
                       placeholder="Provide detailed feedback..."
-                      rows="6"
+                      rows="4"
                       required
                     ></textarea>
                   </div>
 
-                  <div className={styles.formGroup}>
-                    <label htmlFor="priority">Priority</label>
-                    <select
-                      id="priority"
-                      name="priority"
-                      value={feedbackForm.priority}
-                      onChange={handleFeedbackChange}
-                      required
-                    >
-                      <option value="low">Low</option>
-                      <option value="medium">Medium</option>
-                      <option value="high">High</option>
-                    </select>
-                  </div>
-
-                  <div className={styles.submitSection}>
-                    <button type="submit" className={styles.submitBtn}>
-                      Submit Feedback
-                    </button>
+                  <div className={styles.formRow}>
+                    <div className={styles.formGroup}>
+                      <label htmlFor="priority">Priority</label>
+                      <select
+                        id="priority"
+                        name="priority"
+                        value={feedbackForm.priority}
+                        onChange={handleFeedbackChange}
+                        required
+                      >
+                        <option value="low">Low</option>
+                        <option value="medium">Medium</option>
+                        <option value="high">High</option>
+                      </select>
+                    </div>
+                    <div className={styles.formGroup}>
+                      <div className={styles.submitSection}>
+                        <button type="submit" className={styles.submitBtn}>
+                          Submit Feedback
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </form>
               </div>
             )}
 
             {activeTab === 'report' && (
-              <div className={styles.card}>
+              <div className={styles.formCard}>
                 <div className={styles.cardHeader}>
                   <h2>Report an Issue</h2>
                   <p>Report problems, incidents, or safety concerns</p>
@@ -249,29 +256,31 @@ const StudentFeedback = () => {
                     </div>
                   </div>
 
-                  <div className={styles.formGroup}>
-                    <label htmlFor="title">Title</label>
-                    <input
-                      type="text"
-                      id="title"
-                      name="title"
-                      value={reportForm.title}
-                      onChange={handleReportChange}
-                      placeholder="Brief title of the issue"
-                      required
-                    />
-                  </div>
+                  <div className={styles.formRow}>
+                    <div className={styles.formGroup}>
+                      <label htmlFor="title">Title</label>
+                      <input
+                        type="text"
+                        id="title"
+                        name="title"
+                        value={reportForm.title}
+                        onChange={handleReportChange}
+                        placeholder="Brief title of the issue"
+                        required
+                      />
+                    </div>
 
-                  <div className={styles.formGroup}>
-                    <label htmlFor="location">Location</label>
-                    <input
-                      type="text"
-                      id="location"
-                      name="location"
-                      value={reportForm.location}
-                      onChange={handleReportChange}
-                      placeholder="Where did this occur? (Building, Room, Area)"
-                    />
+                    <div className={styles.formGroup}>
+                      <label htmlFor="location">Location</label>
+                      <input
+                        type="text"
+                        id="location"
+                        name="location"
+                        value={reportForm.location}
+                        onChange={handleReportChange}
+                        placeholder="Building, Room, Area"
+                      />
+                    </div>
                   </div>
 
                   <div className={styles.formGroup}>
@@ -282,28 +291,33 @@ const StudentFeedback = () => {
                       value={reportForm.description}
                       onChange={handleReportChange}
                       placeholder="Detailed description of the issue..."
-                      rows="6"
+                      rows="4"
                       required
                     ></textarea>
                   </div>
 
-                  <div className={styles.checkboxGroup}>
-                    <label className={styles.checkbox}>
-                      <input
-                        type="checkbox"
-                        name="anonymous"
-                        checked={reportForm.anonymous}
-                        onChange={handleReportChange}
-                      />
-                      <span className={styles.checkmark}></span>
-                      Submit anonymously
-                    </label>
-                  </div>
-
-                  <div className={styles.submitSection}>
-                    <button type="submit" className={styles.submitBtn}>
-                      Submit Report
-                    </button>
+                  <div className={styles.formRow}>
+                    <div className={styles.formGroup}>
+                      <div className={styles.checkboxGroup}>
+                        <label className={styles.checkbox}>
+                          <input
+                            type="checkbox"
+                            name="anonymous"
+                            checked={reportForm.anonymous}
+                            onChange={handleReportChange}
+                          />
+                          <span className={styles.checkmark}></span>
+                          Submit anonymously
+                        </label>
+                      </div>
+                    </div>
+                    <div className={styles.formGroup}>
+                      <div className={styles.submitSection}>
+                        <button type="submit" className={styles.submitBtn}>
+                          Submit Report
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 </form>
               </div>

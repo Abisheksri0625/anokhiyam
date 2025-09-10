@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 
+
 // ============================================================================
 // PUBLIC PAGES
 // ============================================================================
@@ -38,6 +39,7 @@ import StudentHostel from './pages/student/StudentHostel/StudentHostel';
 import StudentFees from './pages/student/StudentFees/StudentFees';
 import StudentNotifications from './pages/student/StudentNotifications/StudentNotifications';
 import StudentSettings from './pages/student/StudentSettings/StudentSettings';
+import StudentFeedback from './pages/student/StudentFeedback/StudentFeedback';
 
 // ============================================================================
 // ADMIN PAGES
@@ -192,6 +194,16 @@ function App() {
                 </ProtectedRoute>
               } 
             />
+            {/* Add this route with your other student routes */}
+<Route 
+  path="/student/feedback" 
+  element={
+    <ProtectedRoute requiredRole="student">
+      <StudentFeedback />
+    </ProtectedRoute>
+  } 
+/>
+
             <Route 
               path="/student/notifications" 
               element={
