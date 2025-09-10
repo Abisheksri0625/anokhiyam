@@ -390,7 +390,7 @@ const Admissions = () => {
 
   // ============ REJECT APPLICATION ============
   const handleRejectApplication = async (applicationId) => {
-    const reason = prompt('📝 Please enter rejection reason (required):');
+    const reason = prompt(' Please enter rejection reason (required):');
     if (!reason || reason.trim() === '') {
       alert('❌ Rejection reason is required');
       return;
@@ -707,7 +707,7 @@ const Admissions = () => {
           <div className={styles.pageHeader}>
             <h1 className={styles.pageTitle}>Admission Management</h1>
             <p className={styles.pageSubtitle}>
-              📧 Dual Email System: Admission Confirmation + Login Credentials (Admin Safe)
+              Dual Email System: Admission Confirmation + Login Credentials (Admin Safe)
             </p>
           </div>
 
@@ -807,7 +807,7 @@ const Admissions = () => {
                   marginTop: '0.5rem'
                 }}>
                   <Envelope size={16} />
-                  <span>📧 Admission confirmation email sent automatically on accept</span>
+                  <span> Admission confirmation email sent automatically on accept</span>
                 </div>
               )}
               {selectedCategory === 'credentials' && (
@@ -825,7 +825,7 @@ const Admissions = () => {
                   <User size={16} />
                   <CreditCard size={16} />
                   <Envelope size={16} />
-                  <span>🔑 Manage credentials • Mark fees paid • Send credentials email (Admin Safe)</span>
+                  <span> Manage credentials • Mark fees paid • Send credentials email (Admin Safe)</span>
                 </div>
               )}
             </div>
