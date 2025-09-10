@@ -1,206 +1,250 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import { db, auth } from '../../../config/firebase';
+import { 
+  collection, 
+  query, 
+  where, 
+  getDocs,
+  onSnapshot
+} from 'firebase/firestore';
 import StudentSidebar from '../../../components/StudentSidebar/StudentSidebar';
 import StudentHeader from '../../../components/StudentHeader/StudentHeader';
 import styles from './StudentGrades.module.css';
-import jsPDF from 'jspdf';
-import html2canvas from 'html2canvas';
-
-const subjectPool = {
-  'Sem 1': ['Mathematics I', 'Physics', 'Chemistry', 'Programming Basics', 'Engineering Graphics'],
-  'Sem 2': ['Mathematics II', 'Environmental Science', 'Python Programming', 'Digital Fundamentals', 'Communication Skills'],
-  'Sem 3': ['Data Structures', 'Discrete Mathematics', 'Computer Architecture', 'Database Systems', 'Web Technologies'],
-  'Sem 4': ['Operating Systems', 'Object-Oriented Programming', 'Software Engineering', 'Networks', 'Data Science'],
-  'Sem 5': ['Machine Learning', 'Cloud Computing', 'Mobile App Dev', 'Cybersecurity', 'Compiler Design'],
-  'Sem 6': ['AI & Robotics', 'Big Data Analytics', 'IoT Systems', 'Blockchain', 'UX Design'],
-  'Sem 7': ['Natural Language Processing', 'AR/VR Development', 'DevOps', 'Quantum Computing', 'Ethical Hacking'],
-  'Sem 8': ['Entrepreneurship', 'Project Management', 'Research Methodology', 'Capstone Project', 'Professional Ethics']
-};
-
-const generateMockData = () => {
-  const data = {};
-  for (let sem = 1; sem <= 8; sem++) {
-    const semKey = `Sem ${sem}`;
-    data[semKey] = {};
-    for (let model = 1; model <= 3; model++) {
-      data[semKey][`Model ${model}`] = subjectPool[semKey].map(subject => ({
-        subject,
-        marks: Math.floor(Math.random() * 51 + 50)
-      }));
-    }
-  }
-  return data;
-};
-
-const mockData = generateMockData();
 
 const StudentGrades = () => {
-  const [isCollapsed, setIsCollapsed] = useState(() => localStorage.getItem('studentSidebarCollapsed') === 'true');
-  const [selectedSemester, setSelectedSemester] = useState('');
-  const [selectedModel, setSelectedModel] = useState('');
-  const [visibleMarks, setVisibleMarks] = useState([]);
-  const tableRef = useRef(null);
+  const [grades, setGrades] = useState(null);
+  const [studentInfo, setStudentInfo] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [isCollapsed, setIsCollapsed] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem('studentSidebarCollapsed', isCollapsed);
-  }, [isCollapsed]);
+    fetchStudentGrades();
+  }, []);
 
-  const handleSemesterSelect = (sem) => {
-    setSelectedSemester(sem);
-    setSelectedModel('');
-    setVisibleMarks([]);
-  };
+  const fetchStudentGrades = async () => {
+    try {
+      setLoading(true);
+      setError('');
+      
+      const currentUser = auth.currentUser;
+      
+      if (!currentUser) {
+        setError('No authenticated user found');
+        return;
+      }
 
-  const handleModelSelect = (model) => {
-    const semNum = parseInt(selectedSemester.split(' ')[1]);
-    if (semNum >= 5 || (semNum === 4 && model !== 'Model 1')) {
-      setVisibleMarks([]);
-      return;
+      // Get student info first
+      const studentCredsRef = collection(db, 'student_credentials');
+      const studentQuery = query(studentCredsRef, where('loginEmail', '==', currentUser.email));
+      const studentSnapshot = await getDocs(studentQuery);
+      
+      if (studentSnapshot.empty) {
+        setError('Student credentials not found for your email');
+        return;
+      }
+
+      const studentData = studentSnapshot.docs[0].data();
+      const studentId = studentSnapshot.docs[0].id;
+      
+      setStudentInfo({
+        ...studentData,
+        id: studentId
+      });
+
+      // Set up real-time listener for grades
+      const gradesRef = collection(db, 'student_grades');
+      const gradesQuery = query(gradesRef, where('studentId', '==', studentId));
+      
+      const unsubscribe = onSnapshot(gradesQuery, (snapshot) => {
+        if (!snapshot.empty) {
+          const gradeData = snapshot.docs[0].data();
+          setGrades(gradeData);
+        } else {
+          setGrades(null);
+        }
+        setLoading(false);
+      });
+
+      return unsubscribe;
+
+    } catch (error) {
+      console.error('Error fetching grades:', error);
+      setError('Error fetching grades: ' + error.message);
+      setLoading(false);
     }
-    setSelectedModel(model);
-    setVisibleMarks(mockData[selectedSemester][model]);
   };
 
-  const handleExportPDF = async () => {
-    if (!tableRef.current) return;
-    const canvas = await html2canvas(tableRef.current);
-    const imgData = canvas.toDataURL('image/png');
-    const pdf = new jsPDF();
-    const pdfWidth = pdf.internal.pageSize.getWidth();
-    const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
-    pdf.addImage(imgData, 'PNG', 0, 10, pdfWidth, pdfHeight);
-    pdf.save('Marks_Report.pdf');
+  const getGradeColor = (mark) => {
+    if (mark >= 90) return '#10b981';
+    if (mark >= 80) return '#22c55e';
+    if (mark >= 70) return '#eab308';
+    if (mark >= 60) return '#f59e0b';
+    if (mark >= 50) return '#f97316';
+    return '#ef4444';
   };
 
-  const handleExportImage = async () => {
-    if (!tableRef.current) return;
-    const canvas = await html2canvas(tableRef.current);
-    const link = document.createElement('a');
-    link.download = 'Marks_Report.png';
-    link.href = canvas.toDataURL('image/png');
-    link.click();
+  const getGradeLetter = (mark) => {
+    if (mark >= 90) return 'A+';
+    if (mark >= 80) return 'A';
+    if (mark >= 70) return 'B+';
+    if (mark >= 60) return 'B';
+    if (mark >= 50) return 'C';
+    return 'F';
   };
 
-  return (
-    <div className={styles.pageContainer}>
-      <StudentSidebar activeItem="grades" isCollapsed={isCollapsed} setIsCollapsed={setIsCollapsed} />
-      <div className={`${styles.mainContent} ${isCollapsed ? styles.collapsed : ''}`}>
-        <StudentHeader isCollapsed={isCollapsed} onMenuToggle={() => setIsCollapsed(!isCollapsed)} />
-        <div className={styles.content}>
-          <h1 style={{ color: '#059669', marginBottom: '1.5rem' }}>Marks</h1>
-
-          {/* Semester Selection */}
-          <div style={{ marginBottom: '1rem' }}>
-            <h3>Semester</h3>
-            <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-              {Object.keys(mockData).map((sem) => (
-                <button
-                  key={sem}
-                  onClick={() => handleSemesterSelect(sem)}
-                  style={{
-                    padding: '0.5rem 1rem',
-                    background: selectedSemester === sem ? '#059669' : '#e5e7eb',
-                    color: selectedSemester === sem ? '#fff' : '#111',
-                    border: 'none',
-                    borderRadius: '6px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  {sem}
-                </button>
-              ))}
+  if (loading) {
+    return (
+      <div className={styles.layout}>
+        <StudentSidebar
+          activeItem="grades"
+          isCollapsed={isCollapsed}
+          setIsCollapsed={setIsCollapsed}
+        />
+        <div className={`${styles.main} ${isCollapsed ? styles.collapsed : ""}`}>
+          <StudentHeader
+            isCollapsed={isCollapsed}
+            onMenuToggle={() => setIsCollapsed(!isCollapsed)}
+          />
+          <div className={styles.pageContent}>
+            <div className={styles.loading}>
+              <h3>Loading your grades...</h3>
+              <p>Please wait while we fetch your academic records.</p>
             </div>
           </div>
+        </div>
+      </div>
+    );
+  }
 
-          {/* Model Selection */}
-          {selectedSemester && (
-            <div style={{ marginBottom: '1rem' }}>
-              <h3>Exam</h3>
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                {Object.keys(mockData[selectedSemester]).map((model) => {
-                  const semNum = parseInt(selectedSemester.split(' ')[1]);
-                  if (semNum === 4 && model !== 'Model 1') return null;
-                  if (semNum >= 5) return null;
-                  return (
-                    <button
-                      key={model}
-                      onClick={() => handleModelSelect(model)}
-                      style={{
-                        padding: '0.5rem 1rem',
-                        background: selectedModel === model ? '#10b981' : '#e5e7eb',
-                        color: selectedModel === model ? '#fff' : '#111',
-                        border: 'none',
-                        borderRadius: '6px',
-                        cursor: 'pointer'
-                      }}
-                    >
-                      {model}
-                    </button>
-                  );
-                })}
-              </div>
+  if (error) {
+    return (
+      <div className={styles.layout}>
+        <StudentSidebar
+          activeItem="grades"
+          isCollapsed={isCollapsed}
+          setIsCollapsed={setIsCollapsed}
+        />
+        <div className={`${styles.main} ${isCollapsed ? styles.collapsed : ""}`}>
+          <StudentHeader
+            isCollapsed={isCollapsed}
+            onMenuToggle={() => setIsCollapsed(!isCollapsed)}
+          />
+          <div className={styles.pageContent}>
+            <div className={styles.error}>
+              <h3>Error Loading Grades</h3>
+              <p>{error}</p>
+              <button onClick={() => window.location.reload()} className={styles.retryButton}>
+                Try Again
+              </button>
             </div>
-          )}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
-          {/* Marks Table */}
-          {visibleMarks.length > 0 && (
-            <>
-              <div ref={tableRef} style={{
-                background: '#ffffff',
-                padding: '1.5rem',
-                borderRadius: '12px',
-                boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
-                marginTop: '1rem'
-              }}>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                  <thead>
-                    <tr style={{ background: '#f0fdf4', textAlign: 'left' }}>
-                      <th style={{ padding: '0.75rem', borderBottom: '1px solid #ccc' }}>Subject</th>
-                      <th style={{ padding: '0.75rem', borderBottom: '1px solid #ccc' }}>Marks</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {visibleMarks.map((s, index) => (
-                      <tr key={index}>
-                        <td style={{ padding: '0.75rem', borderBottom: '1px solid #eee' }}>{s.subject}</td>
-                        <td style={{ padding: '0.75rem', borderBottom: '1px solid #eee' }}>{s.marks}</td>
+  if (!grades) {
+    return (
+      <div className={styles.layout}>
+        <StudentSidebar
+          activeItem="grades"
+          isCollapsed={isCollapsed}
+          setIsCollapsed={setIsCollapsed}
+        />
+        <div className={`${styles.main} ${isCollapsed ? styles.collapsed : ""}`}>
+          <StudentHeader
+            isCollapsed={isCollapsed}
+            onMenuToggle={() => setIsCollapsed(!isCollapsed)}
+          />
+          <div className={styles.pageContent}>
+            <div className={styles.noGrades}>
+              <h3>No Grades Available</h3>
+              <p>Your grades haven't been uploaded yet. Please check back later .</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  const subjects = Object.keys(grades.subjects || {});
+  const totalMarks = Object.values(grades.subjects).reduce((sum, mark) => sum + (Number(mark) || 0), 0);
+  const maxMarks = subjects.length * 100;
+  const percentage = maxMarks > 0 ? ((totalMarks / maxMarks) * 100).toFixed(2) : 0;
+  const overallGrade = getGradeLetter(percentage);
+
+  return (
+    <div className={styles.layout}>
+      <StudentSidebar
+        activeItem="grades"
+        isCollapsed={isCollapsed}
+        setIsCollapsed={setIsCollapsed}
+      />
+      
+      <div className={`${styles.main} ${isCollapsed ? styles.collapsed : ""}`}>
+        <StudentHeader
+          isCollapsed={isCollapsed}
+          onMenuToggle={() => setIsCollapsed(!isCollapsed)}
+        />
+        
+        <div className={styles.pageContent}>
+          <div className={styles.container}>
+            <div className={styles.header}>
+              <h2> Grades</h2>
+            </div>
+
+            <div className={styles.detailedSection}>
+              <h3>Model-I Score</h3>
+              <table className={styles.gradesTable}>
+                <thead>
+                  <tr>
+                    <th>Subject</th>
+                    <th>Marks Obtained</th>
+                    <th>Maximum Marks</th>
+                    <th>Percentage</th>
+                    <th>Grade</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {subjects.map((subject) => {
+                    const mark = Number(grades.subjects[subject]) || 0;
+                    const subjectPercentage = (mark / 100 * 100).toFixed(1);
+                    const grade = getGradeLetter(mark);
+                    return (
+                      <tr key={subject}>
+                        <td><strong>{subject}</strong></td>
+                        <td>{mark}</td>
+                        <td>100</td>
+                        <td>{subjectPercentage}%</td>
+                        <td>
+                          <span 
+                            className={styles.tableGrade}
+                            style={{ color: getGradeColor(mark) }}
+                          >
+                            {grade}
+                          </span>
+                        </td>
                       </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Export Buttons */}
-              <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-                <button onClick={handleExportPDF} style={{
-                  padding: '0.5rem 1rem',
-                  background: '#059669',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '6px',
-                  cursor: 'pointer'
-                }}>
-                  Export as PDF
-                </button>
-                <button onClick={handleExportImage} style={{
-                  padding: '0.5rem 1rem',
-                  background: '#059669',
-                  color: '#fff',
-                  border: 'none',
-                  borderRadius: '6px',
-                  cursor: 'pointer'
-                }}>
-                  Export as Image
-                </button>
-              </div>
-            </>
-          )}
-
-          {/* No Marks Message */}
-          {selectedSemester && selectedModel && visibleMarks.length === 0 && (
-            <p style={{ marginTop: '1rem', color: '#ef4444' }}>
-              Marks not available for this selection.
-            </p>
-          )}
+                    );
+                  })}
+                </tbody>
+                <tfoot>
+                  <tr className={styles.totalRow}>
+                    <td><strong>Total</strong></td>
+                    <td><strong>{totalMarks}</strong></td>
+                    <td><strong>{maxMarks}</strong></td>
+                    <td><strong>{percentage}%</strong></td>
+                    <td>
+                      <strong style={{ color: getGradeColor(percentage) }}>
+                        {overallGrade}
+                      </strong>
+                    </td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+          </div>
         </div>
       </div>
     </div>
