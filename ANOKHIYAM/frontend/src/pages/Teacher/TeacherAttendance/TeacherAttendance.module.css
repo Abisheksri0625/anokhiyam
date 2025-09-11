@@ -1,8 +1,9 @@
+/* components/TeachAttendance/TeachAttendance.module.css */
 .pageContainer {
   display: flex;
   height: 100vh;
   font-family: 'Segoe UI', sans-serif;
-  background-color: #f9f9f9;
+  background-color: #f8fafc;
   overflow: hidden;
 }
 
@@ -10,51 +11,434 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  transition: margin-left 0.3s ease;
+  transition: margin-left 0.3s ease, width 0.3s ease;
   margin-left: 220px;
+  width: calc(100vw - 220px);
   overflow: hidden;
+  position: relative;
 }
 
-.collapsed {
+.mainContent.collapsed {
   margin-left: 60px;
+  width: calc(100vw - 60px);
 }
 
-.taskbar {
+.pageContent {
+  flex: 1;
   display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #f8fafc;
+  height: 100vh;
+}
+
+.pageHeader {
+  padding: 20px;
+  background: linear-gradient(135deg, #ec4899 0%, #be185d 50%, #9d174d 100%);
+  color: white;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 10;
+}
+
+.pageTitle {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  color: white;
+}
+
+.pageSubtitle {
+  display: none;
+}
+
+.contentContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: white;
+  margin: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.controlsHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 2px solid #f1f5f9;
+  flex-shrink: 0;
+  background: white;
+}
+
+.sectionTitle {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0;
+}
+
+.dateSection {
+  display: flex;
+  align-items: center;
   gap: 12px;
-  padding: 16px 20px;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.dateSection label {
+  font-weight: 600;
+  color: #374151;
+  font-size: 0.875rem;
+}
+
+.dateInput {
+  padding: 10px 14px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-weight: 500;
+  background: white;
+  transition: border-color 0.2s;
+  color: #374151;
+}
+
+.dateInput:focus {
+  outline: none;
+  border-color: #ec4899;
+  box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
+}
+
+.statsBar {
+  background: linear-gradient(135deg, #ec4899 0%, #be185d 50%, #9d174d 100%);
+  color: white;
+  padding: 16px 24px;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 600;
+  font-size: 0.95rem;
   flex-shrink: 0;
 }
 
-.tabButton {
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 600;
-  border: none;
-  border-radius: 6px;
-  background: linear-gradient(135deg, #ec4899 0%, #be185d 50%, #9d174d 100%);
-  color: white;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.tabButton:hover {
-  transform: scale(1.03);
-}
-
-.active {
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
-}
-
-.sectionBox {
-  padding: 20px;
-  background-color: white;
-  border-radius: 8px;
-  margin: 20px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+.tableContainer {
   flex: 1;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: auto;
+  background: white;
+  margin: 0;
+  position: relative;
+  height: calc(100vh - 280px);
+}
+
+.attendanceTable {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  font-size: 0.875rem;
+  table-layout: auto;
+  min-width: 1200px;
+}
+
+.attendanceTable thead {
+  background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.attendanceTable th {
+  padding: 16px 10px;
+  text-align: center;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
+  white-space: nowrap;
+}
+
+.attendanceTable th:last-child {
+  border-right: none;
+}
+
+.attendanceTable tbody tr {
+  border-bottom: 1px solid #f1f5f9;
+  transition: background-color 0.2s;
+}
+
+.evenRow {
+  background: #f9fafb;
+}
+
+.oddRow {
+  background: white;
+}
+
+.attendanceTable tbody tr:hover {
+  background: #fce7f3 !important;
+}
+
+.attendanceTable td {
+  padding: 12px 10px;
+  text-align: center;
+  vertical-align: middle;
+  border-right: 1px solid #f1f5f9;
+  white-space: nowrap;
+}
+
+.attendanceTable td:last-child {
+  border-right: none;
+}
+
+.snoCell {
+  font-weight: 700;
+  color: #ec4899;
+  width: 60px;
+}
+
+.nameCell {
+  text-align: left;
+  font-weight: 600;
+  color: #1f2937;
+  min-width: 180px;
+  padding-left: 12px;
+}
+
+.rollCell {
+  font-family: 'Courier New', monospace;
+  font-weight: 600;
+  color: #4b5563;
+  min-width: 140px;
+}
+
+.periodCell {
+  padding: 8px;
+  min-width: 110px;
+}
+
+.attendanceSelect {
+  padding: 6px 8px;
+  border: 2px solid #e5e7eb;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: 95px;
+  background: white;
+  font-size: 0.75rem;
+}
+
+.attendanceSelect:focus {
+  outline: none;
+  border-color: #ec4899;
+  box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.1);
+}
+
+.present {
+  background-color: #dcfce7;
+  color: #166534;
+  border-color: #10b981;
+}
+
+.absent {
+  background-color: #fee2e2;
+  color: #dc2626;
+  border-color: #ef4444;
+}
+
+.submitSection {
+  text-align: center;
+  padding: 20px;
+  border-top: 2px solid #f1f5f9;
+  flex-shrink: 0;
+  background: white;
+}
+
+.submitButton {
+  background: linear-gradient(135deg, #ec4899 0%, #be185d 100%);
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  min-width: 200px;
+}
+
+.submitButton:hover:not(:disabled) {
+  background: linear-gradient(135deg, #be185d 0%, #9d174d 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3);
+}
+
+.submitButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.loadingContainer {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #be185d;
+  padding: 2rem;
+}
+
+.loadingSpinner {
+  width: 40px;
+  height: 40px;
+  border: 4px solid rgba(236, 72, 153, 0.2);
+  border-top: 4px solid #ec4899;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Horizontal and Vertical Scrollbars */
+.tableContainer::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.tableContainer::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 6px;
+}
+
+.tableContainer::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 6px;
+}
+
+.tableContainer::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.tableContainer::-webkit-scrollbar-corner {
+  background: #f1f5f9;
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 1400px) {
+  .mainContent {
+    margin-left: 220px;
+    width: calc(100vw - 220px);
+  }
+  
+  .mainContent.collapsed {
+    margin-left: 60px;
+    width: calc(100vw - 60px);
+  }
+}
+
+@media (max-width: 1200px) {
+  .controlsHeader {
+    flex-direction: column;
+    gap: 16px;
+    text-align: center;
+    padding: 15px;
+  }
+  
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
+  
+  .statsBar {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+    padding: 12px;
+  }
+  
+  .attendanceTable th,
+  .attendanceTable td {
+    padding: 10px 8px;
+  }
+  
+  .attendanceTable {
+    min-width: 1000px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .mainContent {
+    margin-left: 0;
+    width: 100vw;
+  }
+  
+  .mainContent.collapsed {
+    margin-left: 0;
+    width: 100vw;
+  }
+  
+  .attendanceTable {
+    min-width: 900px;
+  }
+}
+
+@media (max-width: 768px) {
+  .pageHeader {
+    padding: 15px;
+    text-align: center;
+  }
+  
+  .pageTitle {
+    font-size: 1.5rem;
+  }
+  
+  .controlsHeader {
+    padding: 10px;
+  }
+  
+  .sectionTitle {
+    font-size: 1.25rem;
+  }
+  
+  .dateSection {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .tableContainer {
+    height: calc(100vh - 320px);
+  }
+  
+  .attendanceTable {
+    min-width: 800px;
+  }
+  
+  .attendanceTable th,
+  .attendanceTable td {
+    padding: 8px 6px;
+    font-size: 0.7rem;
+  }
+  
+  .attendanceSelect {
+    width: 85px;
+    font-size: 0.7rem;
+  }
+  
+  .nameCell {
+    min-width: 140px;
+  }
+  
+  .rollCell {
+    min-width: 120px;
+  }
+  
+  .periodCell {
+    min-width: 90px;
+  }
 }

@@ -1,12 +1,10 @@
-// components/attendance/Attendance.jsx
 import React, { useState, useEffect } from 'react';
 import { db, auth } from '../../config/firebase';
-import { 
+import {
   collection, 
   query, 
   where, 
-  getDocs, 
-  orderBy 
+  getDocs
 } from 'firebase/firestore';
 import styles from './Attendance.module.css';
 
@@ -28,24 +26,17 @@ const Attendance = () => {
       setError('');
       
       const currentUser = auth.currentUser;
-      console.log('Current user:', currentUser);
-      
       if (!currentUser) {
         setError('No authenticated user found');
         return;
       }
 
-      console.log('Current user email:', currentUser.email);
-
-      // First, get student info from student_credentials using email
+      // Get student info
       const studentCredsRef = collection(db, 'student_credentials');
       const studentQuery = query(studentCredsRef, where('loginEmail', '==', currentUser.email));
       const studentSnapshot = await getDocs(studentQuery);
       
-      console.log('Student query result:', studentSnapshot.docs.length, 'documents found');
-      
       if (studentSnapshot.empty) {
-        console.log('No student credentials found for email:', currentUser.email);
         setError('Student credentials not found for your email');
         return;
       }
@@ -53,44 +44,31 @@ const Attendance = () => {
       const studentData = studentSnapshot.docs[0].data();
       const studentId = studentSnapshot.docs[0].id;
       
-      console.log('Student data found:', studentData);
-      console.log('Student ID:', studentId);
-      
       setStudentInfo({
         ...studentData,
         id: studentId
       });
 
-      // Then fetch attendance records for this student
+      // Fetch attendance records
       const attendanceRef = collection(db, 'attendance');
       const attendanceQuery = query(
         attendanceRef,
         where('studentId', '==', studentId)
       );
 
-      console.log('Fetching attendance for studentId:', studentId);
       const attendanceSnapshot = await getDocs(attendanceQuery);
       
-      console.log('Attendance query result:', attendanceSnapshot.docs.length, 'documents found');
-      
       if (attendanceSnapshot.empty) {
-        console.log('No attendance records found for studentId:', studentId);
         setError('No attendance records found');
         return;
       }
 
-      const attendance = attendanceSnapshot.docs.map(doc => {
-        const data = doc.data();
-        console.log('Attendance record:', data);
-        return {
-          id: doc.id,
-          ...data
-        };
-      });
+      const attendance = attendanceSnapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      }));
 
-      // Sort by date (newest first)
       attendance.sort((a, b) => new Date(b.date) - new Date(a.date));
-      
       setAttendanceData(attendance);
       
       if (attendance.length > 0) {
@@ -99,7 +77,6 @@ const Attendance = () => {
       }
 
     } catch (error) {
-      console.error('Error fetching attendance:', error);
       setError('Error fetching attendance data: ' + error.message);
     } finally {
       setLoading(false);
@@ -118,9 +95,10 @@ const Attendance = () => {
   if (loading) {
     return (
       <div className={styles.container}>
-        <div className={styles.loading}>
+        <div className={styles.centerMessage}>
+          <div className={styles.loader}></div>
           <h3>Loading attendance data...</h3>
-          <p>Please wait while we fetch your attendance records.</p>
+          <p>Please wait while we fetch your records.</p>
         </div>
       </div>
     );
@@ -129,7 +107,8 @@ const Attendance = () => {
   if (error) {
     return (
       <div className={styles.container}>
-        <div className={styles.error}>
+        <div className={styles.centerMessage}>
+          <div className={styles.errorIcon}>⚠️</div>
           <h3>Error Loading Attendance</h3>
           <p>{error}</p>
           <button onClick={() => window.location.reload()} className={styles.retryButton}>
@@ -142,84 +121,113 @@ const Attendance = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.header}>
-        <h2>ATTENDANCE </h2>
-        <p className={styles.percentage}>Overall Attendance: {overallAttendance}%</p>
-      </div>
-
-      {studentInfo && (
-        <div className={styles.studentInfo}>
-          <p><strong>Student:</strong> {studentInfo.firstName} {studentInfo.lastName}</p>
-          <p><strong>Roll No:</strong> {studentInfo.acceptedStudentId}</p>
-          <p><strong>Email:</strong> {studentInfo.loginEmail}</p>
+      {/* Header Section */}
+      <div className={styles.headerSection}>
+        <div className={styles.titleGroup}>
+          <h1 className={styles.pageTitle}>My Attendance</h1>
+          <div className={styles.overallStats}>
+            <span className={styles.attendancePercentage}>{overallAttendance}%</span>
+            <span className={styles.attendanceLabel}>Overall</span>
+          </div>
         </div>
-      )}
+
+        {studentInfo && (
+          <div className={styles.studentCard}>
+            <div className={styles.studentName}>
+              {studentInfo.firstName} {studentInfo.lastName}
+            </div>
+            <div className={styles.studentDetails}>
+              <span>Roll No: {studentInfo.acceptedStudentId}</span>
+              <span>•</span>
+              <span>{studentInfo.loginEmail}</span>
+            </div>
+          </div>
+        )}
+      </div>
 
       {attendanceData.length > 0 ? (
         <>
-          <div className={styles.controlGroup}>
-            <label htmlFor="dateSelect"><strong>Select Date:</strong></label>
-            <select
-              id="dateSelect"
-              value={selectedDate}
-              onChange={e => setSelectedDate(e.target.value)}
-              className={styles.dropdown}
-            >
-              {attendanceData.map((record) => (
-                <option key={record.id} value={record.date}>
-                  {new Date(record.date).toLocaleDateString()} 
-                  ({record.presentPeriods}/{record.totalPeriods} Present)
-                </option>
-              ))}
-            </select>
+          {/* Date Selection */}
+          <div className={styles.controlSection}>
+            <div className={styles.dateSelector}>
+              <label className={styles.dateLabel}>Select Date:</label>
+              <select
+                value={selectedDate}
+                onChange={e => setSelectedDate(e.target.value)}
+                className={styles.dateSelect}
+              >
+                {attendanceData.map((record) => (
+                  <option key={record.id} value={record.date}>
+                    {new Date(record.date).toLocaleDateString('en-US', {
+                      weekday: 'short',
+                      month: 'short', 
+                      day: 'numeric'
+                    })} - {record.presentPeriods}/{record.totalPeriods}
+                  </option>
+                ))}
+              </select>
+            </div>
           </div>
 
+          {/* Attendance Display */}
           {currentDay && (
-            <div className={styles.attendanceDetails}>
-              <h3>Attendance for {new Date(currentDay.date).toLocaleDateString()}</h3>
-              
-              <div className={styles.dayInfo}>
-                <p><strong>Submitted at:</strong> {new Date(currentDay.submittedAt).toLocaleString()}</p>
+            <div className={styles.attendanceSection}>
+              <div className={styles.dayHeader}>
+                <div className={styles.dateInfo}>
+                  <h2>{new Date(currentDay.date).toLocaleDateString('en-US', { 
+                    weekday: 'long', 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}</h2>
+                  <p>Submitted: {new Date(currentDay.submittedAt).toLocaleString()}</p>
+                </div>
+                <div className={styles.dayStats}>
+                  <div className={styles.statBox}>
+                    <span className={styles.statNumber}>{currentDay.presentPeriods}</span>
+                    <span className={styles.statLabel}>Present</span>
+                  </div>
+                  <div className={styles.statDivider}>/</div>
+                  <div className={styles.statBox}>
+                    <span className={styles.statNumber}>{currentDay.totalPeriods}</span>
+                    <span className={styles.statLabel}>Total</span>
+                  </div>
+                  <div className={styles.dailyPercentage}>
+                    {((currentDay.presentPeriods / currentDay.totalPeriods) * 100).toFixed(1)}%
+                  </div>
+                </div>
               </div>
-              
-              <table className={styles.table}>
-                <thead>
-                  <tr>
-                    {Object.keys(currentDay.periods).sort((a, b) => parseInt(a) - parseInt(b)).map((period) => (
-                      <th key={period}>Period {period}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    {Object.keys(currentDay.periods).sort((a, b) => parseInt(a) - parseInt(b)).map((period) => (
-                      <td key={period} className={styles[currentDay.periods[period]]}>
-                        {currentDay.periods[period] === 'P' ? 'Present' : 'Absent'}
-                      </td>
-                    ))}
-                  </tr>
-                </tbody>
-              </table>
-              
-              <div className={styles.summary}>
-                <p><strong>Present:</strong> {currentDay.presentPeriods} / {currentDay.totalPeriods}</p>
-                <p><strong>Daily Attendance:</strong> {((currentDay.presentPeriods / currentDay.totalPeriods) * 100).toFixed(2)}%</p>
+
+              <div className={styles.periodsGrid}>
+                {Object.keys(currentDay.periods)
+                  .sort((a, b) => parseInt(a) - parseInt(b))
+                  .map((period) => (
+                    <div 
+                      key={period} 
+                      className={`${styles.periodCard} ${
+                        currentDay.periods[period] === 'P' ? styles.present : styles.absent
+                      }`}
+                    >
+                      <div className={styles.periodNumber}>Period {period}</div>
+                      <div className={styles.statusBadge}>
+                        <span className={styles.statusIcon}>
+                          {currentDay.periods[period] === 'P' ? '✓' : '✗'}
+                        </span>
+                        <span className={styles.statusText}>
+                          {currentDay.periods[period] === 'P' ? 'Present' : 'Absent'}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
               </div>
             </div>
           )}
         </>
       ) : (
-        <div className={styles.noData}>
-          <h3>No Attendance Data Found</h3>
-          <p>Your attendance records will appear here once your teacher submits attendance.</p>
-          <div className={styles.troubleshoot}>
-            <h4>Troubleshooting:</h4>
-            <ul>
-              <li>Make sure your teacher has submitted attendance</li>
-              <li>Check if your email matches your student record</li>
-              <li>Contact your teacher if the issue persists</li>
-            </ul>
-          </div>
+        <div className={styles.centerMessage}>
+          <div className={styles.emptyIcon}>📊</div>
+          <h3>No Attendance Records</h3>
+          <p>Your attendance will appear here once your teacher marks it.</p>
         </div>
       )}
     </div>
